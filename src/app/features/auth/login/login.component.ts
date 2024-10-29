@@ -29,6 +29,10 @@ export class LoginComponent {
     });
   }
 
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
   onLogin(): void {
     if (this.loginForm.invalid) {
       return;
