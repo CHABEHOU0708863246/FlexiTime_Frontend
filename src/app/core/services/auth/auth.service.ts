@@ -55,8 +55,12 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    if (typeof window !== 'undefined' && localStorage) {
+      return localStorage.getItem(this.tokenKey);
+    }
+    return null;
   }
+
 
   isAuthenticated(): boolean {
     const token = this.getToken();

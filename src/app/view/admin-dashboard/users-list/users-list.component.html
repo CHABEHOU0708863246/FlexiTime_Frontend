@@ -4,7 +4,7 @@
       <div class="logo"><a href="index.html"><span>FlexiTime</span></a></div>
       <ul>
         <li class="label">Principale</li>
-        <li class="active"><a class="sidebar-sub-toggle"><i class="ti-home"></i> Dashboard <span class="badge badge-primary"></span></a>
+        <li class="active"><a class="sidebar-sub-toggle" [routerLink]="['/admin/dashboard']"><i class="ti-home"></i> Dashboard <span class="badge badge-primary"></span></a>
         </li>
 
         <li class="label">Menu</li>
@@ -60,6 +60,8 @@
             <li><a href="chart-flot.html">Export des rapports</a></li>
           </ul>
         </li>
+
+
 
 
         <li><a href="app-widget-card.html"><i class="ti-key grid2-alt"></i> Paramètres de l’Application</a></li>
@@ -228,122 +230,75 @@
   <div class="main">
       <div class="container-fluid">
           <div class="row">
-              <div class="col-lg-8 p-r-0 title-margin-right">
-                  <div class="page-header">
-                      <div class="page-title">
-                        <h1>
-                          <span class="emoji">👋</span>
-                          Salut,
-                          <span class="highlight">Bienvenue</span>
-                          dans
-                          <span class="brand-name">FlexiTime</span>
-                        </h1>
-                      </div>
-                  </div>
-              </div>
               <!-- /# column -->
               <div class="col-lg-4 p-l-0 title-margin-left">
                   <div class="page-header">
                       <div class="page-title">
                           <ol class="breadcrumb">
-                              <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                              <li class="breadcrumb-item active">Accueil</li>
+                              <li class="breadcrumb-item"><a href="#">Menu</a></li>
+                              <li class="breadcrumb-item active">Gestion des utilisateurs</li>
+                              <li class="breadcrumb-item active">Liste des utilisateurs</li>
                           </ol>
                       </div>
                   </div>
               </div>
               <!-- /# column -->
           </div>
-          <!-- /# row -->
-          <section id="main-content">
-              <div class="row">
-                  <div class="col-lg-3">
-                      <div class="card">
-                          <div class="stat-widget-one">
-                              <div class="stat-icon dib"><i class="ti-world grid2 color-pink border-pink"></i></div>
-                              <div class="stat-content dib">
-                                  <div class="stat-text">Total Congés</div>
-                                  <div class="stat-digit">1,012</div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-lg-3">
-                      <div class="card">
-                          <div class="stat-widget-one">
-                              <div class="stat-icon dib"><i class="ti-hand-open color-primary border-primary"></i></div>
-                              <div class="stat-content dib">
-                                  <div class="stat-text">Congé en Attente</div>
-                                  <div class="stat-digit">961</div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-lg-3">
-                      <div class="card">
-                          <div class="stat-widget-one">
-                              <div class="stat-icon dib"><i class="ti-face-smile color-success border-success"></i></div>
-                              <div class="stat-content dib">
-                                  <div class="stat-text">Congé Acceptés</div>
-                                  <div class="stat-digit">770</div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-lg-3">
-                      <div class="card">
-                          <div class="stat-widget-one">
-                              <div class="stat-icon dib"><i class="ti-face-sad color-danger border-danger"></i></div>
-                              <div class="stat-content dib">
-                                  <div class="stat-text">Congé Réfusés</div>
-                                  <div class="stat-digit">2,781</div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="row">
-                  <div class="col-lg-8">
-                      <div class="card">
-                          <div class="card-title">
-                              <h4>Liste des demandes de congés en attente</h4>
+</div>
 
-                          </div>
-                          <div class="card-body">
-                              <div class="ct-bar-chart m-t-30"></div>
-                          </div>
-                      </div>
-                  </div>
 
-                  <div class="col-lg-4">
-                      <div class="card">
+<div class="content-wrap">
+  <div class="main">
+    <div class="container-fluid">
+      <section id="main-content">
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered verticle-middle table-responsive-sm">
+                <thead>
+                  <tr>
+                    <th scope="col" class="text-center">Prénom</th>
+                    <th scope="col" class="text-center">Nom</th>
+                    <th scope="col" class="text-center">Roles</th>
+                    <th scope="col" class="text-center">Email</th>
+                    <th scope="col" class="text-center">Numéro de téléphone</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of users">
+                    <td>{{ user.firstName }}</td>
+                    <td>{{ user.lastName }}</td>
+                    <td>{{ user.roles.join(', ') }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phoneNumber }}</td>
+                    <td>
+                      <span>
+                        <a href="javascript:void()" class="mr-4" data-toggle="tooltip" data-placement="top" title="Modifier">
+                          <i class="fa fa-pencil color-muted"></i>
+                        </a>
+                        <a href="javascript:void()" data-toggle="tooltip" data-placement="top" title="{{ user.isEnabled ? 'Desactiver' : 'Activer' }}" (click)="toggleAccount(user)">
+                          <i class="fa" [ngClass]="user.isEnabled ? 'fa-toggle-on color-success' : 'fa-toggle-off color-danger'"></i>
+                        </a>
+                      </span>
 
-                          <div class="card-body">
-                              <div class="ct-pie-chart"></div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="row">
-                <div class="col-lg-12">
-                    <div class="footer">
-                        <p> ©2024 FlexiTime -- Devélopper par <a href="https://www.linkedin.com/in/afferyauxencedelorschabehou/"> Affery Auxence Delors CHABEHOU.</a></p>
-                    </div>
-                </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          </section>
-      </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="footer">
+              <p>©2024 FlexiTime -- Développé par <a href="https://www.linkedin.com/in/afferyauxencedelorschabehou/">Affery Auxence Delors CHABEHOU.</a></p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </div>
 
-
-
-
-<div id="search">
-  <button type="button" class="close">×</button>
-  <form>
-    <input type="search" value="" placeholder="type keyword(s) here" />
-    <button type="submit" class="btn btn-primary">Search</button>
-  </form>
-</div>

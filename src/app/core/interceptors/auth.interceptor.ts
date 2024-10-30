@@ -11,15 +11,12 @@ export class AuthInterceptor implements HttpInterceptor {
     const token = this.tokenService.getToken();
 
     if (token) {
-      // Crée une nouvelle requête avec des modifications
       request = request.clone({
-        // Ajoute un en-tête d'autorisation avec le token
         setHeaders: {
           Authorization: `Bearer ${token}`
         }
       });
     }
-    //Transmet la requête modifiée au prochain intercepteur
     return next.handle(request);
   }
 }
