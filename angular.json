@@ -36,7 +36,9 @@
 
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
 
-              "src/styles.scss"
+              "src/styles.scss",
+
+              "node_modules/sweetalert2/dist/sweetalert2.min.css"
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"

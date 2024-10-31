@@ -80,3 +80,30 @@ h1 span {
 
 
 
+
+.role-select {
+  width: 100%; /* S'assurer que le sélecteur prend toute la largeur */
+  border: 1px solid #ced4da; /* Couleur de la bordure */
+  border-radius: 5px; /* Coins arrondis */
+  background-color: #f8f9fa; /* Couleur d'arrière-plan */
+}
+
+.role-select .ng-select {
+  padding: 5px 10px; /* Espacement intérieur */
+}
+
+.role-select .ng-select.ng-select-single {
+  border-color: #007bff; /* Couleur de la bordure au survol */
+}
+
+.role-select .ng-select .ng-select-container {
+  min-height: 38px; /* Hauteur minimum du sélecteur */
+}
+
+.role-select .ng-select .ng-select-container .ng-select-label {
+  color: #333; /* Couleur du texte */
+}
+
+
+
+

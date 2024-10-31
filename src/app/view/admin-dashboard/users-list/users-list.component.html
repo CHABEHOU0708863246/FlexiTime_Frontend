@@ -88,58 +88,10 @@
         </div>
         <div class="float-right">
           <ul>
-
             <li class="header-icon dib"><i class="ti-bell"></i>
               <div class="drop-down">
                 <div class="dropdown-content-heading">
                   <span class="text-left">Recent Notifications</span>
-                </div>
-                <div class="dropdown-content-body">
-                  <ul>
-                    <li>
-                      <a href="#">
-                                            <img class="pull-left m-r-10 avatar-img" src="../../../../assets/images/avatar/3.jpg" alt="" />
-                                            <div class="notification-content">
-                                                <small class="notification-timestamp pull-right">02:34 PM</small>
-                                                <div class="notification-heading">Mr. John</div>
-                                                <div class="notification-text">5 members joined today </div>
-                                            </div>
-                                        </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                                            <img class="pull-left m-r-10 avatar-img" src="../../../../assets/images/avatar/3.jpg" alt="" />
-                                            <div class="notification-content">
-                                                <small class="notification-timestamp pull-right">02:34 PM</small>
-                                                <div class="notification-heading">Mariam</div>
-                                                <div class="notification-text">likes a photo of you</div>
-                                            </div>
-                                        </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                                            <img class="pull-left m-r-10 avatar-img" src="../../../../assets/images/avatar/3.jpg" alt="" />
-                                            <div class="notification-content">
-                                                <small class="notification-timestamp pull-right">02:34 PM</small>
-                                                <div class="notification-heading">Tasnim</div>
-                                                <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
-                                            </div>
-                                        </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                                            <img class="pull-left m-r-10 avatar-img" src="../../../../assets/images/avatar/3.jpg" alt="" />
-                                            <div class="notification-content">
-                                                <small class="notification-timestamp pull-right">02:34 PM</small>
-                                                <div class="notification-heading">Mr. John</div>
-                                                <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
-                                            </div>
-                                        </a>
-                    </li>
-                    <li class="text-center">
-                      <a href="#" class="more-link">See All</a>
-                    </li>
-                  </ul>
                 </div>
               </div>
             </li>
@@ -149,71 +101,20 @@
                   <span class="text-left">2 New Messages</span>
                   <a href="email.html"><i class="ti-pencil-alt pull-right"></i></a>
                 </div>
-                <div class="dropdown-content-body">
-                  <ul>
-                    <li class="notification-unread">
-                      <a href="#">
-                                            <img class="pull-left m-r-10 avatar-img" src="assets/images/avatar/1.jpg" alt="" />
-                                            <div class="notification-content">
-                                                <small class="notification-timestamp pull-right">02:34 PM</small>
-                                                <div class="notification-heading">Michael Qin</div>
-                                                <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
-                                            </div>
-                                        </a>
-                    </li>
-                    <li class="notification-unread">
-                      <a href="#">
-                                            <img class="pull-left m-r-10 avatar-img" src="assets/images/avatar/2.jpg" alt="" />
-                                            <div class="notification-content">
-                                                <small class="notification-timestamp pull-right">02:34 PM</small>
-                                                <div class="notification-heading">Mr. John</div>
-                                                <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
-                                            </div>
-                                        </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                                            <img class="pull-left m-r-10 avatar-img" src="assets/images/avatar/3.jpg" alt="" />
-                                            <div class="notification-content">
-                                                <small class="notification-timestamp pull-right">02:34 PM</small>
-                                                <div class="notification-heading">Michael Qin</div>
-                                                <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
-                                            </div>
-                                        </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                                            <img class="pull-left m-r-10 avatar-img" src="assets/images/avatar/2.jpg" alt="" />
-                                            <div class="notification-content">
-                                                <small class="notification-timestamp pull-right">02:34 PM</small>
-                                                <div class="notification-heading">Mr. John</div>
-                                                <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
-                                            </div>
-                                        </a>
-                    </li>
-                    <li class="text-center">
-                      <a href="#" class="more-link">See All</a>
-                    </li>
-                  </ul>
-                </div>
               </div>
             </li>
-            <li class="header-icon dib"><span class="user-avatar">John <i class="ti-angle-down f-s-10"></i></span>
-              <div class="drop-down dropdown-profile">
+            <li class="header-icon dib">
+              <span class="user-avatar">{{ user?.firstName }} <i class="ti-angle-down f-s-10"></i></span>
+              <div class="drop-down">
                 <div class="dropdown-content-heading">
-                  <span class="text-left">Upgrade Now</span>
-                  <p class="trial-day">30 Days Trail</p>
+                  <span class="text-left">User Details</span>
                 </div>
-                <div class="dropdown-content-body">
-                  <ul>
-                    <li><a href="#"><i class="ti-user"></i> <span>Profile</span></a></li>
-
-                    <li><a href="#"><i class="ti-email"></i> <span>Inbox</span></a></li>
-                    <li><a href="#"><i class="ti-settings"></i> <span>Setting</span></a></li>
-
-                    <li><a href="#"><i class="ti-lock"></i> <span>Lock Screen</span></a></li>
-                    <li><a href="#"><i class="ti-power-off"></i> <span>Logout</span></a></li>
-                  </ul>
+                <div class="dropdown-content">
+                  <span>Email: {{ user?.email }}</span><br />
+                  <span>Phone: {{ user?.phoneNumber }}</span>
+                </div>
+                <div class="dropdown-footer">
+                  <button (click)="logout()">Logout</button>
                 </div>
               </div>
             </li>
@@ -253,6 +154,17 @@
       <section id="main-content">
         <div class="card">
           <div class="card-body">
+            <!-- Champ de recherche -->
+            <div class="search-bar mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Rechercher par prénom, nom, ou email"
+                [(ngModel)]="searchTerm"
+                (ngModelChange)="filterUsers()"
+              />
+            </div>
+
             <div class="table-responsive">
               <table class="table table-bordered verticle-middle table-responsive-sm">
                 <thead>
@@ -266,7 +178,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let user of users">
+                  <tr *ngFor="let user of filteredUsers">
                     <td>{{ user.firstName }}</td>
                     <td>{{ user.lastName }}</td>
                     <td>{{ user.roles.join(', ') }}</td>
@@ -281,11 +193,16 @@
                           <i class="fa" [ngClass]="user.isEnabled ? 'fa-toggle-on color-success' : 'fa-toggle-off color-danger'"></i>
                         </a>
                       </span>
-
                     </td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+            <!-- Pagination -->
+            <div class="pagination">
+              <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">&laquo; Précédent</button>
+              <span>Page {{ currentPage }} sur {{ totalPages }}</span>
+              <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Suivant &raquo;</button>
             </div>
           </div>
         </div>
@@ -301,4 +218,5 @@
     </div>
   </div>
 </div>
+
 

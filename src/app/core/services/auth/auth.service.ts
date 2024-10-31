@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
+import { User } from '../../models/User';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,28 @@ export class AuthService {
       })
     );
   }
+
+
+  getCurrentUser(): User | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const decodedToken = this.decodeToken(token);
+    if (!decodedToken) return null;
+
+    // Créer une instance de l'utilisateur à partir du token décodé
+    return new User({
+        id: decodedToken.sub,
+        firstName: decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || '', // Utilisation de la clé appropriée pour le prénom
+        lastName: decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || '', // Ajuster selon les données disponibles
+        email: decodedToken.email,
+        phoneNumber: decodedToken.phoneNumber || '',
+        roles: decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ? [decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']] : []
+    });
+}
+
+
+
 
   getUserRole(): string | null {
     const token = this.getToken();

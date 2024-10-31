@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
+import { User } from '../../core/models/User';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -15,14 +16,23 @@ import { CommonModule } from '@angular/common';
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
 })
-export class AdminDashboardComponent {
+export class AdminDashboardComponent implements OnInit {
   isUserMenuOpen: boolean = false;
   isLeaveMenuOpen: boolean = false;
   isAttendanceMenuOpen: boolean = false;
   isReportMenuOpen: boolean = false;
+  user: User | null = null;
 
 
   constructor(private router: Router, private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.getUserDetails();
+  }
+
+  getUserDetails(): void {
+    this.user = this.authService.getCurrentUser();
+  }
 
   toggleUserMenu() {
     this.isUserMenuOpen = !this.isUserMenuOpen;
