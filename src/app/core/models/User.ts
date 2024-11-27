@@ -23,7 +23,7 @@ export class User {
       this.roles = data.roles || this.roles;
       this.workingHours = data.workingHours ?? this.workingHours;
       this.isPartTime = data.isPartTime ?? this.isPartTime;
-      this.hireDate = data.hireDate || this.hireDate;
+      this.hireDate = data.hireDate ? new Date(data.hireDate) : this.hireDate;
       this.password = data.password || this.password;
       this.confirmPassword = data.confirmPassword || this.confirmPassword;
     }

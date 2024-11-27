@@ -17,7 +17,6 @@
             <li><a [routerLink]="['/admin/users-list']">Liste des utilisateurs</a></li>
             <li><a [routerLink]="['/admin/users-create']">Créer un utilisateur</a></li>
             <li><a href="chartjs.html">Rôles et permissions</a></li>
-            <li><a href="chartist.html">Import/Export</a></li>
           </ul>
         </li>
 
@@ -28,7 +27,7 @@
             <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isLeaveMenuOpen}"></span>
           </a>
           <ul class="submenu" [ngClass]="{'active': isLeaveMenuOpen}">
-            <li><a href="chart-flot.html">Liste des demandes de congés</a></li>
+            <li><a [routerLink]="['/admin/leave-request-list']">Liste des demandes de congés</a></li>
             <li><a href="chart-flot.html">Liste des congés approuvés</a></li>
             <li><a href="chart-flot.html">Liste des congés rejettés</a></li>
             <li><a href="chart-flot.html">Liste des congés annuler</a></li>
@@ -45,7 +44,7 @@
           </a>
           <ul class="submenu" [ngClass]="{'active': isAttendanceMenuOpen}">
             <li><a href="chart-flot.html">Types d'absences</a></li>
-            <li><a href="chart-flot.html">Suivi des absences</a></li>
+            <li><a [routerLink]="['/admin/attendance-follow-up']">Suivi des absences</a></li>
           </ul>
         </li>
 
@@ -150,7 +149,7 @@
                   <div class="page-header">
                       <div class="page-title">
                           <ol class="breadcrumb">
-                              <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                              <li class="breadcrumb-item"><a [routerLink]="['/admin/dashboard']">Dashboard</a></li>
                               <li class="breadcrumb-item active">Accueil</li>
                           </ol>
                       </div>
@@ -177,7 +176,7 @@
                           <div class="stat-widget-one">
                               <div class="stat-icon dib"><i class="ti-hand-open color-primary border-primary"></i></div>
                               <div class="stat-content dib">
-                                  <div class="stat-text">Congé en Attente</div>
+                                  <div class="stat-text">Congé Attente</div>
                                   <div class="stat-digit">961</div>
                               </div>
                           </div>

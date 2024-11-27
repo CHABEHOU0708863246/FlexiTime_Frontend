@@ -17,7 +17,6 @@
             <li><a [routerLink]="['/admin/users-list']">Liste des utilisateurs</a></li>
             <li><a [routerLink]="['/admin/users-create']">Créer un utilisateur</a></li>
             <li><a href="chartjs.html">Rôles et permissions</a></li>
-            <li><a href="chartist.html">Import/Export</a></li>
           </ul>
         </li>
 
@@ -28,7 +27,7 @@
             <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isLeaveMenuOpen}"></span>
           </a>
           <ul class="submenu" [ngClass]="{'active': isLeaveMenuOpen}">
-            <li><a href="chart-flot.html">Liste des demandes de congés</a></li>
+            <li><a [routerLink]="['/admin/leave-request-list']">Liste des demandes de congés</a></li>
             <li><a href="chart-flot.html">Liste des congés approuvés</a></li>
             <li><a href="chart-flot.html">Liste des congés rejettés</a></li>
             <li><a href="chart-flot.html">Liste des congés annuler</a></li>
@@ -45,7 +44,7 @@
           </a>
           <ul class="submenu" [ngClass]="{'active': isAttendanceMenuOpen}">
             <li><a href="chart-flot.html">Types d'absences</a></li>
-            <li><a href="chart-flot.html">Suivi des absences</a></li>
+            <li><a [routerLink]="['/admin/attendance-follow-up']">Suivi des absences</a></li>
           </ul>
         </li>
 
@@ -136,7 +135,7 @@
                   <div class="page-header">
                       <div class="page-title">
                           <ol class="breadcrumb">
-                              <li class="breadcrumb-item"><a href="#">Menu</a></li>
+                              <li class="breadcrumb-item"><a [routerLink]="['/admin/dashboard']">Menu</a></li>
                               <li class="breadcrumb-item active">Gestion des utilisateurs</li>
                               <li class="breadcrumb-item active">Liste des utilisateurs</li>
                           </ol>
@@ -165,6 +164,13 @@
               />
             </div>
 
+            <!-- Bouton d'exportation -->
+            <div class="mb-3">
+              <button class="btn btn-success" (click)="exportUsers()" title="Exporter les données vers XLSX">
+                <i class="fa fa-file-excel-o"></i> Exporter vers XLSX
+              </button>
+            </div>
+
             <div class="table-responsive">
               <table class="table table-bordered verticle-middle table-responsive-sm">
                 <thead>
@@ -174,21 +180,20 @@
                     <th scope="col" class="text-center">Roles</th>
                     <th scope="col" class="text-center">Email</th>
                     <th scope="col" class="text-center">Numéro de téléphone</th>
+                    <th scope="col" class="text-center">Date d'embauche</th>
                     <th scope="col" class="text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let user of filteredUsers">
+                  <tr *ngFor="let user of displayedUsers">
                     <td>{{ user.firstName }}</td>
                     <td>{{ user.lastName }}</td>
                     <td>{{ user.roles.join(', ') }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.phoneNumber }}</td>
+                    <td>{{ user.hireDate | date: 'dd/MM/yyyy' }}</td>
                     <td>
                       <span>
-                        <a href="javascript:void()" class="mr-4" data-toggle="tooltip" data-placement="top" title="Modifier">
-                          <i class="fa fa-pencil color-muted"></i>
-                        </a>
                         <a href="javascript:void()" data-toggle="tooltip" data-placement="top" title="{{ user.isEnabled ? 'Desactiver' : 'Activer' }}" (click)="toggleAccount(user)">
                           <i class="fa" [ngClass]="user.isEnabled ? 'fa-toggle-on color-success' : 'fa-toggle-off color-danger'"></i>
                         </a>
@@ -200,10 +205,26 @@
             </div>
             <!-- Pagination -->
             <div class="pagination">
-              <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">&laquo; Précédent</button>
-              <span>Page {{ currentPage }} sur {{ totalPages }}</span>
-              <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Suivant &raquo;</button>
+              <button
+                (click)="previousPage()"
+                [disabled]="currentPage === 1"
+                class="pagination-btn">
+                &laquo; Précédent
+              </button>
+
+              <span class="pagination-info">
+                Page {{ currentPage }} sur {{ totalPages }}
+                ({{ totalItems }} utilisateurs)
+              </span>
+
+              <button
+                (click)="nextPage()"
+                [disabled]="currentPage === totalPages"
+                class="pagination-btn">
+                Suivant &raquo;
+              </button>
             </div>
+
           </div>
         </div>
 

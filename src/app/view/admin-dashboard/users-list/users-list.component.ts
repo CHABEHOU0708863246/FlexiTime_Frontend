@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../core/models/User';
@@ -21,10 +21,12 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 export class UsersListComponent {
   users: User[] = [];
   filteredUsers: User[] = [];
+  displayedUsers: User[] = [];
 
-  // Pagination
-  currentPage: number = 1;
-  itemsPerPage: number = 5;
+  currentPage = 1;
+  itemsPerPage = 10;
+  totalItems = 0;
+  totalPages = 0;
 
   isUserMenuOpen: boolean = false;
   isLeaveMenuOpen: boolean = false;
@@ -51,37 +53,85 @@ export class UsersListComponent {
     } else {
       this.filteredUsers = this.users;
     }
+    this.totalItems = this.filteredUsers.length;
+    this.calculateTotalPages();
+    this.updateDisplayedUsers();
   }
+
+  exportUsers() {
+    this.usersService.exportUsers('xlsx').subscribe(response => {
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'utilisateurs.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, error => {
+      console.error('Erreur lors de l\'exportation des utilisateurs', error);
+    });
+  }
+
+
+  calculateTotalPages(): void {
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages || 1;
+    }
+  }
+
+  updateDisplayedUsers(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = Math.min(startIndex + this.itemsPerPage, this.filteredUsers.length);
+    this.displayedUsers = this.filteredUsers.slice(startIndex, endIndex);
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updateDisplayedUsers();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updateDisplayedUsers();
+    }
+  }
+
+  pageChanged(event: any): void {
+    this.currentPage = event;
+    this.applyFilter();
+  }
+
+  applyFilter(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+
+    this.filteredUsers = this.users.slice(start, end);
+  }
+
 
   getUserDetails(): void {
     this.user = this.authService.getCurrentUser();
   }
 
   getUsers(): void {
-    this.usersService.getAllUsers().subscribe(
-      (data) => {
+    this.usersService.getAllUsers().subscribe({
+      next: (data) => {
         this.users = data;
         this.filteredUsers = data;
+        this.totalItems = data.length;
+        this.calculateTotalPages();
+        this.updateDisplayedUsers();
       },
-      (error) => {
+      error: (error) => {
         console.error("Erreur lors du chargement des utilisateurs", error);
       }
-    );
-  }
-
-  // Méthodes pour la pagination
-  get totalPages(): number {
-    return Math.ceil(this.filteredUsers.length / this.itemsPerPage);
-  }
-
-  get paginatedUsers(): User[] {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredUsers.slice(start, start + this.itemsPerPage); // Retourne les utilisateurs pour la page actuelle
-  }
-
-  changePage(page: number): void {
-    if (page < 1 || page > this.totalPages) return; // Ne pas changer si la page est hors limites
-    this.currentPage = page;
+    });
   }
 
 
@@ -112,9 +162,8 @@ export class UsersListComponent {
   toggleAccount(user: User): void {
     this.usersService.toggleUserAccount(user.id).subscribe(
       (response) => {
-        // Mettre à jour l’état local de l’utilisateur après la bascule
         user.isEnabled = !user.isEnabled;
-        console.log(`L'état de l'utilisateur ${user.id} a été basculé`);
+        console.log(`L'état de l'utilisateur ${user.firstName} a été basculé`);
       },
       (error) => {
         console.error("Erreur lors de la bascule de l'utilisateur", error);

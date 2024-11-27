@@ -40,6 +40,10 @@
 
               "node_modules/sweetalert2/dist/sweetalert2.min.css"
             ],
+            "polyfills": [
+              "zone.js",
+              "@angular/localize/init"
+            ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ],

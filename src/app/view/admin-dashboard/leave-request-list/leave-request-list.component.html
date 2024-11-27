@@ -1,0 +1,228 @@
+<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+  <div class="nano">
+    <div class="nano-content">
+      <div class="logo"><a href="index.html"><span>FlexiTime</span></a></div>
+      <ul>
+        <li class="label">Principale</li>
+        <li class="active"><a class="sidebar-sub-toggle" [routerLink]="['/admin/dashboard']"><i class="ti-home"></i> Dashboard <span class="badge badge-primary"></span></a>
+        </li>
+
+        <li class="label">Menu</li>
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleUserMenu()">
+            <i class="ti-user -chart-alt"></i> Gestion des Utilisateurs
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isUserMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isUserMenuOpen}">
+            <li><a [routerLink]="['/admin/users-list']">Liste des utilisateurs</a></li>
+            <li><a [routerLink]="['/admin/users-create']">Créer un utilisateur</a></li>
+            <li><a href="chartjs.html">Rôles et permissions</a></li>
+          </ul>
+        </li>
+
+
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleLeaveMenu()">
+            <i class="ti-ticket -chart-alt"></i> Gestion des congés
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isLeaveMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isLeaveMenuOpen}">
+            <li><a [routerLink]="['/admin/leave-request-list']">Liste des demandes de congés</a></li>
+            <li><a href="chart-flot.html">Liste des congés approuvés</a></li>
+            <li><a href="chart-flot.html">Liste des congés rejettés</a></li>
+            <li><a href="chart-flot.html">Liste des congés annuler</a></li>
+            <li><a href="chart-morris.html">Configuration des congés</a></li>
+            <li><a href="chartjs.html">Politique de congés</a></li>
+            <li><a href="chartist.html">Jours fériés</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleAttendanceMenu()">
+            <i class="ti-help -chart-alt"></i> Gestion des Absences
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isAttendanceMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isAttendanceMenuOpen}">
+            <li><a href="chart-flot.html">Types d'absences</a></li>
+            <li><a [routerLink]="['/admin/attendance-follow-up']">Suivi des absences</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleReportMenu()">
+            <i class="ti-stats-up -chart-alt"></i> Rapports et Statistiques
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isReportMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isReportMenuOpen}">
+            <li><a href="chart-flot.html">Rapports de congés</a></li>
+            <li><a href="chart-flot.html">Rapports d’absences</a></li>
+            <li><a href="chart-flot.html">Export des rapports</a></li>
+          </ul>
+        </li>
+
+
+
+
+        <li><a href="app-widget-card.html"><i class="ti-key grid2-alt"></i> Paramètres de l’Application</a></li>
+        <li><a href="app-widget-card.html"><i class="ti-book grid2-alt"></i>Journal des Activités</a></li>
+
+
+        <li><a (click)="logout()"><i class="ti-close"></i> Je me déconnecte</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="float-left">
+          <div class="">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </div>
+        </div>
+        <div class="float-right">
+          <ul>
+            <li class="header-icon dib"><i class="ti-bell"></i>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">Recent Notifications</span>
+                </div>
+              </div>
+            </li>
+            <li class="header-icon dib"><i class="ti-email"></i>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">2 New Messages</span>
+                  <a href="email.html"><i class="ti-pencil-alt pull-right"></i></a>
+                </div>
+              </div>
+            </li>
+            <li class="header-icon dib">
+              <span class="user-avatar">{{ user?.firstName }} <i class="ti-angle-down f-s-10"></i></span>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">User Details</span>
+                </div>
+                <div class="dropdown-content">
+                  <span>Email: {{ user?.email }}</span><br />
+                  <span>Phone: {{ user?.phoneNumber }}</span>
+                </div>
+                <div class="dropdown-footer">
+                  <button (click)="logout()">Logout</button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content-wrap">
+  <div class="main">
+      <div class="container-fluid">
+          <div class="row">
+              <!-- /# column -->
+              <div class="col-lg-4 p-l-0 title-margin-left">
+                  <div class="page-header">
+                      <div class="page-title">
+                          <ol class="breadcrumb">
+                              <li class="breadcrumb-item"><a [routerLink]="['/admin/dashboard']">Menu</a></li>
+                              <li class="breadcrumb-item active">Gestion des congés</li>
+                              <li class="breadcrumb-item active">Liste des demandes de congés</li>
+                          </ol>
+                      </div>
+                  </div>
+              </div>
+              <!-- /# column -->
+          </div>
+</div>
+
+
+
+<div class="content-wrap">
+  <div class="main">
+    <div class="container-fluid">
+      <section id="main-content">
+        <div class="card">
+          <div class="card-body">
+            <!-- Champ de recherche -->
+            <div class="search-bar mb-3">
+              <input
+              type="text"
+              class="form-control"
+              placeholder="Rechercher type de congé ou statut"
+              [(ngModel)]="searchTerm"
+              (ngModelChange)="filterLeaveRequests()"
+            />
+            </div>
+
+            <!-- Table des demandes de congés -->
+            <div class="table-responsive">
+              <table class="table table-bordered verticle-middle table-responsive-sm">
+                <thead>
+                  <tr>
+                    <th scope="col" class="text-center">Utilisateur</th>
+                    <th scope="col" class="text-center">Type de congé</th>
+                    <th scope="col" class="text-center">Date de début</th>
+                    <th scope="col" class="text-center">Date de fin</th>
+                    <th scope="col" class="text-center">Statut</th>
+                    <th scope="col" class="text-center">Commentaire</th>
+                    <th scope="col" class="text-center">Raison</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let leaveRequest of leaveRequests">
+                    <td>{{ leaveRequest.userFirstName }} {{ leaveRequest.userLastName }}</td>
+                    <td>{{ getTypeCongeString(leaveRequest.type) }}</td>
+                    <td>{{ leaveRequest.startDate | date: 'dd/MM/yyyy' }}</td>
+                    <td>{{ leaveRequest.endDate | date: 'dd/MM/yyyy' }}</td>
+                    <td>{{ getStatutCongeString(leaveRequest.status) }}</td>
+                    <td>{{ leaveRequest.comment }}</td>
+                    <td>{{ leaveRequest.reason }}</td>
+                    <td>
+                      <select
+                        class="form-control"
+                        [ngModel]="leaveRequest.status"
+                        (ngModelChange)="updateLeaveStatus(leaveRequest.id, $event)"
+                      >
+                        <option [value]="StatutConges.Attente">En attente</option>
+                        <option [value]="StatutConges.Approuve">Approuvé</option>
+                        <option [value]="StatutConges.Rejete">Rejeté</option>
+                        <option [value]="StatutConges.Annule">Annulé</option>
+                      </select>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+              <button  [disabled]="currentPage === 1">&laquo; Précédent</button>
+              <span>Page {{ currentPage }} sur {{ totalPages }}</span>
+              <button  [disabled]="currentPage === totalPages">Suivant &raquo;</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="footer">
+              <p>©2024 FlexiTime -- Développé par <a href="https://www.linkedin.com/in/afferyauxencedelorschabehou/">Affery Auxence Delors CHABEHOU.</a></p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+

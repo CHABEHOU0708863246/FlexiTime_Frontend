@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdminSettingsComponent } from './admin-settings.component';
+import { LeaveReportComponent } from './leave-report.component';
 
-describe('AdminSettingsComponent', () => {
-  let component: AdminSettingsComponent;
-  let fixture: ComponentFixture<AdminSettingsComponent>;
+describe('LeaveReportComponent', () => {
+  let component: LeaveReportComponent;
+  let fixture: ComponentFixture<LeaveReportComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminSettingsComponent]
+      imports: [LeaveReportComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AdminSettingsComponent);
+    fixture = TestBed.createComponent(LeaveReportComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

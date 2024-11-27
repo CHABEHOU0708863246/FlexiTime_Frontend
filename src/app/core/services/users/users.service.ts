@@ -32,4 +32,14 @@ export class UsersService {
     return this.http.put<any>(`${this.baseUrl}/${id}`, {});
   }
 
+  // Méthode pour exporter les utilisateurs
+  exportUsers(fileType: string): Observable<Blob> {
+    return this.http.get<Blob>(`${this.baseUrl}/export-users?fileType=${fileType}`, { responseType: 'blob' as 'json' });
+  }
+
+   // Méthode pour obtenir une liste paginée d'utilisateurs
+   getPaginatedUsers(pageNumber: number = 1, pageSize: number = 10): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/paginated?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  }
+
 }

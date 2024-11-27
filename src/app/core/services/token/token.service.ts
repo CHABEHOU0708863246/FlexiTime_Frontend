@@ -43,6 +43,8 @@ export class TokenService {
     const currentTime = Date.now() / 1000;
     return decodedToken.exp < currentTime;
   }
+
+
   // Renvoie du token
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);

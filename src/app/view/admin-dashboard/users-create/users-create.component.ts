@@ -25,7 +25,7 @@ import Swal from 'sweetalert2';
 export class UsersCreateComponent {
   users: User[] = [];
   userForm: FormGroup;
-  availableRoles: string[] = ['admin', 'user', 'manager'];
+  availableRoles: string[] = ['admin', 'employe', 'manager'];
 
   user: User | null = null;
 

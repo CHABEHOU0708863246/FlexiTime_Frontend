@@ -61,7 +61,6 @@ export class AuthService {
             const decodedToken: any = this.decodeToken(token);
             // Utilisez la clé complète pour accéder au rôle
             const roleKey = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
-            console.log('Rôle dans le token:', decodedToken[roleKey]);
             return decodedToken[roleKey] || localStorage.getItem('userRole');
         } catch (error) {
             console.error('Erreur lors du décodage du token:', error);
@@ -72,17 +71,19 @@ export class AuthService {
 }
 
 
-  logout(): void {
+logout(): void {
+  if (typeof window !== 'undefined' && window.localStorage) {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem('userRole');
   }
+}
 
-  getToken(): string | null {
-    if (typeof window !== 'undefined' && localStorage) {
-      return localStorage.getItem(this.tokenKey);
-    }
-    return null;
+getToken(): string | null {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    return localStorage.getItem(this.tokenKey);
   }
+  return null;
+}
 
 
   isAuthenticated(): boolean {
@@ -102,13 +103,24 @@ export class AuthService {
   // Décoder le jeton JWT
   decodeToken(token: string): any {
     try {
-      const decoded = jwtDecode(token); // Utilisation de jwt-decode
-      console.log('Token décodé:', decoded); // Ajoutez ceci pour voir la structure
-      return decoded; // Vérifiez si le rôle est bien là
+      const decoded = jwtDecode(token);
+      return decoded;
     } catch (error) {
       console.error('Erreur lors du décodage du token:', error);
       return null;
     }
+  }
+
+  forgotPassword(email: string, redirectPath: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/forgot-password`, { email, redirectPath });
+  }
+
+  resetPassword(email: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/reset-password`, { email });
+  }
+
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/change-password`, { oldPassword, newPassword });
   }
 
 }
