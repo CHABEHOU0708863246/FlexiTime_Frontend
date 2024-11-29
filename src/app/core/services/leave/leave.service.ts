@@ -69,6 +69,12 @@ export class LeaveService {
     );
   }
 
+  // 10. Nouvelle méthode pour télécharger le PDF d'une demande de congé
+  downloadLeavePdf(leaveId: string, userId: string): Observable<Blob> {
+    const url = `${this.apiUrl}/leaves/${leaveId}/users/${userId}/download`;
+    return this.http.get(url, { responseType: 'blob' }); // Utilisation de 'blob' pour gérer les fichiers binaires
+  }
+
 
   // Gestion d'erreur centralisée
   private handleError(error: HttpErrorResponse): Observable<never> {

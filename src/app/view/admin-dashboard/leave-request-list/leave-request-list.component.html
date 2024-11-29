@@ -28,9 +28,6 @@
           </a>
           <ul class="submenu" [ngClass]="{'active': isLeaveMenuOpen}">
             <li><a [routerLink]="['/admin/leave-request-list']">Liste des demandes de congés</a></li>
-            <li><a href="chart-flot.html">Liste des congés approuvés</a></li>
-            <li><a href="chart-flot.html">Liste des congés rejettés</a></li>
-            <li><a href="chart-flot.html">Liste des congés annuler</a></li>
             <li><a href="chart-morris.html">Configuration des congés</a></li>
             <li><a href="chartjs.html">Politique de congés</a></li>
             <li><a href="chartist.html">Jours fériés</a></li>
@@ -127,7 +124,6 @@
   <div class="main">
       <div class="container-fluid">
           <div class="row">
-              <!-- /# column -->
               <div class="col-lg-4 p-l-0 title-margin-left">
                   <div class="page-header">
                       <div class="page-title">
@@ -139,8 +135,7 @@
                       </div>
                   </div>
               </div>
-              <!-- /# column -->
-          </div>
+        </div>
 </div>
 
 
@@ -167,14 +162,15 @@
               <table class="table table-bordered verticle-middle table-responsive-sm">
                 <thead>
                   <tr>
-                    <th scope="col" class="text-center">Utilisateur</th>
+                    <th scope="col" class="text-center">Employe</th>
                     <th scope="col" class="text-center">Type de congé</th>
                     <th scope="col" class="text-center">Date de début</th>
                     <th scope="col" class="text-center">Date de fin</th>
                     <th scope="col" class="text-center">Statut</th>
-                    <th scope="col" class="text-center">Commentaire</th>
+                    <!-- <th scope="col" class="text-center">Commentaire</th> -->
                     <th scope="col" class="text-center">Raison</th>
                     <th scope="col" class="text-center">Action</th>
+                    <th scope="col" class="text-center">Export</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -184,7 +180,7 @@
                     <td>{{ leaveRequest.startDate | date: 'dd/MM/yyyy' }}</td>
                     <td>{{ leaveRequest.endDate | date: 'dd/MM/yyyy' }}</td>
                     <td>{{ getStatutCongeString(leaveRequest.status) }}</td>
-                    <td>{{ leaveRequest.comment }}</td>
+                    <!-- <td>{{ leaveRequest.comment }}</td> -->
                     <td>{{ leaveRequest.reason }}</td>
                     <td>
                       <select
@@ -198,7 +194,13 @@
                         <option [value]="StatutConges.Annule">Annulé</option>
                       </select>
                     </td>
-
+                    <td>
+                      <span>
+                        <a href="javascript:void(0)" (click)="downloadPdf(leaveRequest.id, leaveRequest.userId)">
+                          <i class="fa fa-file-pdf-o pdf-icon" aria-hidden="true"></i>
+                        </a>
+                      </span>
+                    </td>
                   </tr>
                 </tbody>
               </table>

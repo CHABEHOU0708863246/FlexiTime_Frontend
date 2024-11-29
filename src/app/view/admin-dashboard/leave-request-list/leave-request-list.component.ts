@@ -125,6 +125,8 @@ getStatutCongeString(status: StatutConges): string {
 filterLeaveRequests(): void {
   if (this.searchTerm) {
     const searchTermLower = this.searchTerm.toLowerCase();
+
+    // Filtrer les demandes de congés par type, statut ou utilisateur (prénom et nom)
     this.leaveRequests = this.originalLeaveRequests.filter(request =>
       this.getTypeCongeString(request.type).toLowerCase().includes(searchTermLower) ||
       this.getStatutCongeString(request.status).toLowerCase().includes(searchTermLower) ||
@@ -132,9 +134,28 @@ filterLeaveRequests(): void {
        request.userLastName?.toLowerCase().includes(searchTermLower))
     );
   } else {
+    // Si la recherche est vide, réinitialiser les données
     this.leaveRequests = [...this.originalLeaveRequests];
   }
 }
+
+
+// Méthode pour télécharger le PDF
+downloadPdf(leaveId: string, userId: string): void {
+  this.leaveService.downloadLeavePdf(leaveId, userId).subscribe(
+    (response: Blob) => {
+      const fileURL = URL.createObjectURL(response);
+      const link = document.createElement('a');
+      link.href = fileURL;
+      link.download = `Leave_${leaveId}.pdf`;  // Nom du fichier téléchargé
+      link.click();
+    },
+    error => {
+      console.error('Erreur lors du téléchargement du PDF', error);
+    }
+  );
+}
+
 
 // Déconnexion de l'utilisateur
 logout(): void {
