@@ -30,12 +30,15 @@ export class LeaveRequestListComponent implements OnInit{
 
   leaveRequests: LeaveRequest[] = [];
   searchTerm: string = '';
+  pageSize: number = 3;
   currentPage: number = 1;
   totalPages: number = 1;
 
   originalLeaveRequests: LeaveRequest[] = [];
 
   StatutConges = StatutConges;
+
+  currentUserId: string | null = null;
 
 
 
@@ -51,6 +54,7 @@ export class LeaveRequestListComponent implements OnInit{
     this.getUserDetails();
   }
 
+
   // Gestion des menus
   toggleUserMenu() { this.isUserMenuOpen = !this.isUserMenuOpen; }
   toggleLeaveMenu() { this.isLeaveMenuOpen = !this.isLeaveMenuOpen; }
@@ -58,32 +62,49 @@ export class LeaveRequestListComponent implements OnInit{
   toggleReportMenu() { this.isReportMenuOpen = !this.isReportMenuOpen; }
 
 
+  // Gérer la pagination : page suivante
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadLeaveRequests();
+    }
+  }
+
+  // Gérer la pagination : page précédente
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadLeaveRequests();
+    }
+  }
+
+
   // Charger les demandes de congés
   loadLeaveRequests(): void {
     this.leaveService.getLeaveRequests().subscribe(
       (data: LeaveRequest[]) => {
-        const originalLeaveRequests = [...data];
         this.originalLeaveRequests = [...data];
         this.leaveRequests = [...data];
 
         // Récupérer les utilisateurs pour associer les noms
         this.usersService.getAllUsers().subscribe(users => {
-          const userMap = new Map(users.map(user => [user.id, user]));
+          const userMap = new Map(users.map(user => [user.id, user]));  // Associer les utilisateurs par ID
 
-          this.leaveRequests = originalLeaveRequests.map(leaveRequest => {
-            const newLeaveRequest = Object.assign({}, leaveRequest);
-            newLeaveRequest.userFirstName = userMap.get(leaveRequest.userId)?.firstName || 'Inconnu';
-            newLeaveRequest.userLastName = userMap.get(leaveRequest.userId)?.lastName || 'Inconnu';
-
-            return newLeaveRequest;
+          // Associer les informations des utilisateurs aux demandes de congé
+          this.leaveRequests = this.leaveRequests.map(leaveRequest => {
+            const user = userMap.get(leaveRequest.userId);
+            leaveRequest.userFirstName = user?.firstName || 'Inconnu';
+            leaveRequest.userLastName = user?.lastName || 'Inconnu';
+            return leaveRequest;
           });
-        });
 
-        this.totalPages = Math.ceil(this.leaveRequests.length / 10);
+          this.totalPages = Math.ceil(this.leaveRequests.length / 10);
+        });
       },
       (error: string) => console.error('Erreur :', error)
     );
   }
+
 
 
 // Obtenir les utilisateurs
@@ -97,20 +118,39 @@ getUsers(): void {
 // Obtenir les détails de l'utilisateur connecté
 getUserDetails(): void {
   this.user = this.authService.getCurrentUser();
+  if (this.user) {
+    this.currentUserId = this.user.id;
+  }
 }
 
+
 // Mettre à jour le statut d'une demande de congé
-updateLeaveStatus(leaveId: string, newStatus: StatutConges): void {
-  this.leaveService.updateLeaveStatus(leaveId, newStatus).subscribe(
-    () => {
+updateLeaveStatus(leaveId: string, newStatus: StatutConges, userId: string): void {
+  if (!userId) {
+    alert('Utilisateur non connecté ou ID utilisateur manquant.');
+    return;
+  }
+
+  // Appel au service avec les trois paramètres requis
+  this.leaveService.updateLeaveStatus(leaveId, newStatus, userId).subscribe({
+    next: (message) => {
+      // Mise à jour locale du statut si l'opération est réussie
       const leave = this.leaveRequests.find(request => request.id === leaveId);
       if (leave) {
         leave.status = newStatus;
       }
+      alert(message); // Notification à l'utilisateur
     },
-    error => console.error('Erreur lors de la mise à jour du statut :', error)
-  );
+    error: (error) => {
+      console.error('Erreur lors de la mise à jour du statut :', error);
+      alert(`Erreur : ${error.error?.title || 'Une erreur est survenue.'}`);
+    }
+  });
 }
+
+
+
+
 
 // Méthodes d'affichage pour les types et statuts
 getTypeCongeString(type: TypeConge): string {
@@ -126,18 +166,22 @@ filterLeaveRequests(): void {
   if (this.searchTerm) {
     const searchTermLower = this.searchTerm.toLowerCase();
 
-    // Filtrer les demandes de congés par type, statut ou utilisateur (prénom et nom)
-    this.leaveRequests = this.originalLeaveRequests.filter(request =>
+    // Créer un tableau temporaire filtré sans altérer l'original
+    const filteredRequests = this.originalLeaveRequests.filter(request =>
       this.getTypeCongeString(request.type).toLowerCase().includes(searchTermLower) ||
       this.getStatutCongeString(request.status).toLowerCase().includes(searchTermLower) ||
       (request.userFirstName?.toLowerCase().includes(searchTermLower) ||
        request.userLastName?.toLowerCase().includes(searchTermLower))
     );
+
+    // Mettre à jour `leaveRequests` avec les résultats filtrés
+    this.leaveRequests = filteredRequests;
   } else {
     // Si la recherche est vide, réinitialiser les données
     this.leaveRequests = [...this.originalLeaveRequests];
   }
 }
+
 
 
 // Méthode pour télécharger le PDF
