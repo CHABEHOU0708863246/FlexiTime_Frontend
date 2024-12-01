@@ -105,22 +105,20 @@ export class LeaveService {
     );
   }
 
-  /**
-   * 9. Met à jour le statut d'une demande de congé.
+/**
+   * Met à jour le statut d'une demande de congé.
    * @param leaveId - L'identifiant de la demande.
-   * @param status - Le nouveau statut de la demande.
+   * @param newStatus - Le nouveau statut de la demande.
    * @param userId - L'identifiant de l'utilisateur effectuant la mise à jour.
    * @returns Observable contenant un message de confirmation.
    */
-  updateLeaveStatus(leaveId: string, status: number, userId: string): Observable<string> {
-    return this.http.patch<{ message: string }>(
-      `${this.apiUrl}/${leaveId}/update-status?userId=${userId}`,
-      { status }
-    ).pipe(
-      map(response => response.message || 'Statut mis à jour avec succès.'),
-      catchError(this.handleError)
-    );
-  }
+updateLeaveStatus(leaveId: string, newStatus: number, userId: string): Observable<string> {
+  const url = `${this.apiUrl}/${leaveId}/status?newStatus=${newStatus}&userId=${userId}`;
+  return this.http.put<{ succeeded: boolean; message?: string }>(url, {}).pipe(
+    map(response => response.message || 'Statut mis à jour avec succès.'),
+    catchError(this.handleError)
+  );
+}
 
   /**
    * 10. Télécharge le PDF d'une demande de congé.

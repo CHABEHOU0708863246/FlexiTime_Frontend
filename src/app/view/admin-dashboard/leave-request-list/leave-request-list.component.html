@@ -187,7 +187,7 @@
                       <select
                         class="form-control"
                         [ngModel]="leaveRequest.status"
-                        (ngModelChange)="updateLeaveStatus(leaveRequest.id, $event, user?.id || '')"
+                        (ngModelChange)="updateLeaveStatus(leaveRequest.id, $event)"
                       >
                         <option [value]="StatutConges.Attente">En attente</option>
                         <option [value]="StatutConges.Approuve">Approuvé</option>

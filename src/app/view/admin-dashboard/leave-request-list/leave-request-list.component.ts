@@ -125,28 +125,30 @@ getUserDetails(): void {
 
 
 // Mettre à jour le statut d'une demande de congé
-updateLeaveStatus(leaveId: string, newStatus: StatutConges, userId: string): void {
-  if (!userId) {
+updateLeaveStatus(leaveId: string, newStatus: StatutConges): void {
+  if (!this.currentUserId) {
     alert('Utilisateur non connecté ou ID utilisateur manquant.');
     return;
   }
 
-  // Appel au service avec les trois paramètres requis
-  this.leaveService.updateLeaveStatus(leaveId, newStatus, userId).subscribe({
+  this.leaveService.updateLeaveStatus(leaveId, newStatus, this.currentUserId).subscribe({
     next: (message) => {
-      // Mise à jour locale du statut si l'opération est réussie
-      const leave = this.leaveRequests.find(request => request.id === leaveId);
-      if (leave) {
-        leave.status = newStatus;
+      // Trouver la demande concernée et mettre à jour son statut localement
+      const leaveIndex = this.leaveRequests.findIndex(request => request.id === leaveId);
+      if (leaveIndex !== -1) {
+        this.leaveRequests[leaveIndex].status = newStatus;
       }
-      alert(message); // Notification à l'utilisateur
+
+      alert(message); // Informer l'utilisateur du succès
     },
     error: (error) => {
       console.error('Erreur lors de la mise à jour du statut :', error);
-      alert(`Erreur : ${error.error?.title || 'Une erreur est survenue.'}`);
+      const errorMessage = error.error?.message || 'Une erreur est survenue.';
+      alert(`Erreur : ${errorMessage}`);
     }
   });
 }
+
 
 
 
