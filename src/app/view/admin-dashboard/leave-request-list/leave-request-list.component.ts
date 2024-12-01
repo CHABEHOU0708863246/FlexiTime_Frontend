@@ -7,6 +7,7 @@ import { User } from '../../../core/models/User';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { LeaveRequest, StatutConges, TypeConge} from '../../../core/models/LeaveRequest';
 import { LeaveService } from '../../../core/services/leave/leave.service';
+import { PaginatedResponse } from '../../../core/models/PaginationResponse ';
 
 @Component({
   selector: 'app-leave-request-list',
@@ -33,7 +34,6 @@ export class LeaveRequestListComponent implements OnInit{
   pageSize: number = 3;
   currentPage: number = 1;
   totalPages: number = 1;
-
   originalLeaveRequests: LeaveRequest[] = [];
 
   StatutConges = StatutConges;
@@ -79,31 +79,31 @@ export class LeaveRequestListComponent implements OnInit{
   }
 
 
-  // Charger les demandes de congés
-  loadLeaveRequests(): void {
-    this.leaveService.getLeaveRequests().subscribe(
-      (data: LeaveRequest[]) => {
-        this.originalLeaveRequests = [...data];
-        this.leaveRequests = [...data];
+// Charger les demandes de congés avec pagination
+loadLeaveRequests(): void {
+  this.leaveService.getPaginatedLeaves(this.currentPage, this.pageSize).subscribe(
+    (data: PaginatedResponse<LeaveRequest>) => {
+      this.leaveRequests = data.items;  // Mise à jour des demandes de congé
+      this.totalPages = data.totalPages;  // Mise à jour du nombre total de pages
+      this.originalLeaveRequests = [...this.leaveRequests];  // Sauvegarder les demandes de congé d'origine
 
-        // Récupérer les utilisateurs pour associer les noms
-        this.usersService.getAllUsers().subscribe(users => {
-          const userMap = new Map(users.map(user => [user.id, user]));  // Associer les utilisateurs par ID
+      // Récupérer les utilisateurs pour associer les noms
+      this.usersService.getAllUsers().subscribe(users => {
+        const userMap = new Map(users.map(user => [user.id, user]));  // Associer les utilisateurs par ID
 
-          // Associer les informations des utilisateurs aux demandes de congé
-          this.leaveRequests = this.leaveRequests.map(leaveRequest => {
-            const user = userMap.get(leaveRequest.userId);
-            leaveRequest.userFirstName = user?.firstName || 'Inconnu';
-            leaveRequest.userLastName = user?.lastName || 'Inconnu';
-            return leaveRequest;
-          });
-
-          this.totalPages = Math.ceil(this.leaveRequests.length / 10);
+        // Associer les informations des utilisateurs aux demandes de congé
+        this.leaveRequests = this.leaveRequests.map(leaveRequest => {
+          const user = userMap.get(leaveRequest.userId);
+          leaveRequest.userFirstName = user?.firstName || 'Inconnu';
+          leaveRequest.userLastName = user?.lastName || 'Inconnu';
+          return leaveRequest;
         });
-      },
-      (error: string) => console.error('Erreur :', error)
-    );
-  }
+      });
+    },
+    (error: string) => console.error('Erreur :', error)
+  );
+}
+
 
 
 
@@ -183,6 +183,8 @@ filterLeaveRequests(): void {
     this.leaveRequests = [...this.originalLeaveRequests];
   }
 }
+
+
 
 
 

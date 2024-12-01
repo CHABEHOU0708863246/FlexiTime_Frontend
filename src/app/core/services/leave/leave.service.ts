@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { LeaveRequest } from '../../models/LeaveRequest';
-import { LeavePaginationResponse } from '../../models/LeavePaginationResponse ';
+import { PaginatedResponse } from '../../models/PaginatedRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -132,24 +132,15 @@ updateLeaveStatus(leaveId: string, newStatus: number, userId: string): Observabl
   }
 
   /**
-   * 11. Récupère des demandes de congé avec pagination.
-   * @param pageNumber - Numéro de la page demandée.
-   * @param pageSize - Nombre d'éléments par page.
-   * @returns Observable contenant une réponse paginée.
+   * 11.Récupère les demandes de congé paginées.
+   * @param pageNumber - Le numéro de la page.
+   * @param pageSize - La taille de la page.
+   * @returns Observable contenant la réponse paginée.
    */
-  getPagedLeaveRequests(pageNumber: number, pageSize: number): Observable<LeavePaginationResponse> {
-    const params: any = { pageNumber, pageSize };
-    return this.http.get<LeavePaginationResponse>(`${this.apiUrl}/paged-leaves`, { params });
-  }
-
-  /**
-   * 12. Récupère des demandes de congé sous forme paginée (ancienne méthode).
-   * @param pageNumber - Numéro de la page demandée.
-   * @param pageSize - Nombre d'éléments par page.
-   * @returns Observable contenant un tableau de demandes.
-   */
-  getLeaves(pageNumber: number, pageSize: number): Observable<LeaveRequest[]> {
-    return this.http.get<LeaveRequest[]>(`${this.apiUrl}/leaves?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  getPaginatedLeaves(pageNumber: number, pageSize: number): Observable<PaginatedResponse<LeaveRequest>> {
+    return this.http.get<PaginatedResponse<LeaveRequest>>(
+      `${this.apiUrl}/paginated?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
   }
 
   /**

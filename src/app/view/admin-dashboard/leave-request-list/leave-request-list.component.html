@@ -207,12 +207,17 @@
               </table>
             </div>
 
-            <!-- Pagination -->
             <div class="pagination">
+              <!-- Bouton Précédent -->
               <button (click)="previousPage()" [disabled]="currentPage === 1">Précédent</button>
+
+              <!-- Affichage de la page actuelle et du total des pages -->
               <span>{{ currentPage }} / {{ totalPages }}</span>
+
+              <!-- Bouton Suivant -->
               <button (click)="nextPage()" [disabled]="currentPage === totalPages">Suivant</button>
             </div>
+
           </div>
         </div>
 

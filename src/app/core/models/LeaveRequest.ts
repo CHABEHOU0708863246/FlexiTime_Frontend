@@ -8,10 +8,10 @@ export class LeaveRequest {
 
   id: string;
   userId: string;
-  type: TypeConge = TypeConge.Paye;
+  type: TypeConge = TypeConge.Paye; // Type de congé par défaut
   startDate: Date;
   endDate: Date;
-  status: StatutConges = StatutConges.Attente;
+  status: StatutConges = StatutConges.Attente; // Statut par défaut
   comment: string = '';
   approvedBy?: string;
   reason?: string;
@@ -44,6 +44,7 @@ export class LeaveRequest {
     this.approvedAt = approvedAt;
   }
 
+  // Méthode pour obtenir le nom complet de l'approbateur
   getApproverFullName(): string {
     if (this.approvedByFirstName && this.approvedByLastName) {
       return `${this.approvedByFirstName} ${this.approvedByLastName}`;
@@ -59,17 +60,66 @@ export class LeaveRequest {
 
 // Enum pour le statut de la demande de congé
 export enum StatutConges {
-  Attente = 0,
-  Approuve = 1,
-  Rejete = 2,
-  Annule = 3
+  Attente = 0,   // En attente d'approbation
+  Approuve = 1,  // Congé approuvé
+  Rejete = 2,    // Congé rejeté
+  Annule = 3     // Congé annulé
 }
 
 // Enum pour le type de congé
 export enum TypeConge {
-  Paye = 0,
-  NonPaye = 1,
-  Maladie = 2,
-  Parental = 3,
-  Autre = 4
+  Paye = 0,                 // Congé payé
+  NonPaye = 1,              // Congé non payé
+  Maladie = 2,              // Congé maladie
+  Parental = 3,             // Congé parental
+  Autre = 4,                // Autre type de congé
+  Sabbatique = 5,           // Congé sabbatique
+  Famille = 6,              // Congé pour événements familiaux (mariage, naissance, décès)
+  Formation = 7,            // Congé pour formation
+  Militaire = 8,            // Congé pour service militaire
+  SansSolde = 9,            // Congé sans solde
+  Exceptionnel = 10,        // Congé exceptionnel soumis à approbation spéciale
+  ReposCompensateur = 11,   // Congé pour repos compensateur
+  Anniversaire = 12,        // Congé pour anniversaire
+  Civique = 13,             // Congé pour obligation civique
+  DonSang = 14,             // Congé pour don de sang
+  Deuil = 15                // Congé pour deuil
+}
+
+// Fonction pour afficher les informations liées à chaque type de congé
+export function getLeaveDetails(type: TypeConge): string {
+  switch(type) {
+    case TypeConge.Paye:
+      return "Congé payé - Déduit du solde de congé payé";
+    case TypeConge.NonPaye:
+      return "Congé non payé - Pas de déduction du solde";
+    case TypeConge.Maladie:
+      return "Congé maladie - Nécessite un certificat médical";
+    case TypeConge.Parental:
+      return "Congé parental - Selon la législation, souvent payé";
+    case TypeConge.Sabbatique:
+      return "Congé sabbatique - Souvent non payé, accord spécifique nécessaire";
+    case TypeConge.Famille:
+      return "Congé pour événements familiaux - Mariage, naissance, décès, etc.";
+    case TypeConge.Formation:
+      return "Congé pour formation - Peut être rémunéré selon les accords";
+    case TypeConge.Militaire:
+      return "Congé pour service militaire - Selon la législation";
+    case TypeConge.SansSolde:
+      return "Congé sans solde - Non payé";
+    case TypeConge.Exceptionnel:
+      return "Congé exceptionnel - Soumis à une approbation spéciale";
+    case TypeConge.ReposCompensateur:
+      return "Congé pour repos compensateur - Compensation pour heures supplémentaires";
+    case TypeConge.Anniversaire:
+      return "Congé pour anniversaire - Souvent offert comme avantage";
+    case TypeConge.Civique:
+      return "Congé pour obligation civique - Protégé par la loi (juré, élection, etc.)";
+    case TypeConge.DonSang:
+      return "Congé pour don de sang - Accordé pour participation à un don";
+    case TypeConge.Deuil:
+      return "Congé pour deuil - Accordé pour la perte d'un proche";
+    default:
+      return "Type de congé inconnu";
+  }
 }
