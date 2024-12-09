@@ -16,7 +16,7 @@
           <ul class="submenu" [ngClass]="{'active': isUserMenuOpen}">
             <li><a [routerLink]="['/admin/users-list']">Liste des utilisateurs</a></li>
             <li><a [routerLink]="['/admin/users-create']">Créer un utilisateur</a></li>
-            <li><a href="chartjs.html">Rôles et permissions</a></li>
+            <li><a [routerLink]="['/admin/users-role-management']">Rôles et permissions</a></li>
           </ul>
         </li>
 
@@ -31,17 +31,6 @@
             <li><a href="chart-morris.html">Configuration des congés</a></li>
             <li><a href="chartjs.html">Politique de congés</a></li>
             <li><a href="chartist.html">Jours fériés</a></li>
-          </ul>
-        </li>
-
-        <li>
-          <a class="sidebar-sub-toggle" (click)="toggleAttendanceMenu()">
-            <i class="ti-help -chart-alt"></i> Gestion des Absences
-            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isAttendanceMenuOpen}"></span>
-          </a>
-          <ul class="submenu" [ngClass]="{'active': isAttendanceMenuOpen}">
-            <li><a href="chart-flot.html">Types d'absences</a></li>
-            <li><a [routerLink]="['/admin/attendance-follow-up']">Suivi des absences</a></li>
           </ul>
         </li>
 

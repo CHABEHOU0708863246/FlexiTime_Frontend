@@ -42,10 +42,6 @@ export class LeaveCalendarViewComponent implements OnInit{
     this.isLeaveMenuOpen = !this.isLeaveMenuOpen;
   }
 
-  toggleAttendanceMenu() {
-    this.isAttendanceMenuOpen = !this.isAttendanceMenuOpen;
-  }
-
   toggleReportMenu() {
     this.isReportMenuOpen = !this.isReportMenuOpen;
   }

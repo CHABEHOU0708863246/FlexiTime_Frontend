@@ -1,11 +1,12 @@
 export class LeaveRequest {
-
+  // Propriétés de l'employé
   userFirstName?: string;
   userLastName?: string;
   approvedById?: string;
   approvedByFirstName?: string;
   approvedByLastName?: string;
 
+  // Propriétés liées à la demande de congé
   id: string;
   userId: string;
   type: TypeConge = TypeConge.Paye; // Type de congé par défaut
@@ -18,6 +19,9 @@ export class LeaveRequest {
   requestedAt: Date;
   approvedAt?: Date;
 
+  // Propriété ajoutée pour la justification de congé
+  justificationFileUrl?: string; // URL du fichier justificatif
+
   constructor(
     id: string,
     userId: string,
@@ -29,7 +33,8 @@ export class LeaveRequest {
     approvedBy: string | undefined,
     reason: string | undefined,
     requestedAt: Date,
-    approvedAt?: Date
+    approvedAt?: Date,
+    justificationFileUrl?: string // Paramètre pour la justification
   ) {
     this.id = id;
     this.userId = userId;
@@ -42,6 +47,7 @@ export class LeaveRequest {
     this.reason = reason;
     this.requestedAt = requestedAt;
     this.approvedAt = approvedAt;
+    this.justificationFileUrl = justificationFileUrl;
   }
 
   // Méthode pour obtenir le nom complet de l'approbateur

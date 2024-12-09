@@ -18,7 +18,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       return router.parseUrl('/access-denied');
     }
   } else {
-    authService.logout(); // Assure que le token est supprimé s'il est expiré
+    authService.logout();
     return router.parseUrl('/auth/login');
   }
 };

@@ -9,7 +9,6 @@ import { PaginatedResponse } from '../../models/PaginatedRequest';
 })
 export class LeaveService {
 
-  // URL de base pour accéder aux API liées aux congés.
   private apiUrl = 'https://localhost:7082/api/Leave';
 
   constructor(private http: HttpClient) { }

@@ -1,0 +1,65 @@
+h1 {
+  color: #333;
+  text-align: center;
+}
+
+h1 span {
+  display: inline-block;
+  padding: 0 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+}
+
+.highlight {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.brand-name {
+  font-size: 1.2em;
+  font-family: 'Arial Black', Tahoma, Geneva, Verdana, sans-serif;
+  color: #ff6600;
+}
+
+.emoji {
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+
+
+
+
+.submenu {
+  display: none; /* Masquer par défaut */
+  margin-left: 15px; /* Indentation pour les sous-menus */
+  padding: 0; /* Supprimer le padding */
+}
+
+.submenu.active {
+  display: block; /* Afficher le sous-menu si actif */
+}
+
+.submenu li {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.submenu a {
+  color: #ffffff;
+  padding: 8px 15px;
+}
+
+.submenu a:hover {
+  background-color: rgba(0, 123, 255, 0.2);
+}
+
+
+.rotate {
+  transition: transform 0.3s ease;
+}
+
+.rotate.active {
+  transform: rotate(180deg);
+}
+
+

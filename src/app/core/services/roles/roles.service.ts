@@ -8,8 +8,8 @@ import { RoleRequest } from '../../models/RoleRequest'; // Modèle représentant
 })
 export class RolesService {
 
-  private apiUrl = 'https://localhost:7082/api/Roles'; // URL de base pour l'API des rôles.
-  private roleUpdatedSubject = new Subject<void>(); // Sujet RxJS pour notifier les composants lorsqu'un rôle est mis à jour.
+  private apiUrl = 'https://localhost:7082/api/Roles';
+  private roleUpdatedSubject = new Subject<void>();
 
   constructor(private http: HttpClient) { }
 

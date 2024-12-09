@@ -4,7 +4,7 @@
       <div class="logo"><a href="index.html"><span>FlexiTime</span></a></div>
       <ul>
         <li class="label">Principale</li>
-        <li class="active"><a class="sidebar-sub-toggle" [routerLink]="['/admin/dashboard']"><i class="ti-home"></i> Dashboard <span class="badge badge-primary"></span></a>
+        <li class="active"><a class="sidebar-sub-toggle"><i class="ti-home"></i> Dashboard <span class="badge badge-primary"></span></a>
         </li>
 
         <li class="label">Menu</li>
@@ -16,7 +16,7 @@
           <ul class="submenu" [ngClass]="{'active': isUserMenuOpen}">
             <li><a [routerLink]="['/admin/users-list']">Liste des utilisateurs</a></li>
             <li><a [routerLink]="['/admin/users-create']">Créer un utilisateur</a></li>
-            <li><a href="chartjs.html">Rôles et permissions</a></li>
+            <li><a [routerLink]="['/admin/users-role-management']">Rôles et permissions</a></li>
           </ul>
         </li>
 
@@ -35,17 +35,6 @@
         </li>
 
         <li>
-          <a class="sidebar-sub-toggle" (click)="toggleAttendanceMenu()">
-            <i class="ti-help -chart-alt"></i> Gestion des Absences
-            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isAttendanceMenuOpen}"></span>
-          </a>
-          <ul class="submenu" [ngClass]="{'active': isAttendanceMenuOpen}">
-            <li><a href="chart-flot.html">Types d'absences</a></li>
-            <li><a [routerLink]="['/admin/attendance-follow-up']">Suivi des absences</a></li>
-          </ul>
-        </li>
-
-        <li>
           <a class="sidebar-sub-toggle" (click)="toggleReportMenu()">
             <i class="ti-stats-up -chart-alt"></i> Rapports et Statistiques
             <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isReportMenuOpen}"></span>
@@ -57,9 +46,6 @@
           </ul>
         </li>
 
-
-
-
         <li><a [routerLink]="['/admin/leave-calendar-view']"><i class="ti-calendar grid2-alt"></i> Calendrier de congés</a></li>
         <li><a href="app-widget-card.html"><i class="ti-key grid2-alt"></i> Paramètres de l’Application</a></li>
         <li><a href="app-widget-card.html"><i class="ti-book grid2-alt"></i>Journal des Activités</a></li>
@@ -70,6 +56,7 @@
     </div>
   </div>
 </div>
+
 
 <div class="header">
   <div class="container-fluid">
@@ -121,6 +108,8 @@
   </div>
 </div>
 
+
+
 <div class="content-wrap">
   <div class="main">
       <div class="container-fluid">
@@ -131,8 +120,8 @@
                       <div class="page-title">
                           <ol class="breadcrumb">
                               <li class="breadcrumb-item"><a [routerLink]="['/admin/dashboard']">Menu</a></li>
-                              <li class="breadcrumb-item active">Gestion des absences</li>
-                              <li class="breadcrumb-item active">Suivi des absences</li>
+                              <li class="breadcrumb-item active">Gestion des utilisateurs</li>
+                              <li class="breadcrumb-item active">Role et permissions</li>
                           </ol>
                       </div>
                   </div>
@@ -144,79 +133,57 @@
 
 <div class="content-wrap">
   <div class="main">
-    <div class="container-fluid">
-      <section id="main-content">
-        <div class="card">
-          <div class="card-body">
-            <!-- Champ de recherche -->
-            <div class="search-bar mb-3">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Rechercher par identifiant ou raison de l'absence"
-                [(ngModel)]="searchTerm"
-              />
+      <div class="container-fluid">
+          <!-- /# row -->
+          <section id="main-content">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="form-validation">
+                      <form>
+                        <div class="form-group row">
+                          <label class="col-lg-4 col-form-label" for="val-firstname">Code <span class="text-danger">*</span></label>
+                          <div class="col-lg-8">
+                            <input type="text" class="form-control" id="val-firstname" formControlName="firstName" placeholder="Code du role Ex : adm pour admin.">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-lg-4 col-form-label" for="val-lastname">Nom du role <span class="text-danger">*</span></label>
+                          <div class="col-lg-8">
+                            <input type="text" class="form-control" id="val-lastname" formControlName="lastName" placeholder="le nom du rôle">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-lg-4 col-form-label" for="val-lastname">Nom du role normalisé <span class="text-danger">*</span></label>
+                          <div class="col-lg-8">
+                            <input type="text" class="form-control" id="val-lastname" formControlName="lastName" placeholder="Nom du role normalisé">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-lg-8 offset-lg-4">
+                            <button type="submit" class="btn btn-primary">Crée le rôle</button>&nbsp;&nbsp;&nbsp;
+                            <button type="button" class="btn btn-secondary" >Réinitialiser</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+          </section>
 
-            <!-- Bouton d'exportation -->
-            <div class="mb-3">
-              <button class="btn btn-success"  title="Exporter les données vers XLSX">
-                <i class="fa fa-file-excel-o"></i> Exporter vers XLSX
-              </button>
-            </div>
-
-            <div class="table-responsive">
-              <table class="table table-bordered verticle-middle table-responsive-sm">
-                <thead>
-                  <tr>
-                    <th scope="col" class="text-center">Employé</th>
-                    <th scope="col" class="text-center">Date de début</th>
-                    <th scope="col" class="text-center">Date de fin</th>
-                    <th scope="col" class="text-center">Raison</th>
-                    <th scope="col" class="text-center">Statut</th>
-                    <th scope="col" class="text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let attendance of attendances">
-                    <td>{{ attendance.employeeName }}</td>
-                    <td>{{ attendance.startDate | date: 'dd/MM/yyyy' }}</td>
-                    <td>{{ attendance.endDate | date: 'dd/MM/yyyy' }}</td>
-                    <td>{{ attendance.reason }}</td>
-                    <td>{{ attendance.status }}</td>
-                    <td>
-                      <span>
-                        <a href="javascript:void()" class="mr-4" data-toggle="tooltip" data-placement="top" title="Modifier">
-                          <i class="fa fa-pencil color-muted"></i>
-                        </a>
-                        <a href="javascript:void()" data-toggle="tooltip" data-placement="top" title="Changer le statut" >
-                          <i class="fa" [ngClass]="attendance.status === 'Approved' ? 'fa-check-circle color-success' : 'fa-times-circle color-danger'"></i>
-                        </a>
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Pagination -->
-            <div class="pagination">
-              <button  [disabled]="currentPage === 1">&laquo; Précédent</button>
-              <span>Page {{ currentPage }} sur {{ totalPages }}</span>
-              <button  [disabled]="currentPage === totalPages">Suivant &raquo;</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="footer">
-              <p>©2024 FlexiTime -- Développé par <a href="https://www.linkedin.com/in/afferyauxencedelorschabehou/">Affery Auxence Delors CHABEHOU.</a></p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+      </div>
   </div>
 </div>
 
+
+
+<div id="search">
+  <button type="button" class="close">×</button>
+  <form>
+    <input type="search" value="" placeholder="type keyword(s) here" />
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+</div>

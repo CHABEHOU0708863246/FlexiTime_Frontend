@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
-import { User } from '../../core/models/User';
+import { User } from '../../../core/models/User';
+import { AuthService } from '../../../core/services/auth/auth.service';
 
 @Component({
-  selector: 'app-admin-dashboard',
+  selector: 'app-users-role-management',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     RouterLink
   ],
-  templateUrl: './admin-dashboard.component.html',
-  styleUrl: './admin-dashboard.component.scss'
+  templateUrl: './users-role-management.component.html',
+  styleUrl: './users-role-management.component.scss'
 })
-export class AdminDashboardComponent implements OnInit {
+export class UsersRoleManagementComponent implements OnInit {
   isUserMenuOpen: boolean = false;
   isLeaveMenuOpen: boolean = false;
   isAttendanceMenuOpen: boolean = false;
@@ -52,4 +52,5 @@ export class AdminDashboardComponent implements OnInit {
     }
     this.router.navigate(['/auth/login']);
   }
+
 }

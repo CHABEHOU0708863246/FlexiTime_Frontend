@@ -48,10 +48,16 @@ export class UsersCreateComponent {
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
       isEnabled: [true],
-      workingHours: [0],
-      roles: [[], Validators.required],
+      workingHours: [0, [Validators.required, Validators.min(0)]], // Valider que les heures sont >= 0
+      roles: [[], Validators.required], // Liste des rôles, obligatoire
       isPartTime: [false],
-      hireDate: ['', Validators.required]
+      hireDate: ['', Validators.required],
+      gender: ['', Validators.required], // Sexe, obligatoire (par exemple : "Homme", "Femme")
+      contractType: ['', Validators.required], // Type de contrat, obligatoire (par exemple : "CDI", "CDD")
+      numberOfChildren: [null, [Validators.min(0)]], // Nombre d'enfants, optionnel, et doit être >= 0
+      maritalStatus: ['', Validators.required], // Statut marital, obligatoire (par exemple : "Célibataire", "Marié")
+      residence: ['', Validators.required], // Lieu de résidence, obligatoire
+      postalAddress: ['', Validators.required] // Adresse postale, obligatoire
     });
   }
 
@@ -65,12 +71,19 @@ export class UsersCreateComponent {
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
       isEnabled: [true],
-      workingHours: [0],
+      workingHours: [0, [Validators.required, Validators.min(0)]],
       roles: [[], Validators.required],
       isPartTime: [false],
-      hireDate: ['', Validators.required]
+      hireDate: ['', Validators.required],
+      gender: ['', Validators.required], // Peut être une liste déroulante (ex. "Homme", "Femme")
+      contractType: ['', Validators.required], // Liste déroulante (ex. "CDI", "CDD")
+      numberOfChildren: [null, [Validators.min(0)]], // Optionnel
+      maritalStatus: ['', Validators.required], // Liste déroulante (ex. "Célibataire", "Marié")
+      residence: ['', Validators.required],
+      postalAddress: ['', Validators.required]
     });
   }
+
 
   ngOnInit(): void {
     this.getUsers();
@@ -138,10 +151,6 @@ export class UsersCreateComponent {
 
   toggleLeaveMenu() {
     this.isLeaveMenuOpen = !this.isLeaveMenuOpen;
-  }
-
-  toggleAttendanceMenu() {
-    this.isAttendanceMenuOpen = !this.isAttendanceMenuOpen;
   }
 
   toggleReportMenu() {

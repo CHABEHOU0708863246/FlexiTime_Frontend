@@ -16,7 +16,7 @@
           <ul class="submenu" [ngClass]="{'active': isUserMenuOpen}">
             <li><a [routerLink]="['/admin/users-list']">Liste des utilisateurs</a></li>
             <li><a [routerLink]="['/admin/users-create']">Créer un utilisateur</a></li>
-            <li><a href="chartjs.html">Rôles et permissions</a></li>
+            <li><a [routerLink]="['/admin/users-role-management']">Rôles et permissions</a></li>
           </ul>
         </li>
 
@@ -31,17 +31,6 @@
             <li><a href="chart-morris.html">Configuration des congés</a></li>
             <li><a href="chartjs.html">Politique de congés</a></li>
             <li><a href="chartist.html">Jours fériés</a></li>
-          </ul>
-        </li>
-
-        <li>
-          <a class="sidebar-sub-toggle" (click)="toggleAttendanceMenu()">
-            <i class="ti-help -chart-alt"></i> Gestion des Absences
-            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isAttendanceMenuOpen}"></span>
-          </a>
-          <ul class="submenu" [ngClass]="{'active': isAttendanceMenuOpen}">
-            <li><a href="chart-flot.html">Types d'absences</a></li>
-            <li><a [routerLink]="['/admin/attendance-follow-up']">Suivi des absences</a></li>
           </ul>
         </li>
 
@@ -168,9 +157,8 @@
                     <th scope="col" class="text-center">Date de début</th>
                     <th scope="col" class="text-center">Date de fin</th>
                     <th scope="col" class="text-center">Statut</th>
-                    <!-- <th scope="col" class="text-center">Commentaire</th> -->
-                    <th scope="col" class="text-center">Raison</th>
                     <th scope="col" class="text-center">Action</th>
+                    <th scope="col" class="text-center">Justification</th>
                     <th scope="col" class="text-center">Export</th>
                   </tr>
                 </thead>
@@ -180,21 +168,43 @@
                     <td>{{ getTypeCongeString(leaveRequest.type) }}</td>
                     <td>{{ leaveRequest.startDate | date: 'dd/MM/yyyy' }}</td>
                     <td>{{ leaveRequest.endDate | date: 'dd/MM/yyyy' }}</td>
-                    <td>{{ getStatutCongeString(leaveRequest.status) }}</td>
-                    <!-- <td>{{ leaveRequest.comment }}</td> -->
-                    <td>{{ leaveRequest.reason }}</td>
+                    <td [ngClass]="{
+                      'text-success': leaveRequest.status === StatutConges.Approuve,
+                      'text-danger': leaveRequest.status === StatutConges.Rejete,
+                      'text-warning': leaveRequest.status === StatutConges.Attente,
+                      'text-secondary': leaveRequest.status === StatutConges.Annule
+                    }">
+                      {{ getStatutCongeString(leaveRequest.status) }}
+                    </td>
                     <td>
                       <select
-                        class="form-control"
-                        [ngModel]="leaveRequest.status"
-                        (ngModelChange)="updateLeaveStatus(leaveRequest.id, $event)"
-                      >
-                        <option [value]="StatutConges.Attente">En attente</option>
-                        <option [value]="StatutConges.Approuve">Approuvé</option>
-                        <option [value]="StatutConges.Rejete">Rejeté</option>
-                        <option [value]="StatutConges.Annule">Annulé</option>
-                      </select>
+                          class="form-control"
+                          [ngClass]="{
+                            'bg-success text-white': leaveRequest.status === StatutConges.Approuve,
+                            'bg-danger text-white': leaveRequest.status === StatutConges.Rejete,
+                            'bg-warning text-dark': leaveRequest.status === StatutConges.Attente,
+                            'bg-secondary text-white': leaveRequest.status === StatutConges.Annule
+                          }"
+                          [ngModel]="leaveRequest.status"
+                          (ngModelChange)="updateLeaveStatus(leaveRequest.id, $event)"
+                        >
+                          <option [value]="StatutConges.Attente">En attente</option>
+                          <option [value]="StatutConges.Approuve">Approuvé</option>
+                          <option [value]="StatutConges.Rejete">Rejeté</option>
+                          <option [value]="StatutConges.Annule">Annulé</option>
+                        </select>
                     </td>
+                    <td>
+                      <span *ngIf="leaveRequest.justificationFileUrl">
+                        <a [href]="leaveRequest.justificationFileUrl" download>
+                          <i class="fa fa-download" aria-hidden="true"></i> Télécharger la justification
+                        </a>
+                      </span>
+                      <span *ngIf="!leaveRequest.justificationFileUrl">
+                        Aucune justification
+                      </span>
+                    </td>
+
                     <td>
                       <span>
                         <a href="javascript:void(0)" (click)="downloadPdf(leaveRequest.id, leaveRequest.userId)">

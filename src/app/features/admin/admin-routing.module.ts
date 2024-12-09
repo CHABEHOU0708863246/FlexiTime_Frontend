@@ -4,8 +4,8 @@ import { AdminDashboardComponent } from '../../view/admin-dashboard/admin-dashbo
 import { UsersListComponent } from '../../view/admin-dashboard/users-list/users-list.component';
 import { UsersCreateComponent } from '../../view/admin-dashboard/users-create/users-create.component';
 import { LeaveRequestListComponent } from '../../view/admin-dashboard/leave-request-list/leave-request-list.component';
-import { AttendanceFollowUpComponent } from '../../view/admin-dashboard/attendance-follow-up/attendance-follow-up.component';
 import { LeaveCalendarViewComponent } from '../../view/admin-dashboard/leave-calendar-view/leave-calendar-view.component';
+import { UsersRoleManagementComponent } from '../../view/admin-dashboard/users-role-management/users-role-management.component';
 
 const routes: Routes = [
   {
@@ -26,16 +26,16 @@ const routes: Routes = [
     component: UsersCreateComponent
   },
   {
+    path: 'users-role-management',
+    component: UsersRoleManagementComponent
+  },
+  {
     path: 'leave-request-list',
     component: LeaveRequestListComponent
   },
   {
     path: 'leave-calendar-view',
     component: LeaveCalendarViewComponent
-  },
-  {
-    path: 'attendance-follow-up',
-    component: AttendanceFollowUpComponent
   }
 ];
 

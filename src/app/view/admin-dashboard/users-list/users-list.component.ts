@@ -42,13 +42,12 @@ export class UsersListComponent {
     this.getUserDetails();
   }
 
-  // Méthode pour filtrer les utilisateurs
   filterUsers(): void {
     if (this.searchTerm) {
       this.filteredUsers = this.users.filter(user =>
-        user.firstName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        user.lastName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(this.searchTerm.toLowerCase())
+        (user.firstName?.toLowerCase() ?? '').includes(this.searchTerm.toLowerCase()) ||
+        user.lastName?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        user.email?.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     } else {
       this.filteredUsers = this.users;
@@ -57,6 +56,7 @@ export class UsersListComponent {
     this.calculateTotalPages();
     this.updateDisplayedUsers();
   }
+
 
   exportUsers() {
     this.usersService.exportUsers('xlsx').subscribe(response => {
@@ -142,10 +142,6 @@ export class UsersListComponent {
 
   toggleLeaveMenu() {
     this.isLeaveMenuOpen = !this.isLeaveMenuOpen;
-  }
-
-  toggleAttendanceMenu() {
-    this.isAttendanceMenuOpen = !this.isAttendanceMenuOpen;
   }
 
   toggleReportMenu() {

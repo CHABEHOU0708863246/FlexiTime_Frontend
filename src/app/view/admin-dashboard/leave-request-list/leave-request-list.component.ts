@@ -58,7 +58,6 @@ export class LeaveRequestListComponent implements OnInit{
   // Gestion des menus
   toggleUserMenu() { this.isUserMenuOpen = !this.isUserMenuOpen; }
   toggleLeaveMenu() { this.isLeaveMenuOpen = !this.isLeaveMenuOpen; }
-  toggleAttendanceMenu() { this.isAttendanceMenuOpen = !this.isAttendanceMenuOpen; }
   toggleReportMenu() { this.isReportMenuOpen = !this.isReportMenuOpen; }
 
 
@@ -96,6 +95,9 @@ loadLeaveRequests(): void {
           const user = userMap.get(leaveRequest.userId);
           leaveRequest.userFirstName = user?.firstName || 'Inconnu';
           leaveRequest.userLastName = user?.lastName || 'Inconnu';
+
+          // Ajouter l'URL de la justification
+          leaveRequest.justificationFileUrl = leaveRequest.justificationFileUrl || '';
           return leaveRequest;
         });
       });
@@ -138,8 +140,6 @@ updateLeaveStatus(leaveId: string, newStatus: StatutConges): void {
       if (leaveIndex !== -1) {
         this.leaveRequests[leaveIndex].status = newStatus;
       }
-
-      alert(message); // Informer l'utilisateur du succès
     },
     error: (error) => {
       console.error('Erreur lors de la mise à jour du statut :', error);

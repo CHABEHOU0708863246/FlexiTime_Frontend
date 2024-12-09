@@ -7,7 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class TokenService {
 
-  private tokenKey = 'VGhpcyBpcyBhIG5pY2Ugc3VjY2Vzc2Z1bCB0aGF0IHNhaWQgb3V0IG15IGpldG9u'; // Clé pour stocker le token dans le localStorage (peut être une valeur encodée).
+  private tokenKey = 'VGhpcyBpcyBhIG5pY2Ugc3VjY2Vzc2Z1bCB0aGF0IHNhaWQgb3V0IG15IGpldG9u';
 
   constructor(private router: Router) {}
 
