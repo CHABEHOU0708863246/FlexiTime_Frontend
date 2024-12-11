@@ -156,12 +156,39 @@ updateLeaveStatus(leaveId: string, newStatus: StatutConges): void {
 
 // Méthodes d'affichage pour les types et statuts
 getTypeCongeString(type: TypeConge): string {
-  return TypeConge[type];
+  switch (type) {
+    case TypeConge.Paye: return 'Congé payé';
+    case TypeConge.NonPaye: return 'Congé non payé';
+    case TypeConge.Maladie: return 'Congé maladie';
+    case TypeConge.Parental: return 'Congé parental';
+    case TypeConge.Autre: return 'Autre';
+    case TypeConge.Sabbatique: return 'Congé sabbatique';
+    case TypeConge.Famille: return 'Congé pour événement familial';
+    case TypeConge.Formation: return 'Congé pour formation';
+    case TypeConge.Militaire: return 'Congé pour service militaire';
+    case TypeConge.SansSolde: return 'Congé sans solde';
+    case TypeConge.Exceptionnel: return 'Congé exceptionnel';
+    case TypeConge.ReposCompensateur: return 'Repos compensateur';
+    case TypeConge.Anniversaire: return 'Congé pour anniversaire';
+    case TypeConge.Civique: return 'Congé civique';
+    case TypeConge.DonSang: return 'Don de sang';
+    case TypeConge.Deuil: return 'Congé pour deuil';
+    default: return 'Type de congé inconnu';
+  }
 }
 
 getStatutCongeString(status: StatutConges): string {
-  return StatutConges[status];
+  switch (status) {
+    case StatutConges.Attente: return 'En attente';
+    case StatutConges.Approuve: return 'Approuvé';
+    case StatutConges.Rejete: return 'Rejeté';
+    case StatutConges.Annule: return 'Annulé';
+    default: return 'Statut inconnu';
+  }
 }
+
+
+
 
 // Filtrer les demandes par recherche
 filterLeaveRequests(): void {

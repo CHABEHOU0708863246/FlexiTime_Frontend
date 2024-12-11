@@ -1,9 +1,21 @@
 export class RoleRequest {
-  code: string;
-  roleName: string;
+  id: string = '';
+  roleName?: string;
+  normalizedName: string = '';
+  code?: string;
+  isVisible: boolean = true;
 
-  constructor(code: string, roleName: string) {
-    this.code = code;
+  constructor(
+    id: string = '',
+    roleName?: string,
+    normalizedName: string = '',
+    code?: string,
+    isVisible: boolean = true
+  ) {
+    this.id = id;
     this.roleName = roleName;
+    this.normalizedName = normalizedName;
+    this.code = code;
+    this.isVisible = isVisible;
   }
 }

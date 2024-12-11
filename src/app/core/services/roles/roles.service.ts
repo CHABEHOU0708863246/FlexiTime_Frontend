@@ -53,12 +53,10 @@ export class RolesService {
    * @param roleId - L'identifiant du rôle.
    * @returns Observable avec un retour vide ou un message de confirmation.
    */
-  deleteRole(roleId: number): Observable<any> {
-    const url = `${this.apiUrl}/${roleId}`;
-    return this.http.delete(url).pipe(
-      catchError(this.handleError)
-    );
+  deleteRole(roleId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${roleId}`);
   }
+
 
   /**
    * 5. Met à jour un rôle spécifique.

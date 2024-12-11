@@ -133,50 +133,76 @@
 
 <div class="content-wrap">
   <div class="main">
-      <div class="container-fluid">
-          <!-- /# row -->
-          <section id="main-content">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="form-validation">
-                      <form>
-                        <div class="form-group row">
-                          <label class="col-lg-4 col-form-label" for="val-firstname">Code <span class="text-danger">*</span></label>
-                          <div class="col-lg-8">
-                            <input type="text" class="form-control" id="val-firstname" formControlName="firstName" placeholder="Code du role Ex : adm pour admin.">
-                          </div>
-                        </div>
-                        <div class="form-group row">
-                          <label class="col-lg-4 col-form-label" for="val-lastname">Nom du role <span class="text-danger">*</span></label>
-                          <div class="col-lg-8">
-                            <input type="text" class="form-control" id="val-lastname" formControlName="lastName" placeholder="le nom du rôle">
-                          </div>
-                        </div>
-                        <div class="form-group row">
-                          <label class="col-lg-4 col-form-label" for="val-lastname">Nom du role normalisé <span class="text-danger">*</span></label>
-                          <div class="col-lg-8">
-                            <input type="text" class="form-control" id="val-lastname" formControlName="lastName" placeholder="Nom du role normalisé">
-                          </div>
-                        </div>
-                        <div class="form-group row">
-                          <div class="col-lg-8 offset-lg-4">
-                            <button type="submit" class="btn btn-primary">Crée le rôle</button>&nbsp;&nbsp;&nbsp;
-                            <button type="button" class="btn btn-secondary" >Réinitialiser</button>
-                          </div>
-                        </div>
-                      </form>
+    <div class="container-fluid">
+      <section id="main-content">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Gestion des Rôles</h4>
+
+                <!-- Formulaire de création/édition -->
+                <form [formGroup]="roleForm" (ngSubmit)="saveRole()">
+                  <div class="form-group row">
+                    <label class="col-lg-4 col-form-label">Code</label>
+                    <div class="col-lg-8">
+                      <input type="text" class="form-control" formControlName="code" placeholder="Ex : ADM" />
                     </div>
                   </div>
-                </div>
+                  <div class="form-group row">
+                    <label class="col-lg-4 col-form-label">Nom du Rôle</label>
+                    <div class="col-lg-8">
+                      <input type="text" class="form-control" formControlName="roleName" placeholder="Ex : Administrateur" />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-lg-4 col-form-label">Nom Normalisé</label>
+                    <div class="col-lg-8">
+                      <input type="text" class="form-control" formControlName="normalizedName" placeholder="Ex : ADMIN" />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-lg-8 offset-lg-4">
+                      <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Mettre à jour' : 'Créer' }}</button>
+                      <button type="button" class="btn btn-secondary" (click)="resetForm()">Réinitialiser</button>
+                    </div>
+                  </div>
+                </form>
+
+                <!-- Liste des rôles -->
+                <table class="table mt-4">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Code</th>
+                      <th>Nom</th>
+                      <th>Nom Normalisé</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let role of roles">
+                      <td>{{ role.id }}</td>
+                      <td>{{ role.code }}</td>
+                      <td>{{ role.roleName }}</td>
+                      <td>{{ role.normalizedName }}</td>
+                      <td>
+                        <button class="btn btn-sm btn-warning" (click)="editRole(role)">Modifier</button>
+                        <button class="btn btn-sm btn-danger" (click)="deleteRole(role.id)">Supprimer</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
               </div>
             </div>
-          </section>
-
-      </div>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </div>
+
 
 
 
