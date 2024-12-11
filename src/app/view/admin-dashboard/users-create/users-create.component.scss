@@ -104,6 +104,16 @@ h1 span {
   color: #333; /* Couleur du texte */
 }
 
+.progress-bar {
+  background-color: #05ee11;
+  transition: width 0.3s ease-in-out;
+}
 
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
 
-
+.card-body h4 {
+  margin-bottom: 20px;
+}

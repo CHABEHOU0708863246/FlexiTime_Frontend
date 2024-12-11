@@ -25,6 +25,7 @@ import Swal from 'sweetalert2';
 export class UsersCreateComponent {
   users: User[] = [];
   userForm: FormGroup;
+  currentStep: number = 1;
   availableRoles: string[] = ['admin', 'employe', 'manager'];
 
   user: User | null = null;
@@ -75,10 +76,10 @@ export class UsersCreateComponent {
       roles: [[], Validators.required],
       isPartTime: [false],
       hireDate: ['', Validators.required],
-      gender: ['', Validators.required], // Peut être une liste déroulante (ex. "Homme", "Femme")
-      contractType: ['', Validators.required], // Liste déroulante (ex. "CDI", "CDD")
-      numberOfChildren: [null, [Validators.min(0)]], // Optionnel
-      maritalStatus: ['', Validators.required], // Liste déroulante (ex. "Célibataire", "Marié")
+      gender: ['', Validators.required],
+      contractType: ['', Validators.required],
+      numberOfChildren: [null, [Validators.min(0)]],
+      maritalStatus: ['', Validators.required],
       residence: ['', Validators.required],
       postalAddress: ['', Validators.required]
     });
@@ -137,6 +138,22 @@ export class UsersCreateComponent {
       );
     } else {
       console.log("Le formulaire est invalide");
+    }
+  }
+
+  get stepPercentage(): number {
+    return (this.currentStep / 3) * 100; // Nombre total d'étapes
+  }
+
+  nextStep(): void {
+    if (this.currentStep < 3) {
+      this.currentStep++;
+    }
+  }
+
+  previousStep(): void {
+    if (this.currentStep > 1) {
+      this.currentStep--;
     }
   }
 

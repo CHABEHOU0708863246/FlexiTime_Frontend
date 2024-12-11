@@ -139,150 +139,160 @@
 
 
 
-<div class="content-wrap">
-  <div class="main">
-    <div class="container-fluid">
-      <section id="main-content">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="card">
-              <div class="card-body">
-                <div class="form-validation">
-                  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-firstname">Prénom <span class="text-danger">*</span></label>
-                      <div class="col-lg-8">
-                        <input type="text" class="form-control" id="val-firstname" formControlName="firstName" placeholder="Entrez un prénom..">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-lastname">Nom <span class="text-danger">*</span></label>
-                      <div class="col-lg-8">
-                        <input type="text" class="form-control" id="val-lastname" formControlName="lastName" placeholder="Entrez un nom..">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-email">Email <span class="text-danger">*</span></label>
-                      <div class="col-lg-8">
-                        <input type="email" class="form-control" id="val-email" formControlName="email" placeholder="Votre email valide..">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-phone">Numéro de téléphone <span class="text-danger">*</span></label>
-                      <div class="col-lg-8">
-                        <input type="text" class="form-control" id="val-phone" formControlName="phoneNumber" placeholder="Numéro de téléphone..">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label">Activer l'utilisateur <span class="text-danger">*</span></label>
-                      <div class="col-lg-8">
-                        <input type="checkbox" formControlName="isEnabled">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-working-hours">Heures de travail</label>
-                      <div class="col-lg-8">
-                        <input type="number" class="form-control" id="val-working-hours" formControlName="workingHours" placeholder="Nombre d'heures">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-password">Mot de passe <span class="text-danger">*</span></label>
-                      <div class="col-lg-8">
-                        <input type="password" class="form-control" id="val-password" formControlName="password" placeholder="Choisissez un mot de passe sûr..">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-confirm-password">Confirmer le mot de passe <span class="text-danger">*</span></label>
-                      <div class="col-lg-8">
-                        <input type="password" class="form-control" id="val-confirm-password" formControlName="confirmPassword" placeholder="..et confirmez-le !">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label">Rôles (mollette pour les autres rôles) <span class="text-danger">*</span></label>
-                      <div class="col-lg-8 select-container">
-                        <select multiple class="form-control" formControlName="roles">
-                          <option *ngFor="let role of availableRoles" [value]="role">{{ role }}</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label">Statut de l'emploi <span class="text-danger">*</span></label>
-                      <div class="col-lg-8">
-                        <div class="form-check">
-                          <input type="radio" class="form-check-input" id="val-part-time" formControlName="isPartTime" [value]="true">
-                          <label class="form-check-label" for="val-part-time">À temps partiel</label>
-                        </div>
-                        <div class="form-check">
-                          <input type="radio" class="form-check-input" id="val-full-time" formControlName="isPartTime" [value]="false">
-                          <label class="form-check-label" for="val-full-time">À temps plein</label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-hire-date">Date d'embauche <span class="text-danger">*</span></label>
-                      <div class="col-lg-8">
-                        <input type="date" class="form-control" id="val-hire-date" formControlName="hireDate">
-                      </div>
-                    </div>
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h1 class="text-center">Créer un utilisateur</h1>
+    </div>
+    <div class="card-body">
+      <!-- Barre de progression -->
+      <div class="progress mb-4">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          [style.width]="stepPercentage + '%'"
+          aria-valuenow="25"
+          aria-valuemin="0"
+          aria-valuemax="100">
+          Étape {{ currentStep }} / 3
+        </div>
+      </div>
 
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-gender">Genre <span class="text-danger">*</span></label>
-                      <div class="col-lg-8">
-                        <input type="text" class="form-control" id="val-gender" formControlName="gender" placeholder="Entrez le genre (Homme/Femme)">
-                      </div>
-                    </div>
+      <!-- Étape 1: Informations personnelles -->
+      <div *ngIf="currentStep === 1">
+        <h1 class="text-center">Informations personnelles</h1>
+        <form [formGroup]="userForm">
+          <div class="form-group">
+            <label for="firstName">Prénom</label>
+            <input type="text" class="form-control" formControlName="firstName" placeholder="Entrez un prénom...">
+          </div>
+          <div class="form-group">
+            <label for="lastName">Nom</label>
+            <input type="text" class="form-control" formControlName="lastName" placeholder="Entrez un nom...">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" formControlName="email" placeholder="Votre email...">
+          </div>
+          <div class="form-group">
+            <label for="phoneNumber">Numéro de téléphone</label>
+            <input type="text" class="form-control" formControlName="phoneNumber" placeholder="Votre numéro de téléphone...">
+          </div>
+          <div class="form-group row">
+            <label class="col-lg-4 col-form-label">Activer l'utilisateur <span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+              <input type="checkbox" formControlName="isEnabled">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-lg-4 col-form-label" for="val-postal-address">Adresse postale</label>
+            <div class="col-lg-8">
+              <input type="text" class="form-control" id="val-postal-address" formControlName="postalAddress" placeholder="Entrez l'adresse postale">
+            </div>
+          </div>
+        </form>
+      </div>
 
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-contract-type">Type de contrat <span class="text-danger">*</span></label>
-                      <div class="col-lg-8">
-                        <input type="text" class="form-control" id="val-contract-type" formControlName="contractType" placeholder="Entrez le type de contrat (CDI, CDD, etc.)">
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-children">Nombre d'enfants</label>
-                      <div class="col-lg-8">
-                        <input type="number" class="form-control" id="val-children" formControlName="numberOfChildren" placeholder="Entrez le nombre d'enfants">
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-marital-status">Statut marital <span class="text-danger">*</span></label>
-                      <div class="col-lg-8">
-                        <input type="text" class="form-control" id="val-marital-status" formControlName="maritalStatus" placeholder="Entrez le statut marital (Célibataire, Marié)">
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-residence">Lieu de résidence</label>
-                      <div class="col-lg-8">
-                        <input type="text" class="form-control" id="val-residence" formControlName="residence" placeholder="Entrez le lieu de résidence">
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <label class="col-lg-4 col-form-label" for="val-postal-address">Adresse postale</label>
-                      <div class="col-lg-8">
-                        <input type="text" class="form-control" id="val-postal-address" formControlName="postalAddress" placeholder="Entrez l'adresse postale">
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <div class="col-lg-8 offset-lg-4">
-                        <button type="submit" class="btn btn-primary">Crée l'utilisateur</button>&nbsp;&nbsp;&nbsp;
-                        <button type="button" class="btn btn-secondary" (click)="onReset()">Réinitialiser</button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
+      <!-- Étape 2: Détails professionnels -->
+      <div *ngIf="currentStep === 2">
+        <h1 class="text-center">Détails professionnels</h1>
+        <form [formGroup]="userForm">
+          <div class="form-group">
+            <label for="hireDate">Date d'embauche</label>
+            <input type="date" class="form-control" formControlName="hireDate">
+          </div>
+          <div class="form-group">
+            <label for="roles">Rôles</label>
+            <select multiple class="form-control" formControlName="roles">
+              <option *ngFor="let role of availableRoles" [value]="role">{{ role }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="isPartTime">Statut de l'emploi</label>
+            <div>
+              <div class="form-check form-check-inline">
+                <input type="radio" class="form-check-input" id="partTime" formControlName="isPartTime" [value]="true">
+                <label for="partTime" class="form-check-label">À temps partiel</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input type="radio" class="form-check-input" id="fullTime" formControlName="isPartTime" [value]="false">
+                <label for="fullTime" class="form-check-label">À temps plein</label>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-lg-4 col-form-label" for="val-working-hours">Heures de travail</label>
+              <div class="col-lg-8">
+                <input type="number" class="form-control" id="val-working-hours" formControlName="workingHours" placeholder="Nombre d'heures">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-lg-4 col-form-label" for="val-password">Mot de passe <span class="text-danger">*</span></label>
+              <div class="col-lg-8">
+                <input type="password" class="form-control" id="val-password" formControlName="password" placeholder="Choisissez un mot de passe sûr..">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-lg-4 col-form-label" for="val-confirm-password">Confirmer le mot de passe <span class="text-danger">*</span></label>
+              <div class="col-lg-8">
+                <input type="password" class="form-control" id="val-confirm-password" formControlName="confirmPassword" placeholder="..et confirmez-le !">
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </form>
+      </div>
+
+      <!-- Étape 3: Données supplémentaires -->
+      <div *ngIf="currentStep === 3">
+        <h1 class="text-center">Données supplémentaires</h1>
+        <form [formGroup]="userForm">
+          <div class="form-group">
+            <label for="residence">Lieu de résidence</label>
+            <input type="text" class="form-control" formControlName="residence" placeholder="Entrez votre lieu de résidence...">
+          </div>
+          <div class="form-group">
+            <label for="maritalStatus">Statut marital</label>
+            <input type="text" class="form-control" formControlName="maritalStatus" placeholder="Ex: Célibataire">
+          </div>
+          <div class="form-group">
+            <label for="numberOfChildren">Nombre d'enfants</label>
+            <input type="number" class="form-control" formControlName="numberOfChildren" placeholder="Entrez le nombre d'enfants...">
+          </div>
+          <div class="form-group row">
+            <label class="col-lg-4 col-form-label" for="val-gender">Genre <span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+              <input type="text" class="form-control" id="val-gender" formControlName="gender" placeholder="Entrez le genre (Homme/Femme)">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-lg-4 col-form-label" for="val-contract-type">Type de contrat <span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+              <input type="text" class="form-control" id="val-contract-type" formControlName="contractType" placeholder="Entrez le type de contrat (CDI, CDD, etc.)">
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Boutons de navigation -->
+      <div class="d-flex justify-content-between">
+        <button
+          class="btn btn-secondary"
+          [disabled]="currentStep === 1"
+          (click)="previousStep()">Précédent</button>
+        <button
+          *ngIf="currentStep < 3"
+          class="btn btn-primary"
+          (click)="nextStep()">Suivant</button>
+          <button type="button" class="btn btn-secondary" (click)="onReset()">Réinitialiser</button>
+        <button
+          *ngIf="currentStep === 3"
+          class="btn btn-success"
+          (click)="onSubmit()">Valider</button>
+      </div>
     </div>
   </div>
 </div>
+
 
 
 
