@@ -161,7 +161,6 @@ getTypeCongeString(type: TypeConge): string {
     case TypeConge.NonPaye: return 'Congé non payé';
     case TypeConge.Maladie: return 'Congé maladie';
     case TypeConge.Parental: return 'Congé parental';
-    case TypeConge.Autre: return 'Autre';
     case TypeConge.Sabbatique: return 'Congé sabbatique';
     case TypeConge.Famille: return 'Congé pour événement familial';
     case TypeConge.Formation: return 'Congé pour formation';
@@ -183,7 +182,7 @@ getStatutCongeString(status: StatutConges): string {
     case StatutConges.Approuve: return 'Approuvé';
     case StatutConges.Rejete: return 'Rejeté';
     case StatutConges.Annule: return 'Annulé';
-    default: return 'Statut inconnu';
+    default: return 'Statut mis a jour';
   }
 }
 

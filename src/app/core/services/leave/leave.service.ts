@@ -56,18 +56,7 @@ export class LeaveService {
   }
 
   /**
-   * 5. Supprime une demande de congé.
-   * Envoie une requête DELETE pour supprimer une demande spécifique.
-   * @param id - L'identifiant de la demande de congé.
-   * @returns Observable vide après suppression.
-   */
-  deleteLeaveRequest(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`)
-      .pipe(catchError(this.handleError));
-  }
-
-  /**
-   * 6. Accepte une demande de congé.
+   * 5. Accepte une demande de congé.
    * Envoie une requête POST pour approuver une demande en fonction de son ID.
    * @param leaveId - L'identifiant de la demande de congé.
    * @param approverId - L'identifiant de l'approbateur.
@@ -80,7 +69,7 @@ export class LeaveService {
   }
 
   /**
-   * 7. Rejette une demande de congé.
+   * 6. Rejette une demande de congé.
    * Fonctionne de manière similaire à l'approbation.
    * @param leaveId - L'identifiant de la demande.
    * @param approverId - L'identifiant de l'approbateur.
@@ -93,7 +82,7 @@ export class LeaveService {
   }
 
   /**
-   * 8. Annule une demande de congé.
+   * 7. Annule une demande de congé.
    * Utilise une requête POST sans données supplémentaires.
    * @param leaveId - L'identifiant de la demande de congé.
    * @returns Observable avec une confirmation ou une erreur.
@@ -105,7 +94,7 @@ export class LeaveService {
   }
 
 /**
-   * Met à jour le statut d'une demande de congé.
+   * 8.Met à jour le statut d'une demande de congé.
    * @param leaveId - L'identifiant de la demande.
    * @param newStatus - Le nouveau statut de la demande.
    * @param userId - L'identifiant de l'utilisateur effectuant la mise à jour.
@@ -120,7 +109,7 @@ updateLeaveStatus(leaveId: string, newStatus: number, userId: string): Observabl
 }
 
   /**
-   * 10. Télécharge le PDF d'une demande de congé.
+   * 9. Télécharge le PDF d'une demande de congé.
    * @param leaveId - L'identifiant de la demande de congé.
    * @param userId - L'identifiant de l'utilisateur.
    * @returns Observable contenant le fichier PDF sous forme de Blob.
@@ -131,7 +120,7 @@ updateLeaveStatus(leaveId: string, newStatus: number, userId: string): Observabl
   }
 
   /**
-   * 11.Récupère les demandes de congé paginées.
+   * 10.Récupère les demandes de congé paginées.
    * @param pageNumber - Le numéro de la page.
    * @param pageSize - La taille de la page.
    * @returns Observable contenant la réponse paginée.

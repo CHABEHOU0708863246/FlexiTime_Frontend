@@ -173,7 +173,6 @@
                 <table class="table mt-4">
                   <thead>
                     <tr>
-                      <th>ID</th>
                       <th>Code</th>
                       <th>Nom</th>
                       <th>Nom Normalisé</th>
@@ -182,12 +181,11 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let role of roles">
-                      <td>{{ role.id }}</td>
                       <td>{{ role.code }}</td>
                       <td>{{ role.roleName }}</td>
                       <td>{{ role.normalizedName }}</td>
                       <td>
-                        <button class="btn btn-sm btn-warning" (click)="editRole(role)">Modifier</button>
+                        <button class="btn btn-sm btn-warning" (click)="editRole(role)">Modifier</button>&nbsp;&nbsp;&nbsp;
                         <button class="btn btn-sm btn-danger" (click)="deleteRole(role.id)">Supprimer</button>
                       </td>
                     </tr>

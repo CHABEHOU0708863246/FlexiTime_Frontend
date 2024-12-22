@@ -78,18 +78,17 @@ export enum TypeConge {
   NonPaye = 1,              // Congé non payé
   Maladie = 2,              // Congé maladie
   Parental = 3,             // Congé parental
-  Autre = 4,                // Autre type de congé
-  Sabbatique = 5,           // Congé sabbatique
-  Famille = 6,              // Congé pour événements familiaux (mariage, naissance, décès)
-  Formation = 7,            // Congé pour formation
-  Militaire = 8,            // Congé pour service militaire
-  SansSolde = 9,            // Congé sans solde
-  Exceptionnel = 10,        // Congé exceptionnel soumis à approbation spéciale
-  ReposCompensateur = 11,   // Congé pour repos compensateur
-  Anniversaire = 12,        // Congé pour anniversaire
-  Civique = 13,             // Congé pour obligation civique
-  DonSang = 14,             // Congé pour don de sang
-  Deuil = 15                // Congé pour deuil
+  Sabbatique = 4,           // Congé sabbatique
+  Famille = 5,              // Congé pour événements familiaux (mariage, naissance, décès)
+  Formation = 6,            // Congé pour formation
+  Militaire = 7,            // Congé pour service militaire
+  SansSolde = 8,            // Congé sans solde
+  Exceptionnel = 9,        // Congé exceptionnel soumis à approbation spéciale
+  ReposCompensateur = 10,   // Congé pour repos compensateur
+  Anniversaire = 11,        // Congé pour anniversaire
+  Civique = 12,             // Congé pour obligation civique
+  DonSang = 13,             // Congé pour don de sang
+  Deuil = 14                // Congé pour deuil
 }
 
 // Fonction pour afficher les informations liées à chaque type de congé
