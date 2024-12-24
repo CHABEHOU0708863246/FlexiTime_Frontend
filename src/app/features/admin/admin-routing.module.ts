@@ -6,6 +6,9 @@ import { UsersCreateComponent } from '../../view/admin-dashboard/users-create/us
 import { LeaveRequestListComponent } from '../../view/admin-dashboard/leave-request-list/leave-request-list.component';
 import { LeaveCalendarViewComponent } from '../../view/admin-dashboard/leave-calendar-view/leave-calendar-view.component';
 import { UsersRoleManagementComponent } from '../../view/admin-dashboard/users-role-management/users-role-management.component';
+import { LeaveConfigComponent } from '../../view/admin-dashboard/leave-config/leave-config.component';
+import { HolidayConfigComponent } from '../../view/admin-dashboard/holiday-config/holiday-config.component';
+import { LeaveReportComponent } from '../../view/admin-dashboard/leave-report/leave-report.component';
 
 const routes: Routes = [
   {
@@ -32,6 +35,18 @@ const routes: Routes = [
   {
     path: 'leave-request-list',
     component: LeaveRequestListComponent
+  },
+  {
+    path: 'leave-config',
+    component: LeaveConfigComponent
+  },
+  {
+    path: 'holiday-config',
+    component: HolidayConfigComponent
+  },
+  {
+    path: 'leave-report',
+    component: LeaveReportComponent
   },
   {
     path: 'leave-calendar-view',

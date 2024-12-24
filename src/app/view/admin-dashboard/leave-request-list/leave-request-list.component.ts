@@ -31,7 +31,7 @@ export class LeaveRequestListComponent implements OnInit{
 
   leaveRequests: LeaveRequest[] = [];
   searchTerm: string = '';
-  pageSize: number = 3;
+  pageSize: number = 10;
   currentPage: number = 1;
   totalPages: number = 1;
   originalLeaveRequests: LeaveRequest[] = [];

@@ -1,1 +1,276 @@
-<p>leave-config works!</p>
+<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+  <div class="nano">
+    <div class="nano-content">
+      <div class="logo"><a href="index.html"><span>FlexiTime</span></a></div>
+      <ul>
+        <li class="label">Principale</li>
+        <li class="active"><a class="sidebar-sub-toggle" [routerLink]="['/admin/dashboard']"><i class="ti-home"></i> Dashboard <span class="badge badge-primary"></span></a>
+        </li>
+
+        <li class="label">Menu</li>
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleUserMenu()">
+            <i class="ti-user -chart-alt"></i> Gestion des Utilisateurs
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isUserMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isUserMenuOpen}">
+            <li><a [routerLink]="['/admin/users-list']">Liste des utilisateurs</a></li>
+            <li><a [routerLink]="['/admin/users-create']">Créer un utilisateur</a></li>
+            <li><a [routerLink]="['/admin/users-role-management']">Rôles et permissions</a></li>
+          </ul>
+        </li>
+
+
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleLeaveMenu()">
+            <i class="ti-ticket -chart-alt"></i> Gestion des congés
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isLeaveMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isLeaveMenuOpen}">
+            <li><a [routerLink]="['/admin/leave-request-list']">Liste des demandes de congés</a></li>
+            <li><a [routerLink]="['/admin/leave-config']">Configuration des congés</a></li>
+            <li><a [routerLink]="['/admin/holiday-config']">Jours fériés</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleReportMenu()">
+            <i class="ti-stats-up -chart-alt"></i> Rapports et Statistiques
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isReportMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isReportMenuOpen}">
+            <li><a [routerLink]="['/admin/leave-report']">Rapports de congés</a></li>
+            <li><a href="chart-flot.html">Rapports d’absences</a></li>
+            <li><a href="chart-flot.html">Export des rapports</a></li>
+          </ul>
+        </li>
+
+
+
+
+        <li><a [routerLink]="['/admin/leave-calendar-view']"><i class="ti-calendar grid2-alt"></i> Calendrier de congés</a></li>
+        <li><a href="app-widget-card.html"><i class="ti-key grid2-alt"></i> Paramètres de l’Application</a></li>
+        <li><a href="app-widget-card.html"><i class="ti-book grid2-alt"></i>Journal des Activités</a></li>
+
+
+        <li><a (click)="logout()"><i class="ti-close"></i> Je me déconnecte</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="float-left">
+          <div class="">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </div>
+        </div>
+        <div class="float-right">
+          <ul>
+            <li class="header-icon dib"><i class="ti-bell"></i>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">Recent Notifications</span>
+                </div>
+              </div>
+            </li>
+            <li class="header-icon dib"><i class="ti-email"></i>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">2 New Messages</span>
+                  <a href="email.html"><i class="ti-pencil-alt pull-right"></i></a>
+                </div>
+              </div>
+            </li>
+            <li class="header-icon dib">
+              <span class="user-avatar">{{ user?.firstName }} <i class="ti-angle-down f-s-10"></i></span>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">User Details</span>
+                </div>
+                <div class="dropdown-content">
+                  <span>Email: {{ user?.email }}</span><br />
+                  <span>Phone: {{ user?.phoneNumber }}</span>
+                </div>
+                <div class="dropdown-footer">
+                  <button (click)="logout()">Logout</button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="content-wrap">
+  <div class="main">
+      <div class="container-fluid">
+          <div class="row">
+              <!-- /# column -->
+              <div class="col-lg-4 p-l-0 title-margin-left">
+                  <div class="page-header">
+                      <div class="page-title">
+                          <ol class="breadcrumb">
+                              <li class="breadcrumb-item"><a [routerLink]="['/admin/dashboard']">Menu</a></li>
+                              <li class="breadcrumb-item active">Gestion des congés</li>
+                              <li class="breadcrumb-item active">Configuration des congés</li>
+                          </ol>
+                      </div>
+                  </div>
+              </div>
+              <!-- /# column -->
+          </div>
+</div>
+
+
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title">Configuration des Types de Congés</h4>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Attribution Annuelle</th>
+            <th>Éligibilité</th>
+            <th>Durée Max</th>
+            <th>Règles Spécifiques</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Paid</td>
+            <td>Congé payé standard</td>
+            <td>2.5 jours/mois</td>
+            <td>Après 30 jours de travail</td>
+            <td>30 jours/an</td>
+            <td>Cumul mensuel automatique</td>
+          </tr>
+          <tr>
+            <td>Unpaid</td>
+            <td>Congé non payé</td>
+            <td>10 jours</td>
+            <td>Après 1 an</td>
+            <td>10 jours/an</td>
+            <td>Sur demande justifiée</td>
+          </tr>
+          <tr>
+            <td>Sick</td>
+            <td>Congé maladie</td>
+            <td>5 jours</td>
+            <td>Après 1 an</td>
+            <td>5 jours/an</td>
+            <td>Certificat médical requis</td>
+          </tr>
+          <tr>
+            <td>Parental</td>
+            <td>Congé parental</td>
+            <td>Femmes: 112 jours, Hommes: 14 jours</td>
+            <td>Dès 1 an d'ancienneté</td>
+            <td>Selon genre</td>
+            <td>Justificatif de naissance requis</td>
+          </tr>
+          <tr>
+            <td>Sabbatical</td>
+            <td>Congé sabbatique</td>
+            <td>10 jours</td>
+            <td>Après 2 ans</td>
+            <td>30 jours/an</td>
+            <td>Accord préalable requis</td>
+          </tr>
+          <tr>
+            <td>FamilyEvent</td>
+            <td>Congé pour événements familiaux</td>
+            <td>3 jours</td>
+            <td>Immédiatement</td>
+            <td>3 jours/an</td>
+            <td>Preuve de l'événement requise</td>
+          </tr>
+          <tr>
+            <td>Training</td>
+            <td>Congé pour formation</td>
+            <td>30 jours</td>
+            <td>Après 1 an</td>
+            <td>30 jours/an</td>
+            <td>Formation liée au poste</td>
+          </tr>
+          <tr>
+            <td>MilitaryService</td>
+            <td>Congé pour service militaire</td>
+            <td>5 jours</td>
+            <td>Après 1 an</td>
+            <td>5 jours/an</td>
+            <td>Preuve requise</td>
+          </tr>
+          <tr>
+            <td>Exceptional</td>
+            <td>Congé exceptionnel</td>
+            <td>2 jours</td>
+            <td>Après 2 ans</td>
+            <td>Selon besoin</td>
+            <td>Approbation spéciale requise</td>
+          </tr>
+          <tr>
+            <td>CompensatoryLeave</td>
+            <td>Congé compensateur</td>
+            <td>5 jours</td>
+            <td>Après heures supplémentaires</td>
+            <td>5 jours/an</td>
+            <td>Repos compensateur</td>
+          </tr>
+          <tr>
+            <td>Birthday</td>
+            <td>Congé pour anniversaire</td>
+            <td>1 jour</td>
+            <td>Immédiatement</td>
+            <td>1 jour/an</td>
+            <td>Jour de l'anniversaire</td>
+          </tr>
+          <tr>
+            <td>CivicDuty</td>
+            <td>Congé pour obligation civique</td>
+            <td>3 jours</td>
+            <td>Après 1 an</td>
+            <td>3 jours/an</td>
+            <td>Justificatif requis</td>
+          </tr>
+          <tr>
+            <td>Bereavement</td>
+            <td>Congé pour deuil</td>
+            <td>5 jours</td>
+            <td>Immédiatement</td>
+            <td>5 jours/an</td>
+            <td>Certificat de décès requis</td>
+          </tr>
+          <tr>
+            <td>Other</td>
+            <td>Autres congés</td>
+            <td>2 jours</td>
+            <td>Sur demande</td>
+            <td>Selon besoin</td>
+            <td>Description personnalisée</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

@@ -28,8 +28,7 @@
           </a>
           <ul class="submenu" [ngClass]="{'active': isLeaveMenuOpen}">
             <li><a [routerLink]="['/admin/leave-request-list']">Liste des demandes de congés</a></li>
-            <li><a href="chart-morris.html">Configuration des congés</a></li>
-            <li><a href="chartjs.html">Politique de congés</a></li>
+            <li><a [routerLink]="['/admin/leave-config']">Configuration des congés</a></li>
             <li><a href="chartist.html">Jours fériés</a></li>
           </ul>
         </li>
@@ -40,7 +39,7 @@
             <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isReportMenuOpen}"></span>
           </a>
           <ul class="submenu" [ngClass]="{'active': isReportMenuOpen}">
-            <li><a href="chart-flot.html">Rapports de congés</a></li>
+            <li><a [routerLink]="['/admin/leave-report']">Rapports de congés</a></li>
             <li><a href="chart-flot.html">Rapports d’absences</a></li>
             <li><a href="chart-flot.html">Export des rapports</a></li>
           </ul>

@@ -1,1 +1,245 @@
-<p>holiday-config works!</p>
+<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+  <div class="nano">
+    <div class="nano-content">
+      <div class="logo"><a href="index.html"><span>FlexiTime</span></a></div>
+      <ul>
+        <li class="label">Principale</li>
+        <li class="active"><a class="sidebar-sub-toggle" [routerLink]="['/admin/dashboard']"><i class="ti-home"></i> Dashboard <span class="badge badge-primary"></span></a>
+        </li>
+
+        <li class="label">Menu</li>
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleUserMenu()">
+            <i class="ti-user -chart-alt"></i> Gestion des Utilisateurs
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isUserMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isUserMenuOpen}">
+            <li><a [routerLink]="['/admin/users-list']">Liste des utilisateurs</a></li>
+            <li><a [routerLink]="['/admin/users-create']">Créer un utilisateur</a></li>
+            <li><a [routerLink]="['/admin/users-role-management']">Rôles et permissions</a></li>
+          </ul>
+        </li>
+
+
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleLeaveMenu()">
+            <i class="ti-ticket -chart-alt"></i> Gestion des congés
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isLeaveMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isLeaveMenuOpen}">
+            <li><a [routerLink]="['/admin/leave-request-list']">Liste des demandes de congés</a></li>
+            <li><a [routerLink]="['/admin/leave-config']">Configuration des congés</a></li>
+            <li><a [routerLink]="['/admin/holiday-config']">Jours fériés</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleReportMenu()">
+            <i class="ti-stats-up -chart-alt"></i> Rapports et Statistiques
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isReportMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isReportMenuOpen}">
+            <li><a [routerLink]="['/admin/leave-report']">Rapports de congés</a></li>
+            <li><a href="chart-flot.html">Rapports d’absences</a></li>
+            <li><a href="chart-flot.html">Export des rapports</a></li>
+          </ul>
+        </li>
+
+
+
+
+        <li><a [routerLink]="['/admin/leave-calendar-view']"><i class="ti-calendar grid2-alt"></i> Calendrier de congés</a></li>
+        <li><a href="app-widget-card.html"><i class="ti-key grid2-alt"></i> Paramètres de l’Application</a></li>
+        <li><a href="app-widget-card.html"><i class="ti-book grid2-alt"></i>Journal des Activités</a></li>
+
+
+        <li><a (click)="logout()"><i class="ti-close"></i> Je me déconnecte</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="float-left">
+          <div class="">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </div>
+        </div>
+        <div class="float-right">
+          <ul>
+            <li class="header-icon dib"><i class="ti-bell"></i>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">Recent Notifications</span>
+                </div>
+              </div>
+            </li>
+            <li class="header-icon dib"><i class="ti-email"></i>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">2 New Messages</span>
+                  <a href="email.html"><i class="ti-pencil-alt pull-right"></i></a>
+                </div>
+              </div>
+            </li>
+            <li class="header-icon dib">
+              <span class="user-avatar">{{ user?.firstName }} <i class="ti-angle-down f-s-10"></i></span>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">User Details</span>
+                </div>
+                <div class="dropdown-content">
+                  <span>Email: {{ user?.email }}</span><br />
+                  <span>Phone: {{ user?.phoneNumber }}</span>
+                </div>
+                <div class="dropdown-footer">
+                  <button (click)="logout()">Logout</button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="content-wrap">
+  <div class="main">
+      <div class="container-fluid">
+          <div class="row">
+              <!-- /# column -->
+              <div class="col-lg-4 p-l-0 title-margin-left">
+                  <div class="page-header">
+                      <div class="page-title">
+                          <ol class="breadcrumb">
+                              <li class="breadcrumb-item"><a [routerLink]="['/admin/dashboard']">Menu</a></li>
+                              <li class="breadcrumb-item active">Gestion des congés</li>
+                              <li class="breadcrumb-item active">Jours fériés</li>
+                          </ol>
+                      </div>
+                  </div>
+              </div>
+              <!-- /# column -->
+          </div>
+</div>
+
+
+
+
+<div class="content-wrap">
+  <div class="main">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card mt-4">
+            <div class="card-header">
+              <h3 class="card-title">Ajouter ou Modifier un Jour Férié</h3>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="holidayForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="holidayName">Nom du Jour Férié</label>
+                      <input
+                        id="holidayName"
+                        type="text"
+                        class="form-control"
+                        formControlName="holidayName"
+                        placeholder="Nom du jour férié"
+                      />
+                      <div *ngIf="holidayForm.get('holidayName')?.invalid && holidayForm.get('holidayName')?.touched" class="text-danger">
+                        Le nom est requis.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="holidayDate">Date</label>
+                      <input
+                        id="holidayDate"
+                        type="date"
+                        class="form-control"
+                        formControlName="holidayDate"
+                      />
+                      <div *ngIf="holidayForm.get('holidayDate')?.invalid && holidayForm.get('holidayDate')?.touched" class="text-danger">
+                        La date est requise.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="countryCode">Code Pays</label>
+                      <input
+                        id="countryCode"
+                        type="text"
+                        class="form-control"
+                        formControlName="countryCode"
+                        placeholder="Ex: FR, US"
+                      />
+                      <div *ngIf="holidayForm.get('countryCode')?.invalid && holidayForm.get('countryCode')?.touched" class="text-danger">
+                        Le code pays est requis.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group mt-3">
+                  <button type="submit" class="btn btn-primary" [disabled]="holidayForm.invalid">
+                    {{ isEdit ? 'Mettre à Jour' : 'Ajouter' }}
+                  </button>&nbsp;&nbsp;
+                  <button type="button" class="btn btn-secondary" (click)="onReset()">Réinitialiser</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="card mt-5">
+            <div class="card-header">
+              <h3 class="card-title">Liste des Jours Fériés</h3>
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Date</th>
+                    <th>Code Pays</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let holiday of holidays">
+                    <td>{{ holiday.holidayName }}</td>
+                    <td>{{ holiday.holidayDate | date }}</td>
+                    <td>{{ holiday.countryCode }}</td>
+                    <td>
+                      <button class="btn btn-warning btn-sm" (click)="onEdit(holiday)">Modifier</button>&nbsp;&nbsp;
+                      <button class="btn btn-danger btn-sm" (click)="onDelete(holiday.id)">Supprimer</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

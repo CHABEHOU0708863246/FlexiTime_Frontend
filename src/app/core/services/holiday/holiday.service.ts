@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { PublicHoliday } from '../../models/PublicHoliday';
 
 @Injectable({
   providedIn: 'root'
@@ -9,55 +10,51 @@ export class HolidayService {
 
   private apiUrl = 'https://localhost:7082/api/Holidays';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   /**
-   * Récupère tous les jours fériés enregistrés dans la base de données.
-   * Utilise une requête GET pour récupérer les jours fériés.
-   * @returns Observable avec la liste des jours fériés.
+   * Récupère tous les jours fériés.
+   * @returns Un tableau de jours fériés (Observable).
    */
-  getAllHolidays(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}`);
+  getAllHolidays(): Observable<PublicHoliday[]> {
+    return this.http.get<PublicHoliday[]>(`${this.apiUrl}`);
   }
 
   /**
-   * Récupère un jour férié par son identifiant unique.
-   * Utilise une requête GET avec l'ID pour récupérer le jour férié correspondant.
-   * @param holidayId - L'identifiant unique du jour férié.
-   * @returns Observable avec le jour férié trouvé ou null si non trouvé.
+   * Récupère un jour férié par son ID.
+   * @param id Identifiant du jour férié.
+   * @returns Le jour férié correspondant (Observable).
    */
-  getHolidayById(holidayId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${holidayId}`);
+  getHolidayById(id: string): Observable<PublicHoliday> {
+    return this.http.get<PublicHoliday>(`${this.apiUrl}/${id}`);
   }
 
   /**
-   * Ajoute un nouveau jour férié à la base de données.
-   * Utilise une requête POST pour ajouter un jour férié.
-   * @param holiday - Les détails du jour férié à ajouter.
-   * @returns Observable avec le jour férié ajouté.
+   * Ajoute un nouveau jour férié.
+   * @param holidayRequest Détails du jour férié à ajouter.
+   * @returns Le jour férié ajouté avec son identifiant généré (Observable).
    */
-  addHoliday(holiday: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}`, holiday);
+  addHoliday(holidayRequest: PublicHoliday): Observable<PublicHoliday> {
+    return this.http.post<PublicHoliday>(`${this.apiUrl}`, holidayRequest);
   }
 
   /**
-   * Met à jour un jour férié existant dans la base de données.
-   * Utilise une requête PUT pour mettre à jour un jour férié.
-   * @param holidayId - L'identifiant unique du jour férié à mettre à jour.
-   * @param holiday - Les nouveaux détails du jour férié.
-   * @returns Observable avec le jour férié mis à jour ou null si non trouvé.
+   * Met à jour un jour férié existant.
+   * @param id Identifiant du jour férié à mettre à jour.
+   * @param holidayRequest Nouveaux détails du jour férié.
+   * @returns Le jour férié mis à jour (Observable).
    */
-  updateHoliday(holidayId: string, holiday: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${holidayId}`, holiday);
+  updateHoliday(id: string, holidayRequest: PublicHoliday): Observable<PublicHoliday> {
+    return this.http.put<PublicHoliday>(`${this.apiUrl}/${id}`, holidayRequest);
   }
 
   /**
-   * Supprime un jour férié de la base de données par son identifiant.
-   * Utilise une requête DELETE pour supprimer un jour férié.
-   * @param holidayId - L'identifiant unique du jour férié à supprimer.
-   * @returns Observable avec un message de confirmation ou une erreur.
+   * Supprime un jour férié par son ID.
+   * @param id Identifiant du jour férié à supprimer.
+   * @returns Un booléen indiquant le succès de l'opération (Observable).
    */
-  deleteHoliday(holidayId: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${holidayId}`);
+  deleteHoliday(id: string): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiUrl}/${id}`);
   }
+
 }
