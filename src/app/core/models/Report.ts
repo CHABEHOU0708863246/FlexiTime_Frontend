@@ -6,6 +6,7 @@ export interface Report {
   data: string[];
   createdDate: Date;
   updatedDate?: Date;
+  generatedByName?: string;
 }
 
 export enum ReportType {

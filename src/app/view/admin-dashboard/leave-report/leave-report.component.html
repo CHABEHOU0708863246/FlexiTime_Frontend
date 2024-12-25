@@ -40,8 +40,7 @@
           </a>
           <ul class="submenu" [ngClass]="{'active': isReportMenuOpen}">
             <li><a [routerLink]="['/admin/leave-report']">Rapports de congés</a></li>
-            <li><a href="chart-flot.html">Rapports d’absences</a></li>
-            <li><a href="chart-flot.html">Export des rapports</a></li>
+            <li><a href="chart-flot.html">Statistiques des rapports</a></li>
           </ul>
         </li>
 
@@ -136,6 +135,86 @@
               <!-- /# column -->
           </div>
 </div>
+
+
+
+
+<div class="report-container">
+  <div class="header">
+    <h2>Gestion des Rapports de Congés</h2>
+    <button class="btn btn-primary" (click)="openGenerateReportModal()">+ Générer un rapport</button>
+  </div>
+
+  <!-- Modal de génération de rapport -->
+  <div class="modal" *ngIf="showGenerateModal">
+    <div class="modal-content">
+      <h3>Générer un nouveau rapport</h3>
+      <div class="form-group">
+        <label for="newReportType">Type de rapport :</label>
+        <select id="newReportType" [(ngModel)]="newReportType">
+          <option value="">Sélectionnez un type</option>
+          <option *ngFor="let type of reportTypes" [value]="type">
+            {{ getTranslatedReportType(type) }}
+          </option>
+        </select>
+      </div>
+      <div class="error-message" *ngIf="generationError">{{ generationError }}</div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="showGenerateModal = false">Annuler</button>
+        <button class="btn btn-primary" (click)="generateReport()">Générer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de visualisation -->
+  <div class="modal" *ngIf="showViewModal">
+    <div class="modal-content">
+      <h3>Détails du rapport</h3>
+      <div *ngIf="currentReport">
+      <p><strong>ID:</strong> {{ currentReport.id }}</p>
+      <p><strong>Type:</strong> {{ getTranslatedReportType(currentReport.reportType) }}</p>
+      <p><strong>Généré par:</strong> {{ getUserFullName(currentReport.generatedBy) }}</p>
+      <p><strong>Date:</strong> {{ getFormattedDate(currentReport.generatedAt) }}</p>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" (click)="showViewModal = false">Fermer</button>
+          <button class="btn btn-primary" (click)="exportToExcel(currentReport.id)">
+            Exporter en Excel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="reports-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Généré par</th>
+        <th>Date de génération</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let report of filteredReports">
+        <td>{{ report.id }}</td>
+        <td>{{ getTranslatedReportType(report.reportType) }}</td>
+        <td>{{ getUserFullName(report.generatedBy) }}</td>
+        <td>{{ getFormattedDate(report.generatedAt) }}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="viewReport(report)">Voir</button>&nbsp;&nbsp;
+          <button class="btn btn-sm btn-primary" (click)="exportToExcel(report.id)">Excel</button>&nbsp;&nbsp;
+          <button class="btn btn-sm btn-danger" (click)="deleteReport(report.id)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="filteredReports.length === 0" class="no-reports">
+    Aucun rapport trouvé.
+  </div>
+</div>
+
 
 
 
