@@ -60,7 +60,37 @@
             </div>
           </div>
           <div>
-            <button type="submit" class="w-full flex justify-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500">Je me connecte</button>
+            <button
+              type="submit"
+              [disabled]="isLoading"
+              class="w-full flex justify-center items-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500"
+            >
+              <ng-container *ngIf="!isLoading; else loadingTemplate">
+                Je me connecte
+              </ng-container>
+              <ng-template #loadingTemplate>
+                <svg
+                  class="animate-spin h-5 w-5 mr-3 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="40"
+                    cy="40"
+                    r="20"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8z"
+                  ></path>
+                </svg>
+              </ng-template>
+            </button>
           </div>
         </div>
         <div class="mt-7 text-center text-gray-300 text-xs">

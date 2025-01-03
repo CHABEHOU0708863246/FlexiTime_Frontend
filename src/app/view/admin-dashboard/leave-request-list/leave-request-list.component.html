@@ -194,7 +194,7 @@
                     </td>
                     <td>
                       <span *ngIf="leaveRequest.justificationFileUrl">
-                        <a [href]="leaveRequest.justificationFileUrl" download>
+                        <a href="javascript:void(0)" (click)="downloadJustification(leaveRequest.justificationFileUrl)">
                           <i class="fa fa-download" aria-hidden="true"></i> Télécharger la justification
                         </a>
                       </span>

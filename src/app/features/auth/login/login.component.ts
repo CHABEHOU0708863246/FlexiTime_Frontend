@@ -44,9 +44,11 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true; // Activer le chargement
+    this.errorMessage = null; // Réinitialiser les erreurs
+
     const { email, password } = this.loginForm.value;
 
-    // Check if we're running in a browser environment before calling localStorage
     if (typeof window !== 'undefined' && window.localStorage) {
       this.authService.login(email, password).subscribe({
         next: (response) => {
@@ -66,18 +68,22 @@ export class LoginComponent implements OnInit {
               default:
                 this.router.navigate(['/']);
             }
+            this.isLoading = false; // Désactiver le chargement après navigation
           }, 1000);
         },
         error: (error) => {
           console.error('Erreur de connexion', error);
           this.errorMessage = 'Une erreur s\'est produite lors du processus de connexion.';
+          this.isLoading = false; // Désactiver le chargement en cas d'erreur
         }
       });
     } else {
       console.warn('Not running in a browser environment');
       this.errorMessage = 'Veuillez utiliser un navigateur pour vous connecter.';
+      this.isLoading = false; // Désactiver le chargement
     }
   }
+
 
 
 }

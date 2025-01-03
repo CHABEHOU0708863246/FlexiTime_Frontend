@@ -4,6 +4,8 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { User } from '../../core/models/User';
+import { LeaveStatusSummary } from '../../core/models/LeaveStatusSummary';
+import { LeaveReportsService } from '../../core/services/leaveReports/leave-reports.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -22,16 +24,29 @@ export class AdminDashboardComponent implements OnInit {
   isAttendanceMenuOpen: boolean = false;
   isReportMenuOpen: boolean = false;
   user: User | null = null;
+  leaveStatistics: LeaveStatusSummary | null = null;
 
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private leaveReportsService: LeaveReportsService) {}
 
   ngOnInit(): void {
     this.getUserDetails();
+    this.loadLeaveStatistics();
   }
 
   getUserDetails(): void {
     this.user = this.authService.getCurrentUser();
+  }
+
+  loadLeaveStatistics(): void {
+    this.leaveReportsService.getLeaveStatusSummary().subscribe(
+      (data) => {
+        this.leaveStatistics = data;  // Stocke les données reçues
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des statistiques des congés:', error);
+      }
+    );
   }
 
   toggleUserMenu() {

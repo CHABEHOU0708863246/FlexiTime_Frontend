@@ -230,6 +230,24 @@ downloadPdf(leaveId: string, userId: string): void {
   );
 }
 
+downloadJustification(fileName: string): void {
+  this.leaveService.downloadJustificationFile(fileName).subscribe(
+    (fileBlob: Blob) => {
+      const blobUrl = URL.createObjectURL(fileBlob); // Créer un URL pour le Blob
+      const link = document.createElement('a'); // Créer un élément <a>
+      link.href = blobUrl; // Lien vers le Blob
+      link.download = fileName; // Nom du fichier à télécharger
+      link.click(); // Simuler le clic pour lancer le téléchargement
+      URL.revokeObjectURL(blobUrl); // Révoquer l'URL Blob après utilisation
+    },
+    (error: string) => {
+      console.error('Erreur lors du téléchargement de la justification :', error);
+      alert('Une erreur est survenue lors du téléchargement.');
+    }
+  );
+}
+
+
 
 // Déconnexion de l'utilisateur
 logout(): void {

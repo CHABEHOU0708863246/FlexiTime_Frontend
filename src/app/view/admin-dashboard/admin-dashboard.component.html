@@ -143,83 +143,62 @@
           </div>
           <!-- /# row -->
           <section id="main-content">
-              <div class="row">
-                  <div class="col-lg-3">
-                      <div class="card">
-                          <div class="stat-widget-one">
-                              <div class="stat-icon dib"><i class="ti-world grid2 color-pink border-pink"></i></div>
-                              <div class="stat-content dib">
-                                  <div class="stat-text">Total Congés</div>
-                                  <div class="stat-digit">1,012</div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-lg-3">
-                      <div class="card">
-                          <div class="stat-widget-one">
-                              <div class="stat-icon dib"><i class="ti-hand-open color-primary border-primary"></i></div>
-                              <div class="stat-content dib">
-                                  <div class="stat-text">Congé Attente</div>
-                                  <div class="stat-digit">961</div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-lg-3">
-                      <div class="card">
-                          <div class="stat-widget-one">
-                              <div class="stat-icon dib"><i class="ti-face-smile color-success border-success"></i></div>
-                              <div class="stat-content dib">
-                                  <div class="stat-text">Congé Acceptés</div>
-                                  <div class="stat-digit">770</div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-lg-3">
-                      <div class="card">
-                          <div class="stat-widget-one">
-                              <div class="stat-icon dib"><i class="ti-face-sad color-danger border-danger"></i></div>
-                              <div class="stat-content dib">
-                                  <div class="stat-text">Congé Réfusés</div>
-                                  <div class="stat-digit">2,781</div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="row">
-                  <div class="col-lg-8">
-                      <div class="card">
-                          <div class="card-title">
-                              <h4>Liste des demandes de congés en attente</h4>
-
-                          </div>
-                          <div class="card-body">
-                              <div class="ct-bar-chart m-t-30"></div>
-                          </div>
-                      </div>
-                  </div>
-
-                  <div class="col-lg-4">
-                      <div class="card">
-
-                          <div class="card-body">
-                              <div class="ct-pie-chart"></div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="row">
-                <div class="col-lg-12">
-                    <div class="footer">
-                        <p> ©2024 FlexiTime -- Devélopper par <a href="https://www.linkedin.com/in/afferyauxencedelorschabehou/"> Affery Auxence Delors CHABEHOU.</a></p>
+            <div class="row">
+              <div class="col-lg-3">
+                <div class="card">
+                  <div class="stat-widget-one">
+                    <div class="stat-icon dib"><i class="ti-world grid2 color-pink border-pink"></i></div>
+                    <div class="stat-content dib">
+                      <div class="stat-text">Total Congés</div>
+                      <div class="stat-digit">{{ leaveStatistics?.totalCount }}</div>  <!-- Utilisation de l'opérateur de navigation sécurisée -->
                     </div>
+                  </div>
                 </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="card">
+                  <div class="stat-widget-one">
+                    <div class="stat-icon dib"><i class="ti-hand-open color-primary border-primary"></i></div>
+                    <div class="stat-content dib">
+                      <div class="stat-text">Congé Attente</div>
+                      <div class="stat-digit">{{ leaveStatistics?.pendingCount }}</div>  <!-- Utilisation de l'opérateur de navigation sécurisée -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="card">
+                  <div class="stat-widget-one">
+                    <div class="stat-icon dib"><i class="ti-face-smile color-success border-success"></i></div>
+                    <div class="stat-content dib">
+                      <div class="stat-text">Congé Acceptés</div>
+                      <div class="stat-digit">{{ leaveStatistics?.approvedCount }}</div>  <!-- Utilisation de l'opérateur de navigation sécurisée -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="card">
+                  <div class="stat-widget-one">
+                    <div class="stat-icon dib"><i class="ti-face-sad color-danger border-danger"></i></div>
+                    <div class="stat-content dib">
+                      <div class="stat-text">Congé Réfusés</div>
+                      <div class="stat-digit">{{ leaveStatistics?.rejectedCount }}</div>  <!-- Utilisation de l'opérateur de navigation sécurisée -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="footer">
+                  <p>©2024 FlexiTime -- Développé par <a href="https://www.linkedin.com/in/afferyauxencedelorschabehou/"> Affery Auxence Delors CHABEHOU.</a></p>
+                </div>
+              </div>
             </div>
           </section>
+
       </div>
   </div>
 </div>

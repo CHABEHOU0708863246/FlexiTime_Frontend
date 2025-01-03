@@ -1,3 +1,4 @@
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
@@ -5,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { Report, ReportType } from '../../models/Report';
 import { LeaveBalance } from '../../models/LeaveBalance';
 import { LeaveRequest } from '../../models/LeaveRequest';
+import { LeaveStatusSummary } from '../../models/LeaveStatusSummary';
 
 @Injectable({
   providedIn: 'root'
@@ -95,12 +97,18 @@ export class LeaveReportsService {
    * @param reportId L'ID du rapport à supprimer.
    * @returns Un booléen indiquant le succès ou l'échec (Observable).
    */
-  deleteReport(reportId: string): Observable<boolean> {
-    const url = `${this.apiUrl}/DeleteReport/${reportId}`;
-    return this.http.delete<boolean>(url).pipe(
-      catchError(this.handleError)
+  deleteReport(reportId: string): Observable<Report> {
+    const url = `${this.apiUrl}/Reports/${reportId}`;
+    return this.http.delete<Report>(url).pipe(
+      catchError((error) => {
+        console.error('Erreur lors de la suppression du rapport:', error);
+        return throwError(() => new Error(error));
+      })
     );
   }
+
+
+
 
   /**
    * Génère un rapport personnalisé.
@@ -135,6 +143,17 @@ export class LeaveReportsService {
   exportReportToExcel(reportId: string): Observable<Blob> {
     const url = `${this.apiUrl}/Reports/${reportId}/export`;
     return this.http.get(url, { responseType: 'blob' }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Récupère les statistiques des congés par statut (total, annulé, approuvé, en attente, refusé).
+   * @returns Les statistiques des congés (Observable).
+   */
+  getLeaveStatusSummary(): Observable<LeaveStatusSummary> {
+    const url = `${this.apiUrl}/Reports/status-summary`;  // URL de votre API pour récupérer les statistiques
+    return this.http.get<LeaveStatusSummary>(url).pipe(
       catchError(this.handleError)
     );
   }

@@ -132,6 +132,19 @@ updateLeaveStatus(leaveId: string, newStatus: number, userId: string): Observabl
   }
 
   /**
+   * 11. Télécharge le fichier de justification d'une demande de congé.
+   * @param fileName - Le nom du fichier de justification.
+   * @returns Observable contenant le fichier de justification sous forme de Blob.
+   */
+  downloadJustificationFile(fileName: string): Observable<Blob> {
+    const url = `${this.apiUrl}/justification/${fileName}`;
+    return this.http.get(url, { responseType: 'blob' }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+
+  /**
    * Gestion centralisée des erreurs.
    * @param error - L'erreur HTTP capturée.
    * @returns Observable avec un message d'erreur.
