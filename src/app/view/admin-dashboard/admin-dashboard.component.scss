@@ -62,4 +62,12 @@ h1 span {
   transform: rotate(180deg);
 }
 
+.card-body {
+  min-height: 300px;
+  position: relative;
+}
 
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}

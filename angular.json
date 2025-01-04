@@ -45,7 +45,16 @@
               "@angular/localize/init"
             ],
             "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+
+              "node_modules/@fullcalendar/core/index.cjs",
+
+              "node_modules/@fullcalendar/core/index.global.js",
+
+              "node_modules/@fullcalendar/core/index.global.min.js",
+
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+
             ],
             "server": "src/main.server.ts",
             "prerender": true,

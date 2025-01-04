@@ -111,6 +111,17 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 <div class="content-wrap">
   <div class="main">
       <div class="container-fluid">
@@ -142,6 +153,7 @@
               <!-- /# column -->
           </div>
           <!-- /# row -->
+
           <section id="main-content">
             <div class="row">
               <div class="col-lg-3">
@@ -190,6 +202,50 @@
               </div>
             </div>
 
+
+
+            <section id="main-content">
+              <div class="row mt-4">
+                <!-- Sélecteur d'année -->
+                <div class="col-12">
+                  <label for="yearSelect">Sélectionner l'année :</label>
+                  <select id="yearSelect" [(ngModel)]="selectedYear" (change)="onYearChange()">
+                    <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+                  </select>
+                </div>
+
+                <!-- Graphiques -->
+                <div class="col-lg-6">
+                  <div class="card">
+                    <div class="card-header">
+                      <h4>Graphique des Congés Année</h4>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="sales-chart"></canvas>
+                    </div>
+                  </div>
+                </div>
+                <!-- Graphique des Congés Équipe -->
+                <div class="col-lg-6">
+                  <div class="card">
+                    <div class="card-header">
+                      <h4>Graphique des Congés de l'Équipe</h4>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="team-chart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+
+
+
+
+
+
+
             <div class="row">
               <div class="col-lg-12">
                 <div class="footer">
@@ -213,3 +269,13 @@
     <button type="submit" class="btn btn-primary">Search</button>
   </form>
 </div>
+
+
+
+
+
+
+
+
+
+

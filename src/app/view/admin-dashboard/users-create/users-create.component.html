@@ -274,13 +274,24 @@
       <!-- Boutons de navigation -->
       <div class="d-flex justify-content-between">
         <button
-          class="btn btn-secondary"
+          class="btn btn-primary"
           [disabled]="currentStep === 1"
-          (click)="previousStep()">Précédent</button>
+          (click)="previousStep()">Précédent
+          <div id="container-stars">
+            <div id="stars"></div>
+          </div>
+          <div id="glow">
+            <div class="circle"></div>
+            <div class="circle"></div>
+          </div>
+        </button>
+
         <button
           *ngIf="currentStep < 3"
           class="btn btn-primary"
-          (click)="nextStep()">Suivant</button>
+          (click)="nextStep()">Suivant
+        </button>
+
           <button type="button" class="btn btn-secondary" (click)="onReset()">Réinitialiser</button>
         <button
           *ngIf="currentStep === 3"

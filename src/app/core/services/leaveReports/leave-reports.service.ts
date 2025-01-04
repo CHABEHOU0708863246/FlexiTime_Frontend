@@ -2,11 +2,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Report, ReportType } from '../../models/Report';
 import { LeaveBalance } from '../../models/LeaveBalance';
 import { LeaveRequest } from '../../models/LeaveRequest';
 import { LeaveStatusSummary } from '../../models/LeaveStatusSummary';
+import { LeaveTrend } from '../../models/LeaveTrend';
 
 @Injectable({
   providedIn: 'root'
@@ -154,6 +155,45 @@ export class LeaveReportsService {
   getLeaveStatusSummary(): Observable<LeaveStatusSummary> {
     const url = `${this.apiUrl}/Reports/status-summary`;  // URL de votre API pour récupérer les statistiques
     return this.http.get<LeaveStatusSummary>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Récupère les statistiques globales des congés.
+   * @returns Un dictionnaire avec les statistiques globales.
+   */
+  getGlobalLeaveStatistics(): Observable<Record<string, number>> {
+    const url = `${this.apiUrl}/global-statistics`;
+    return this.http.get<Record<string, number>>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Récupère les tendances des congés par mois.
+   * @returns Une liste des tendances des congés (Observable).
+   */
+  getLeaveTrends(): Observable<LeaveTrend[]> {
+    const url = `${this.apiUrl}/Reports/leave-trends`;
+    console.log('Appel API getLeaveTrends:', url);
+    return this.http.get<LeaveTrend[]>(url).pipe(
+      tap(data => console.log('Données reçues de l\'API:', data)),
+      catchError(error => {
+        console.error('Erreur API:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Récupère le résumé des soldes de congés pour un utilisateur spécifique.
+   * @param userId L'ID de l'utilisateur.
+   * @returns Un dictionnaire avec le type de congé et les soldes (Observable).
+   */
+  getLeaveBalanceSummary(userId: string): Observable<Record<string, number>> {
+    const url = `${this.apiUrl}/leave-balance/${userId}`;
+    return this.http.get<Record<string, number>>(url).pipe(
       catchError(this.handleError)
     );
   }
