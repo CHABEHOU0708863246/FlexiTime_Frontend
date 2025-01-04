@@ -166,6 +166,18 @@
     </div>
   </div>
 
+  <!-- Modal de confirmation de suppression -->
+  <div class="modal" *ngIf="showDeleteModal">
+    <div class="modal-content">
+      <h3>Confirmation de suppression</h3>
+      <p>Êtes-vous sûr de vouloir supprimer ce rapport ?</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="cancelDelete()">Annuler</button>
+        <button class="btn btn-danger" (click)="executeDelete()">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal de visualisation -->
   <div class="modal" *ngIf="showViewModal">
     <div class="modal-content">
@@ -204,7 +216,7 @@
         <td>
           <button class="btn btn-sm btn-info" (click)="viewReport(report)">Voir</button>&nbsp;&nbsp;
           <button class="btn btn-sm btn-primary" (click)="exportToExcel(report.id)">Excel</button>&nbsp;&nbsp;
-          <button class="btn btn-sm btn-danger" (click)="deleteReport(report.id)">Supprimer</button>
+          <button class="btn btn-sm btn-danger" (click)="confirmDelete(report.id)">Supprimer</button>
         </td>
       </tr>
     </tbody>

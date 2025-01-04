@@ -7,6 +7,7 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { LeaveReportsService } from '../../../core/services/leaveReports/leave-reports.service';
 import { Report, ReportType } from '../../../core/models/Report';
 import { CommonModule } from '@angular/common';
+import { ToastService } from '../../../core/services/toast/toast.service';
 
 @Component({
   selector: 'app-leave-report',
@@ -50,13 +51,17 @@ export class LeaveReportComponent implements OnInit{
   showViewModal = false;
   currentReport: Report | null = null;
 
+  showDeleteModal = false;
+  reportToDelete: string | null = null;
+
 
 
   constructor(private router: Router,
     private usersService: UsersService ,
     private authService: AuthService,
     private fb: FormBuilder,
-    private leaveReportsService: LeaveReportsService) {
+    private leaveReportsService: LeaveReportsService,
+    private toastService: ToastService) {
     }
 
   ngOnInit(): void {
@@ -70,6 +75,36 @@ export class LeaveReportComponent implements OnInit{
       },
       error: (err) => console.error('Erreur chargement rapports :', err),
     });
+  }
+
+  confirmDelete(reportId: string): void {
+    this.reportToDelete = reportId;
+    this.showDeleteModal = true;
+  }
+
+  executeDelete(): void {
+    if (this.reportToDelete) {
+      this.leaveReportsService.deleteReport(this.reportToDelete).subscribe({
+        next: () => {
+          this.reports = this.reports.filter((report) => report.id !== this.reportToDelete);
+          this.filterReports();
+          this.showDeleteModal = false;
+          this.reportToDelete = null;
+          this.toastService.show('Rapport supprimé avec succès', 'success');
+        },
+        error: (error) => {
+          console.error("Erreur lors de la suppression du rapport", error);
+          this.toastService.show('Erreur lors de la suppression du rapport', 'error');
+          this.showDeleteModal = false;
+          this.reportToDelete = null;
+        }
+      });
+    }
+  }
+
+  cancelDelete(): void {
+    this.showDeleteModal = false;
+    this.reportToDelete = null;
   }
 
   private static readonly REPORT_TYPE_TRANSLATIONS = new Map<ReportType, string>([
@@ -187,6 +222,7 @@ export class LeaveReportComponent implements OnInit{
       });
     }
   }
+
 
   exportToExcel(reportId: string): void {
     this.leaveReportsService.exportReportToExcel(reportId).subscribe({
