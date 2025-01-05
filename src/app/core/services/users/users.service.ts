@@ -66,4 +66,16 @@ export class UsersService {
     return this.http.get<any>(`${this.baseUrl}/paginated?pageNumber=${pageNumber}&pageSize=${pageSize}`); // Récupère les utilisateurs paginés selon les paramètres de la page.
   }
 
+  /**
+   * 7. Mise à jour du rôle d'un utilisateur.
+   * @param userId - L'ID de l'utilisateur.
+   * @param newRole - Le nouveau rôle à assigner à l'utilisateur.
+   * @returns Un Observable contenant le résultat de la mise à jour.
+   */
+  updateUserRole(userId: string, newRole: string): Observable<any> {
+    const encodedUserId = encodeURIComponent(userId);
+    const encodedNewRole = encodeURIComponent(newRole);
+    return this.http.put<any>(`${this.baseUrl}/update-user-role?userId=${encodedUserId}&newRole=${encodedNewRole}`, {}); // Envoie une requête PUT pour mettre à jour le rôle de l'utilisateur.
+  }
+
 }

@@ -6,6 +6,7 @@ import { User } from '../../../core/models/User';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { RoleRequest } from '../../../core/models/RoleRequest';
 import { RolesService } from '../../../core/services/roles/roles.service';
+import { UsersService } from '../../../core/services/users/users.service';
 
 @Component({
   selector: 'app-users-role-management',
@@ -16,7 +17,7 @@ import { RolesService } from '../../../core/services/roles/roles.service';
     RouterLink
   ],
   templateUrl: './users-role-management.component.html',
-  styleUrl: './users-role-management.component.scss'
+  styleUrls: ['./users-role-management.component.scss']
 })
 export class UsersRoleManagementComponent implements OnInit {
   isUserMenuOpen: boolean = false;
@@ -30,11 +31,13 @@ export class UsersRoleManagementComponent implements OnInit {
   isEditMode: boolean = false;
   currentRoleId: string | null = null;
 
+  updateRoleForm!: FormGroup;
 
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
     private rolesService: RolesService,
+    private usersService: UsersService,
     private router: Router
   ) {
     this.roleForm = this.fb.group({
@@ -42,11 +45,44 @@ export class UsersRoleManagementComponent implements OnInit {
       roleName: ['', Validators.required],
       normalizedName: ['', Validators.required]
     });
+
+    this.updateRoleForm = this.fb.group({
+      userId: ['', Validators.required],
+      newRole: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
     this.getUserDetails();
     this.loadRoles();
+  }
+
+  /**
+   * Met à jour le rôle de l'utilisateur.
+   */
+  updateUserRole(): void {
+    if (this.updateRoleForm.invalid) {
+      return;
+    }
+
+    const { userId, newRole } = this.updateRoleForm.value;
+
+    this.usersService.updateUserRole(userId, newRole).subscribe(
+      (response) => {
+        console.log('Rôle mis à jour avec succès:', response);
+        this.resetUpdateRoleForm();
+      },
+      (error) => {
+        console.error('Erreur lors de la mise à jour du rôle:', error);
+      }
+    );
+  }
+
+  /**
+   * Réinitialise le formulaire de mise à jour du rôle.
+   */
+  resetUpdateRoleForm(): void {
+    this.updateRoleForm.reset();
   }
 
   /**
@@ -62,7 +98,6 @@ export class UsersRoleManagementComponent implements OnInit {
       }
     );
   }
-
 
   saveRole(): void {
     if (this.roleForm.invalid) {
@@ -82,8 +117,7 @@ export class UsersRoleManagementComponent implements OnInit {
           console.error('Erreur lors de la mise à jour du rôle :', error);
         }
       );
-    }
-     else {
+    } else {
       // Mode création
       this.rolesService.createRole(roleData).subscribe(
         () => {
@@ -97,7 +131,6 @@ export class UsersRoleManagementComponent implements OnInit {
     }
   }
 
-
   /**
    * Remplit le formulaire pour éditer un rôle existant.
    * @param role Rôle à éditer.
@@ -107,8 +140,6 @@ export class UsersRoleManagementComponent implements OnInit {
     this.currentRoleId = role.code || null;
     this.roleForm.patchValue(role);
   }
-
-
 
   /**
    * Supprime un rôle par son ID.
@@ -133,19 +164,14 @@ export class UsersRoleManagementComponent implements OnInit {
     }
   }
 
-
-
-
-
-
-    /**
+  /**
    * Réinitialise le formulaire et les variables de mode édition.
    */
-    resetForm(): void {
-      this.roleForm.reset();
-      this.isEditMode = false;
-      this.currentRoleId = null;
-    }
+  resetForm(): void {
+    this.roleForm.reset();
+    this.isEditMode = false;
+    this.currentRoleId = null;
+  }
 
   getUserDetails(): void {
     this.user = this.authService.getCurrentUser();
@@ -163,11 +189,12 @@ export class UsersRoleManagementComponent implements OnInit {
     this.isReportMenuOpen = !this.isReportMenuOpen;
   }
 
+
+
   logout(): void {
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       this.authService.logout();
     }
     this.router.navigate(['/auth/login']);
   }
-
 }

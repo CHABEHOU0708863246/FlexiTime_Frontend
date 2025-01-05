@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../core/models/User';
@@ -10,8 +10,8 @@ import { CalendarOptions } from '@fullcalendar/core/index.js';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CalendarEvent, CalendarEventType } from '../../../core/models/CalendarEvent';
-import { Modal } from 'bootstrap';
-
+import { DomService } from '../../../shared/dom.service';
+import Modal from 'bootstrap/js/dist/modal';
 
 @Component({
   selector: 'app-leave-calendar-view',
@@ -25,7 +25,7 @@ import { Modal } from 'bootstrap';
   templateUrl: './leave-calendar-view.component.html',
   styleUrl: './leave-calendar-view.component.scss'
 })
-export class LeaveCalendarViewComponent implements OnInit{
+export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
   isUserMenuOpen: boolean = false;
   isLeaveMenuOpen: boolean = false;
   isAttendanceMenuOpen: boolean = false;
@@ -36,12 +36,11 @@ export class LeaveCalendarViewComponent implements OnInit{
     initialView: 'dayGridMonth',
     editable: true,
     selectable: true,
-    locale: 'fr',  // Ajouter la langue française
-    events: [], // Les événements seront chargés dynamiquement
-    eventBackgroundColor: '', // La couleur par défaut
-    eventClick: this.handleEventClick.bind(this), // Gestionnaire de clics sur événement
+    locale: 'fr',
+    events: [],
+    eventBackgroundColor: '',
+    eventClick: this.handleEventClick.bind(this),
   };
-
 
   selectedEvent: CalendarEvent | null = null;
 
@@ -69,17 +68,23 @@ export class LeaveCalendarViewComponent implements OnInit{
     return eventTypes[eventType] || 'Type inconnu';
   }
 
-
-
-
-
-  constructor(private router: Router, private authService: AuthService, private calendarService: CalendarService) {}
+  constructor(private router: Router, private authService: AuthService, private calendarService: CalendarService, private domService: DomService) {}
 
   ngOnInit(): void {
     this.getUserDetails();
     this.loadEvents();
   }
 
+  ngAfterViewInit(): void {
+    const doc = this.domService.getDocument();
+    if (doc) {
+      const modalElement = doc.getElementById('eventDetailsModal');
+      if (modalElement) {
+        const modal = new Modal(modalElement);
+        modal.show();
+      }
+    }
+  }
 
   handleEventClick(clickInfo: any): void {
     const event = clickInfo.event;
@@ -89,24 +94,30 @@ export class LeaveCalendarViewComponent implements OnInit{
       startDate: event.startStr,
       endDate: event.endStr,
       eventType: event.extendedProps.eventType,
-      translatedEventType: this.translateEventType(event.extendedProps.eventType), // Traduction en français
+      translatedEventType: this.translateEventType(event.extendedProps.eventType),
       colorCode: event.backgroundColor,
       isRecurring: event.extendedProps.isRecurring || false,
-      requestedBy: event.extendedProps.requestedBy,  // Nom de la personne ayant fait la demande
+      requestedBy: event.extendedProps.requestedBy,
     };
 
-    // Vérifier si 'document' est défini (côté client seulement)
-    if (typeof document !== 'undefined') {
-      const modalElement = document.getElementById('eventDetailsModal');
-      if (modalElement) {
-        const modal = new Modal(modalElement);  // Créer une instance du modal
-        modal.show();  // Afficher le modal
-      }
+    if (this.isClientSide()) {
+      this.showEventDetailsModal();
     }
   }
 
+  isClientSide(): boolean {
+    return typeof window !== 'undefined' && typeof document !== 'undefined';
+  }
 
-
+  showEventDetailsModal(): void {
+    if (this.isClientSide()) {
+      const modalElement = document.getElementById('eventDetailsModal');
+      if (modalElement) {
+        const modal = new Modal(modalElement);
+        modal.show();
+      }
+    }
+  }
 
 
   formatDate(date: string): string {
@@ -116,11 +127,6 @@ export class LeaveCalendarViewComponent implements OnInit{
     const year = d.getFullYear();
     return `${day}/${month}/${year}`;
   }
-
-
-
-
-
 
   loadEvents(): void {
     this.calendarService.getCalendarEvents().subscribe((events: CalendarEvent[]) => {
@@ -140,8 +146,6 @@ export class LeaveCalendarViewComponent implements OnInit{
       this.calendarOptions.events = formattedEvents;
     });
   }
-
-
 
   getUserDetails(): void {
     this.user = this.authService.getCurrentUser();
@@ -165,6 +169,4 @@ export class LeaveCalendarViewComponent implements OnInit{
     }
     this.router.navigate(['/auth/login']);
   }
-
-
 }

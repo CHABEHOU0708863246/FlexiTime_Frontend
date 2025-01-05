@@ -198,6 +198,91 @@ export class LeaveReportsService {
     );
   }
 
+
+  /**
+   * Récupère les données pour afficher les congés en diagrammes en barres.
+   * @param startDate La date de début de la période.
+   * @param endDate La date de fin de la période.
+   * @returns Un dictionnaire contenant les types de congé et le nombre de jours de congé (Observable).
+   */
+  getLeaveDataForBarChart(startDate: Date, endDate: Date): Observable<Record<string, number>> {
+    const url = `${this.apiUrl}/Reports/leave-bar-chart?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
+    return this.http.get<Record<string, number>>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Récupère les données pour afficher la répartition des congés par type en diagramme circulaire.
+   * @returns Un dictionnaire contenant les types de congé et le pourcentage de jours de congé (Observable).
+   */
+  getLeaveDataForPieChart(): Observable<Record<string, number>> {
+    const url = `${this.apiUrl}/Reports/leave-pie-chart`;
+    return this.http.get<Record<string, number>>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Met à jour manuellement le solde de congés d'un employé.
+   * @param userId L'ID de l'employé.
+   * @param leaveType Le type de congé à mettre à jour.
+   * @param newBalance Le nouveau solde.
+   * @returns Un booléen indiquant si la mise à jour a réussi (Observable).
+   */
+  updateLeaveBalanceManually(userId: string, leaveType: string, newBalance: number): Observable<boolean> {
+    const url = `${this.apiUrl}/Reports/update-leave-balance?userId=${userId}&leaveType=${leaveType}&newBalance=${newBalance}`;
+    return this.http.put<boolean>(url, {}).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Exporte le solde de congés d'un employé vers un fichier Excel.
+   * @param userId L'ID de l'utilisateur.
+   * @returns Un blob contenant le fichier Excel (Observable).
+   */
+  exportLeaveBalanceToExcel(userId: string): Observable<Blob> {
+    const url = `${this.apiUrl}/Reports/export-leave-balance?userId=${userId}`;
+    return this.http.get(url, { responseType: 'blob' }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Récupère le planning des congés approuvés pour un employé.
+   * @param userId L'ID de l'employé.
+   * @returns Une liste contenant les congés approuvés (Observable).
+   */
+  getApprovedLeaveSchedule(userId: string): Observable<LeaveRequest[]> {
+    const url = `${this.apiUrl}/Reports/approved-leave-schedule?userId=${userId}`;
+    return this.http.get<LeaveRequest[]>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Analyse les tendances d'utilisation des congés par mois.
+   * @returns Une liste contenant les tendances par mois et par type de congé (Observable).
+   */
+  getDetailedLeaveTrendsByMonth(): Observable<LeaveTrend[]> {
+    const url = `${this.apiUrl}/Reports/leave-trends`;
+    return this.http.get<LeaveTrend[]>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Prévoit les besoins en congés pour l'année prochaine basés sur les données historiques.
+   * @returns Un dictionnaire contenant les prévisions par type de congé (Observable).
+   */
+  predictLeaveNeedsForNextYear(): Observable<Record<string, number>> {
+    const url = `${this.apiUrl}/Reports/predict-leave-needs`;
+    return this.http.get<Record<string, number>>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   /**
    * Gestion des erreurs HTTP.
    * @param error L'erreur capturée.

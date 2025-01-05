@@ -137,8 +137,32 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
+                <h4 class="card-title">Modifier le Rôle d'un Utilisateur</h4>
+                <!-- Formulaire de modification du rôle -->
+                <form [formGroup]="updateRoleForm" (ngSubmit)="updateUserRole()">
+                  <div class="form-group row">
+                    <label class="col-lg-4 col-form-label">ID de l'Utilisateur</label>
+                    <div class="col-lg-8">
+                      <input type="text" class="form-control" formControlName="userId" placeholder="Entrez l'ID de l'utilisateur" />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-lg-4 col-form-label">Nouveau Rôle</label>
+                    <div class="col-lg-8">
+                      <select class="form-control" formControlName="newRole">
+                        <option value="" disabled selected>Sélectionnez un rôle</option>
+                        <option *ngFor="let role of roles" [value]="role.roleName">{{ role.roleName }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-lg-8 offset-lg-4">
+                      <button type="submit" class="btn btn-primary">Mettre à Jour le Rôle</button>
+                      <button type="button" class="btn btn-secondary" (click)="resetUpdateRoleForm()">Réinitialiser</button>
+                    </div>
+                  </div>
+                </form>
                 <h4 class="card-title">Gestion des Rôles</h4>
-
                 <!-- Formulaire de création/édition -->
                 <form [formGroup]="roleForm" (ngSubmit)="saveRole()">
                   <div class="form-group row">
@@ -189,7 +213,6 @@
                     </tr>
                   </tbody>
                 </table>
-
               </div>
             </div>
           </div>
