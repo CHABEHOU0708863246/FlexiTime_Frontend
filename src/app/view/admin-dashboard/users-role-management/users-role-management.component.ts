@@ -25,6 +25,11 @@ export class UsersRoleManagementComponent implements OnInit {
   isAttendanceMenuOpen: boolean = false;
   isReportMenuOpen: boolean = false;
   user: User | null = null;
+  users: User[] = [];
+  selectedUser: User | null = null;
+  loading = false;
+  errorMessage = '';
+  successMessage = '';
 
   roleForm!: FormGroup;
   roles: RoleRequest[] = [];
@@ -47,56 +52,122 @@ export class UsersRoleManagementComponent implements OnInit {
     });
 
     this.updateRoleForm = this.fb.group({
-      userId: ['', Validators.required],
-      newRole: ['', Validators.required]
+      selectedUser: [null, [Validators.required]],
+      newRole: ['', [Validators.required]]
+    });
+
+    // Ajout d'un observateur pour déboguer le statut du formulaire
+    this.updateRoleForm.statusChanges.subscribe(status => {
+      console.log('Form Status:', status);
+      console.log('Form Errors:', this.updateRoleForm.errors);
+      console.log('SelectedUser Errors:', this.updateRoleForm.get('selectedUser')?.errors);
+      console.log('NewRole Errors:', this.updateRoleForm.get('newRole')?.errors);
     });
   }
 
   ngOnInit(): void {
     this.getUserDetails();
     this.loadRoles();
+    this.loadUsers();
   }
+
+/**
+ * Charger les utilisateurs
+ */
+loadUsers(): void {
+  this.loading = true;
+  this.usersService.getAllUsers().subscribe({
+    next: (users) => {
+      this.users = users;
+      this.loading = false;
+    },
+    error: (error) => {
+      this.errorMessage = 'Erreur lors du chargement des utilisateurs: ' + error;
+      this.loading = false;
+    }
+  });
+}
 
   /**
    * Met à jour le rôle de l'utilisateur.
    */
   updateUserRole(): void {
     if (this.updateRoleForm.invalid) {
+      Object.keys(this.updateRoleForm.controls).forEach(key => {
+        const control = this.updateRoleForm.get(key);
+        control?.markAsTouched();
+      });
       return;
     }
 
-    const { userId, newRole } = this.updateRoleForm.value;
+    const selectedUser = this.updateRoleForm.get('selectedUser')?.value;
+    const newRole = this.updateRoleForm.get('newRole')?.value;
 
-    this.usersService.updateUserRole(userId, newRole).subscribe(
-      (response) => {
-        console.log('Rôle mis à jour avec succès:', response);
+    if (!selectedUser || !selectedUser.id) {
+      this.errorMessage = 'Utilisateur invalide';
+      return;
+    }
+
+    if (!newRole) {
+      this.errorMessage = 'Rôle invalide';
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    // Log des données avant envoi
+    console.log('Envoi à l\'API:', {
+      userId: selectedUser.id,
+      newRole: newRole
+    });
+
+    this.usersService.updateUserRole(selectedUser.id, newRole).subscribe({
+      next: () => {
+        this.successMessage = 'Rôle mis à jour avec succès';
+        this.loading = false;
         this.resetUpdateRoleForm();
       },
-      (error) => {
-        console.error('Erreur lors de la mise à jour du rôle:', error);
+      error: (error) => {
+        this.errorMessage = error; // L'erreur est déjà formatée dans le service
+        this.loading = false;
       }
-    );
+    });
   }
 
-  /**
-   * Réinitialise le formulaire de mise à jour du rôle.
-   */
+
   resetUpdateRoleForm(): void {
-    this.updateRoleForm.reset();
+    this.updateRoleForm.reset({
+      selectedUser: null,
+      newRole: ''
+    });
+    this.errorMessage = '';
+    this.successMessage = '';
+  }
+
+  // Ajout de méthodes utilitaires pour la validation
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.updateRoleForm.get(fieldName);
+    return field ? (field.invalid && (field.dirty || field.touched)) : false;
+  }
+
+  canUpdateRole(): boolean {
+    return this.updateRoleForm.valid && !this.loading;
   }
 
   /**
    * Charge la liste des rôles depuis l'API.
    */
   loadRoles(): void {
-    this.rolesService.getRoles().subscribe(
-      (data) => {
-        this.roles = data;
+    this.rolesService.getRoles().subscribe({
+      next: (roles) => {
+        this.roles = roles;
       },
-      (error) => {
-        console.error('Erreur lors du chargement des rôles :', error);
+      error: (error) => {
+        this.errorMessage = 'Erreur lors du chargement des rôles: ' + error;
       }
-    );
+    });
   }
 
   saveRole(): void {
@@ -173,28 +244,42 @@ export class UsersRoleManagementComponent implements OnInit {
     this.currentRoleId = null;
   }
 
+  /**
+   * Charge les détails de l'utilisateur connecté.
+   */
   getUserDetails(): void {
     this.user = this.authService.getCurrentUser();
   }
 
+  /**
+   * Active ou désactive le menu utilisateur.
+   */
   toggleUserMenu() {
     this.isUserMenuOpen = !this.isUserMenuOpen;
   }
 
+  /**
+   * Active ou désactive le menu de gestion des congés.
+   */
   toggleLeaveMenu() {
     this.isLeaveMenuOpen = !this.isLeaveMenuOpen;
   }
 
+  /**
+   * Active ou désactive le menu des rapports.
+   */
   toggleReportMenu() {
     this.isReportMenuOpen = !this.isReportMenuOpen;
   }
 
-
-
+  /**
+   * Déconnecte l'utilisateur et le redirige vers la page de connexion.
+   */
   logout(): void {
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       this.authService.logout();
     }
     this.router.navigate(['/auth/login']);
   }
+
 }

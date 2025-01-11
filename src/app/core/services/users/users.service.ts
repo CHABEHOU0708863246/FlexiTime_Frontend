@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { User } from '../../models/User';
 
 @Injectable({
@@ -26,7 +26,9 @@ export class UsersService {
    * @returns Un Observable contenant une liste d'utilisateurs.
    */
   getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.baseUrl}`); // Envoie une requête GET pour récupérer tous les utilisateurs.
+    return this.http.get<User[]>(`${this.baseUrl}`).pipe(
+      catchError(this.handleError)
+    );
   }
 
   /**
@@ -73,9 +75,35 @@ export class UsersService {
    * @returns Un Observable contenant le résultat de la mise à jour.
    */
   updateUserRole(userId: string, newRole: string): Observable<any> {
-    const encodedUserId = encodeURIComponent(userId);
-    const encodedNewRole = encodeURIComponent(newRole);
-    return this.http.put<any>(`${this.baseUrl}/update-user-role?userId=${encodedUserId}&newRole=${encodedNewRole}`, {}); // Envoie une requête PUT pour mettre à jour le rôle de l'utilisateur.
+    // Vérifiez que userId et newRole sont bien des chaînes valides avant de les envoyer
+    if (!userId || !newRole) {
+      return throwError(() => new Error('userId et newRole sont nécessaires.'));
+    }
+
+    const url = `${this.baseUrl}/update-user-role?userId=${userId}&newRole=${newRole}`;
+
+    return this.http.put<any>(url, {}).pipe(
+      tap(() => {
+        console.log('Rôle mis à jour avec succès');
+        // Vous pouvez appeler un service de notification ou afficher un message à l'utilisateur ici
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+
+
+
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Une erreur est survenue';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Erreur: ${error.error.message}`;
+    } else {
+      errorMessage = `Code d'erreur: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.error(errorMessage);
+    return throwError(() => errorMessage);
   }
 
 }

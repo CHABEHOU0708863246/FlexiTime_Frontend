@@ -138,30 +138,69 @@
             <div class="card">
               <div class="card-body">
                 <h4 class="card-title">Modifier le Rôle d'un Utilisateur</h4>
-                <!-- Formulaire de modification du rôle -->
+
+                <div *ngIf="loading" class="text-center">
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                  </div>
+                </div>
+
+                <div *ngIf="errorMessage" class="alert alert-danger">
+                  {{ successMessage }}
+                </div>
+
+                <div *ngIf="successMessage" class="alert alert-success">
+                  {{ successMessage }}
+                </div>
+                <!-- Assurez-vous que le formulaire complet soit entouré des balises form avec ngSubmit -->
                 <form [formGroup]="updateRoleForm" (ngSubmit)="updateUserRole()">
-                  <div class="form-group row">
-                    <label class="col-lg-4 col-form-label">ID de l'Utilisateur</label>
+                  <div class="form-group row mb-3">
+                    <label class="col-lg-4 col-form-label">Sélectionner un Utilisateur</label>
                     <div class="col-lg-8">
-                      <input type="text" class="form-control" formControlName="userId" placeholder="Entrez l'ID de l'utilisateur" />
+                      <select class="form-select" formControlName="selectedUser">
+                        <option [ngValue]="null">Choisissez un utilisateur</option>
+                        <option *ngFor="let user of users" [ngValue]="user">
+                          {{ user.firstName }} {{ user.lastName }} ({{ user.email }})
+                        </option>
+                      </select>
+                      <div *ngIf="isFieldInvalid('selectedUser')" class="text-danger">
+                        Veuillez sélectionner un utilisateur
+                      </div>
                     </div>
                   </div>
-                  <div class="form-group row">
+
+                  <div class="form-group row mb-3">
                     <label class="col-lg-4 col-form-label">Nouveau Rôle</label>
                     <div class="col-lg-8">
-                      <select class="form-control" formControlName="newRole">
-                        <option value="" disabled selected>Sélectionnez un rôle</option>
-                        <option *ngFor="let role of roles" [value]="role.roleName">{{ role.roleName }}</option>
+                      <select class="form-select" formControlName="newRole">
+                        <option value="">Sélectionnez un rôle</option>
+                        <option *ngFor="let role of roles" [value]="role.roleName">
+                          {{ role.roleName }}
+                        </option>
                       </select>
+                      <div *ngIf="isFieldInvalid('newRole')" class="text-danger">
+                        Veuillez sélectionner un rôle
+                      </div>
                     </div>
                   </div>
+
                   <div class="form-group row">
                     <div class="col-lg-8 offset-lg-4">
-                      <button type="submit" class="btn btn-primary">Mettre à Jour le Rôle</button>
-                      <button type="button" class="btn btn-secondary" (click)="resetUpdateRoleForm()">Réinitialiser</button>
+                      <button type="submit"
+                              class="btn btn-primary me-2"
+                              [disabled]="!canUpdateRole()">
+                        Mettre à Jour le Rôle
+                      </button>
+                      <button type="button"
+                              class="btn btn-secondary"
+                              (click)="resetUpdateRoleForm()"
+                              [disabled]="loading">
+                        Réinitialiser
+                      </button>
                     </div>
                   </div>
                 </form>
+                <hr>
                 <h4 class="card-title">Gestion des Rôles</h4>
                 <!-- Formulaire de création/édition -->
                 <form [formGroup]="roleForm" (ngSubmit)="saveRole()">

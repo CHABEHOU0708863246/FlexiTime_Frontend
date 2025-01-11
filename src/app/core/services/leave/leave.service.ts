@@ -143,6 +143,21 @@ updateLeaveStatus(leaveId: string, newStatus: number, userId: string): Observabl
     );
   }
 
+  /**
+   * 12. Met à jour le solde de congés d'un utilisateur après un congé.
+   * @param userId L'ID de l'utilisateur.
+   * @param leave Les détails du congé.
+   * @returns Un booléen indiquant le succès ou l'échec (Observable).
+   */
+  updateLeaveBalance(userId: string, leave: LeaveRequest): Observable<boolean> {
+    const url = `${this.apiUrl}/balance/${userId}`;
+    return this.http.put<boolean>(url, leave).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+
+
 
   /**
    * Gestion centralisée des erreurs.

@@ -5,63 +5,82 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../core/models/User';
 import { AuthService } from '../../../core/services/auth/auth.service';
-import { LeaveRequest, StatutConges, TypeConge} from '../../../core/models/LeaveRequest';
+import { LeaveRequest, StatutConges, TypeConge } from '../../../core/models/LeaveRequest';
 import { LeaveService } from '../../../core/services/leave/leave.service';
 import { PaginatedResponse } from '../../../core/models/PaginationResponse ';
 
+
 @Component({
-  selector: 'app-leave-request-list',
-  standalone: true,
+  selector: 'app-leave-request-list', // Sélecteur du composant.
+  standalone: true, // Composant autonome.
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
     RouterLink
   ],
-  templateUrl: './leave-request-list.component.html',
-  styleUrl: './leave-request-list.component.scss'
+  templateUrl: './leave-request-list.component.html', // Template HTML associé.
+  styleUrl: './leave-request-list.component.scss' // Fichier de styles SCSS associé.
 })
-export class LeaveRequestListComponent implements OnInit{
-  isUserMenuOpen: boolean = false;
-  isLeaveMenuOpen: boolean = false;
-  isAttendanceMenuOpen: boolean = false;
-  isReportMenuOpen: boolean = false;
-  user: User | null = null;
-  users: User[] = [];
+export class LeaveRequestListComponent implements OnInit {
+  isUserMenuOpen: boolean = false; // État du menu utilisateur.
+  isLeaveMenuOpen: boolean = false; // État du menu des congés.
+  isAttendanceMenuOpen: boolean = false; // État du menu de présence.
+  isReportMenuOpen: boolean = false; // État du menu des rapports.
+  user: User | null = null; // Détails de l'utilisateur connecté.
+  users: User[] = []; // Liste des utilisateurs.
 
-  leaveRequests: LeaveRequest[] = [];
-  searchTerm: string = '';
-  pageSize: number = 10;
-  currentPage: number = 1;
-  totalPages: number = 1;
-  originalLeaveRequests: LeaveRequest[] = [];
+  leaveRequests: LeaveRequest[] = []; // Liste des demandes de congés.
+  searchTerm: string = ''; // Terme de recherche.
+  pageSize: number = 10; // Nombre de demandes par page.
+  currentPage: number = 1; // Page actuelle.
+  totalPages: number = 1; // Nombre total de pages.
+  originalLeaveRequests: LeaveRequest[] = []; // Liste des demandes de congés (originale).
 
-  StatutConges = StatutConges;
+  StatutConges = StatutConges; // Enum pour les statuts de congés.
 
-  currentUserId: string | null = null;
-
-
+  currentUserId: string | null = null; // ID de l'utilisateur connecté.
 
   constructor(
-    private router: Router,
-    private authService: AuthService,
-    private leaveService: LeaveService,
-    private usersService : UsersService) {}
+    private router: Router, // Service de navigation.
+    private authService: AuthService, // Service pour gérer l'authentification.
+    private leaveService: LeaveService, // Service pour interagir avec les congés.
+    private usersService: UsersService // Service pour interagir avec les utilisateurs.
+  ) {}
 
+  /**
+   * Méthode exécutée à l'initialisation du composant.
+   */
   ngOnInit(): void {
-    this.loadLeaveRequests();
-    this.getUsers();
-    this.getUserDetails();
+    this.loadLeaveRequests(); // Charge les demandes de congés.
+    this.getUsers(); // Charge la liste des utilisateurs.
+    this.getUserDetails(); // Charge les détails de l'utilisateur connecté.
   }
 
+  /**
+   * Ouvre ou ferme le menu utilisateur.
+   */
+  toggleUserMenu() {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
 
-  // Gestion des menus
-  toggleUserMenu() { this.isUserMenuOpen = !this.isUserMenuOpen; }
-  toggleLeaveMenu() { this.isLeaveMenuOpen = !this.isLeaveMenuOpen; }
-  toggleReportMenu() { this.isReportMenuOpen = !this.isReportMenuOpen; }
+  /**
+   * Ouvre ou ferme le menu des congés.
+   */
+  toggleLeaveMenu() {
+    this.isLeaveMenuOpen = !this.isLeaveMenuOpen;
+  }
 
+  /**
+   * Ouvre ou ferme le menu des rapports.
+   */
+  toggleReportMenu() {
+    this.isReportMenuOpen = !this.isReportMenuOpen;
+  }
 
-  // Gérer la pagination : page suivante
+  /**
+   * Passe à la page suivante des demandes de congés.
+   */
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
@@ -69,7 +88,9 @@ export class LeaveRequestListComponent implements OnInit{
     }
   }
 
-  // Gérer la pagination : page précédente
+  /**
+   * Revient à la page précédente des demandes de congés.
+   */
   previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
@@ -77,77 +98,78 @@ export class LeaveRequestListComponent implements OnInit{
     }
   }
 
+  /**
+   * Charge les demandes de congés avec pagination.
+   */
+  loadLeaveRequests(): void {
+    this.leaveService.getPaginatedLeaves(this.currentPage, this.pageSize).subscribe(
+      (data: PaginatedResponse<LeaveRequest>) => {
+        this.leaveRequests = data.items; // Met à jour les demandes de congés.
+        this.totalPages = data.totalPages; // Met à jour le nombre total de pages.
+        this.originalLeaveRequests = [...this.leaveRequests]; // Sauvegarde des demandes originales.
 
-// Charger les demandes de congés avec pagination
-loadLeaveRequests(): void {
-  this.leaveService.getPaginatedLeaves(this.currentPage, this.pageSize).subscribe(
-    (data: PaginatedResponse<LeaveRequest>) => {
-      this.leaveRequests = data.items;  // Mise à jour des demandes de congé
-      this.totalPages = data.totalPages;  // Mise à jour du nombre total de pages
-      this.originalLeaveRequests = [...this.leaveRequests];  // Sauvegarder les demandes de congé d'origine
+        // Récupère les utilisateurs et associe leurs informations aux demandes de congés.
+        this.usersService.getAllUsers().subscribe(users => {
+          const userMap = new Map(users.map(user => [user.id, user])); // Map des utilisateurs par ID.
 
-      // Récupérer les utilisateurs pour associer les noms
-      this.usersService.getAllUsers().subscribe(users => {
-        const userMap = new Map(users.map(user => [user.id, user]));  // Associer les utilisateurs par ID
-
-        // Associer les informations des utilisateurs aux demandes de congé
-        this.leaveRequests = this.leaveRequests.map(leaveRequest => {
-          const user = userMap.get(leaveRequest.userId);
-          leaveRequest.userFirstName = user?.firstName || 'Inconnu';
-          leaveRequest.userLastName = user?.lastName || 'Inconnu';
-
-          // Ajouter l'URL de la justification
-          leaveRequest.justificationFileUrl = leaveRequest.justificationFileUrl || '';
-          return leaveRequest;
+          this.leaveRequests = this.leaveRequests.map(leaveRequest => {
+            const user = userMap.get(leaveRequest.userId);
+            leaveRequest.userFirstName = user?.firstName || 'Inconnu';
+            leaveRequest.userLastName = user?.lastName || 'Inconnu';
+            leaveRequest.justificationFileUrl = leaveRequest.justificationFileUrl || ''; // URL de justification.
+            return leaveRequest;
+          });
         });
-      });
-    },
-    (error: string) => console.error('Erreur :', error)
-  );
-}
-
-
-
-
-// Obtenir les utilisateurs
-getUsers(): void {
-  this.usersService.getAllUsers().subscribe({
-    next: data => { this.users = data; },
-    error: error => console.error('Erreur lors du chargement des utilisateurs :', error),
-  });
-}
-
-// Obtenir les détails de l'utilisateur connecté
-getUserDetails(): void {
-  this.user = this.authService.getCurrentUser();
-  if (this.user) {
-    this.currentUserId = this.user.id;
-  }
-}
-
-
-// Mettre à jour le statut d'une demande de congé
-updateLeaveStatus(leaveId: string, newStatus: StatutConges): void {
-  if (!this.currentUserId) {
-    alert('Utilisateur non connecté ou ID utilisateur manquant.');
-    return;
+      },
+      (error: string) => console.error('Erreur :', error)
+    );
   }
 
-  this.leaveService.updateLeaveStatus(leaveId, newStatus, this.currentUserId).subscribe({
-    next: (message) => {
-      // Trouver la demande concernée et mettre à jour son statut localement
-      const leaveIndex = this.leaveRequests.findIndex(request => request.id === leaveId);
-      if (leaveIndex !== -1) {
-        this.leaveRequests[leaveIndex].status = newStatus;
-      }
-    },
-    error: (error) => {
-      console.error('Erreur lors de la mise à jour du statut :', error);
-      const errorMessage = error.error?.message || 'Une erreur est survenue.';
-      alert(`Erreur : ${errorMessage}`);
+  /**
+   * Charge la liste des utilisateurs.
+   */
+  getUsers(): void {
+    this.usersService.getAllUsers().subscribe({
+      next: data => { this.users = data; },
+      error: error => console.error('Erreur lors du chargement des utilisateurs :', error),
+    });
+  }
+
+  /**
+   * Récupère les détails de l'utilisateur connecté.
+   */
+  getUserDetails(): void {
+    this.user = this.authService.getCurrentUser();
+    if (this.user) {
+      this.currentUserId = this.user.id;
     }
-  });
-}
+  }
+
+  /**
+   * Met à jour le statut d'une demande de congé.
+   * @param leaveId - ID de la demande de congé.
+   * @param newStatus - Nouveau statut à appliquer.
+   */
+  updateLeaveStatus(leaveId: string, newStatus: StatutConges): void {
+    if (!this.currentUserId) {
+      alert('Utilisateur non connecté ou ID utilisateur manquant.');
+      return;
+    }
+
+    this.leaveService.updateLeaveStatus(leaveId, newStatus, this.currentUserId).subscribe({
+      next: (message) => {
+        const leaveIndex = this.leaveRequests.findIndex(request => request.id === leaveId);
+        if (leaveIndex !== -1) {
+          this.leaveRequests[leaveIndex].status = newStatus; // Met à jour le statut localement.
+        }
+      },
+      error: (error) => {
+        console.error('Erreur lors de la mise à jour du statut :', error);
+        const errorMessage = error.error?.message || 'Une erreur est survenue.';
+        alert(`Erreur : ${errorMessage}`);
+      }
+    });
+  }
 
 
 

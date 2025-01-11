@@ -8,6 +8,9 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { PublicHoliday } from '../../../core/models/PublicHoliday';
 import { HolidayService } from '../../../core/services/holiday/holiday.service';
 
+/**
+ * Component pour configurer les jours fériés
+ */
 @Component({
   selector: 'app-holiday-config',
   standalone: true,
@@ -20,46 +23,64 @@ import { HolidayService } from '../../../core/services/holiday/holiday.service';
   templateUrl: './holiday-config.component.html',
   styleUrl: './holiday-config.component.scss'
 })
-export class HolidayConfigComponent implements OnInit{
-users: User[] = [];
+export class HolidayConfigComponent implements OnInit {
+  // Liste des utilisateurs
+  users: User[] = [];
   filteredUsers: User[] = [];
   displayedUsers: User[] = [];
 
+  // Pagination
   currentPage = 1;
   itemsPerPage = 10;
   totalItems = 0;
   totalPages = 0;
 
+  // États des menus
   isUserMenuOpen: boolean = false;
   isLeaveMenuOpen: boolean = false;
   isAttendanceMenuOpen: boolean = false;
   isReportMenuOpen: boolean = false;
+
+  // Utilisateur connecté
   user: User | null = null;
+
+  // Recherche
   searchTerm: string = '';
 
+  // Jours fériés
   holidays: PublicHoliday[] = [];
-  holidayForm!: FormGroup;
-  isEdit: boolean = false;
-  currentHolidayId: string | null = null;
 
-  constructor(private router: Router,
-    private usersService: UsersService ,
+  // Formulaire pour gérer l'ajout/modification d'un jour férié
+  holidayForm!: FormGroup;
+  isEdit: boolean = false; // Mode édition actif ?
+  currentHolidayId: string | null = null; // ID du jour férié en cours d'édition
+
+  constructor(
+    private router: Router,
+    private usersService: UsersService,
     private authService: AuthService,
     private fb: FormBuilder,
-    private holidayService: HolidayService) {
-      this.holidayForm = this.fb.group({
-        holidayName: ['', Validators.required],
-        holidayDate: ['', Validators.required],
-        countryCode: ['', Validators.required],
-      });
-    }
+    private holidayService: HolidayService
+  ) {
+    this.holidayForm = this.fb.group({
+      holidayName: ['', Validators.required],
+      holidayDate: ['', Validators.required],
+      countryCode: ['', Validators.required],
+    });
+  }
 
+  /**
+   * Initialiser le component
+   */
   ngOnInit(): void {
     this.getUsers();
     this.getUserDetails();
     this.loadHolidays();
   }
 
+  /**
+   * Charger tous les jours fériés
+   */
   loadHolidays(): void {
     this.holidayService.getAllHolidays().subscribe({
       next: (data) => (this.holidays = data),
@@ -67,12 +88,16 @@ users: User[] = [];
     });
   }
 
+  /**
+   * Soumettre le formulaire d'ajout/modification de jour férié
+   */
   onSubmit(): void {
     if (this.holidayForm.invalid) return;
 
     const holidayData = this.holidayForm.value;
 
     if (this.isEdit && this.currentHolidayId) {
+      // Mode édition : mettre à jour un jour férié existant
       this.holidayService.updateHoliday(this.currentHolidayId, holidayData).subscribe({
         next: () => {
           this.loadHolidays();
@@ -81,6 +106,7 @@ users: User[] = [];
         error: (err) => console.error('Erreur lors de la mise à jour', err),
       });
     } else {
+      // Mode ajout : ajouter un nouveau jour férié
       this.holidayService.addHoliday(holidayData).subscribe({
         next: () => {
           this.loadHolidays();
@@ -91,12 +117,20 @@ users: User[] = [];
     }
   }
 
+  /**
+   * Mettre à jour le formulaire avec les données d'un jour férié existant pour l'édition
+   * @param holiday Le jour férié à éditer
+   */
   onEdit(holiday: PublicHoliday): void {
     this.isEdit = true;
     this.currentHolidayId = holiday.id;
     this.holidayForm.patchValue(holiday);
   }
 
+  /**
+   * Supprimer un jour férié
+   * @param id L'ID du jour férié à supprimer
+   */
   onDelete(id: string): void {
     if (confirm('Voulez-vous vraiment supprimer ce jour férié ?')) {
       this.holidayService.deleteHoliday(id).subscribe({
@@ -106,6 +140,9 @@ users: User[] = [];
     }
   }
 
+  /**
+   * Réinitialiser le formulaire et les états d'édition
+   */
   onReset(): void {
     this.isEdit = false;
     this.currentHolidayId = null;

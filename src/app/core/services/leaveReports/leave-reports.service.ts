@@ -56,19 +56,6 @@ export class LeaveReportsService {
   }
 
   /**
-   * Met à jour le solde de congés pour un utilisateur.
-   * @param userId L'ID de l'utilisateur.
-   * @param leave Les détails du congé.
-   * @returns Un booléen indiquant le succès ou l'échec (Observable).
-   */
-  updateLeaveBalance(userId: string, leave: LeaveRequest): Observable<boolean> {
-    const url = `${this.apiUrl}/UpdateLeaveBalance`;
-    return this.http.put<boolean>(url, { userId, leave }).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  /**
    * Récupère l'historique des congés pour une plage de dates.
    * @param startDate La date de début.
    * @param endDate La date de fin.
@@ -219,20 +206,6 @@ export class LeaveReportsService {
   getLeaveDataForPieChart(): Observable<Record<string, number>> {
     const url = `${this.apiUrl}/Reports/leave-pie-chart`;
     return this.http.get<Record<string, number>>(url).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  /**
-   * Met à jour manuellement le solde de congés d'un employé.
-   * @param userId L'ID de l'employé.
-   * @param leaveType Le type de congé à mettre à jour.
-   * @param newBalance Le nouveau solde.
-   * @returns Un booléen indiquant si la mise à jour a réussi (Observable).
-   */
-  updateLeaveBalanceManually(userId: string, leaveType: string, newBalance: number): Observable<boolean> {
-    const url = `${this.apiUrl}/Reports/update-leave-balance?userId=${userId}&leaveType=${leaveType}&newBalance=${newBalance}`;
-    return this.http.put<boolean>(url, {}).pipe(
       catchError(this.handleError)
     );
   }

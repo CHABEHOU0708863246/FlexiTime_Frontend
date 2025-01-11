@@ -8,7 +8,6 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-users-create',
   standalone: true,
@@ -23,24 +22,26 @@ import Swal from 'sweetalert2';
   styleUrl: './users-create.component.scss'
 })
 export class UsersCreateComponent {
-  users: User[] = [];
-  userForm: FormGroup;
-  currentStep: number = 1;
-  availableRoles: string[] = ['admin', 'employe', 'manager'];
+  users: User[] = []; // Liste des utilisateurs.
+  userForm: FormGroup; // Formulaire pour créer un utilisateur.
+  currentStep: number = 1; // Étape actuelle dans le processus de création.
+  availableRoles: string[] = ['admin', 'employe', 'manager']; // Rôles disponibles pour un utilisateur.
 
-  user: User | null = null;
+  user: User | null = null; // Détails de l'utilisateur actuellement connecté.
 
+  // États des menus pour navigation dynamique.
   isUserMenuOpen: boolean = false;
   isLeaveMenuOpen: boolean = false;
   isAttendanceMenuOpen: boolean = false;
   isReportMenuOpen: boolean = false;
 
   constructor(
-    private router: Router,
-    private usersService: UsersService ,
-    private authService: AuthService,
-    private formBuilder: FormBuilder
+    private router: Router, // Service Angular pour gérer la navigation.
+    private usersService: UsersService, // Service pour interagir avec les utilisateurs.
+    private authService: AuthService, // Service pour gérer l'authentification.
+    private formBuilder: FormBuilder // Service pour construire des formulaires réactifs.
   ) {
+    // Initialisation du formulaire avec validation.
     this.userForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -48,55 +49,46 @@ export class UsersCreateComponent {
       phoneNumber: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
-      isEnabled: [true],
-      workingHours: [0, [Validators.required, Validators.min(0)]], // Valider que les heures sont >= 0
-      roles: [[], Validators.required], // Liste des rôles, obligatoire
-      isPartTime: [false],
-      hireDate: ['', Validators.required],
-      gender: ['', Validators.required], // Sexe, obligatoire (par exemple : "Homme", "Femme")
-      contractType: ['', Validators.required], // Type de contrat, obligatoire (par exemple : "CDI", "CDD")
-      numberOfChildren: [null, [Validators.min(0)]], // Nombre d'enfants, optionnel, et doit être >= 0
-      maritalStatus: ['', Validators.required], // Statut marital, obligatoire (par exemple : "Célibataire", "Marié")
-      residence: ['', Validators.required], // Lieu de résidence, obligatoire
-      postalAddress: ['', Validators.required] // Adresse postale, obligatoire
+      isEnabled: [true], // Par défaut, l'utilisateur est activé.
+      workingHours: [0, [Validators.required, Validators.min(0)]], // Heures de travail valides >= 0.
+      roles: [[], Validators.required], // Rôles attribués, obligatoire.
+      isPartTime: [false], // Statut de travail à temps partiel.
+      hireDate: ['', Validators.required], // Date d'embauche, obligatoire.
+      gender: ['', Validators.required], // Sexe (exemple : "Homme", "Femme").
+      contractType: ['', Validators.required], // Type de contrat (exemple : "CDI", "CDD").
+      numberOfChildren: [null, [Validators.min(0)]], // Nombre d'enfants, optionnel mais >= 0.
+      maritalStatus: ['', Validators.required], // Statut marital (exemple : "Marié").
+      residence: ['', Validators.required], // Lieu de résidence, obligatoire.
+      postalAddress: ['', Validators.required] // Adresse postale, obligatoire.
     });
   }
 
-
+  /**
+   * Réinitialise le formulaire.
+   */
   initializeForm(): void {
-    this.userForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
-      isEnabled: [true],
-      workingHours: [0, [Validators.required, Validators.min(0)]],
-      roles: [[], Validators.required],
-      isPartTime: [false],
-      hireDate: ['', Validators.required],
-      gender: ['', Validators.required],
-      contractType: ['', Validators.required],
-      numberOfChildren: [null, [Validators.min(0)]],
-      maritalStatus: ['', Validators.required],
-      residence: ['', Validators.required],
-      postalAddress: ['', Validators.required]
-    });
+    this.userForm.reset(); // Réinitialise les valeurs du formulaire.
   }
 
-
+  /**
+   * Méthode exécutée lors de l'initialisation du composant.
+   */
   ngOnInit(): void {
-    this.getUsers();
-    this.getUserDetails();
-    this.initializeForm();
+    this.getUsers(); // Charge tous les utilisateurs.
+    this.getUserDetails(); // Récupère les détails de l'utilisateur actuellement connecté.
+    this.initializeForm(); // Réinitialise le formulaire.
   }
 
-
+  /**
+   * Récupère les détails de l'utilisateur actuellement connecté.
+   */
   getUserDetails(): void {
     this.user = this.authService.getCurrentUser();
   }
 
+  /**
+   * Récupère tous les utilisateurs depuis le service.
+   */
   getUsers(): void {
     this.usersService.getAllUsers().subscribe(
       (data) => {
@@ -108,17 +100,19 @@ export class UsersCreateComponent {
     );
   }
 
-
+  /**
+   * Soumet le formulaire pour créer un nouvel utilisateur.
+   */
   onSubmit(): void {
     if (this.userForm.valid) {
-      const user: User = this.userForm.value;
+      const user: User = this.userForm.value; // Transforme les données du formulaire en objet `User`.
       this.usersService.registerUser(user).subscribe(
         (response) => {
           console.log("Utilisateur créé avec succès", response);
-          this.userForm.reset();
-          this.getUsers();
+          this.userForm.reset(); // Réinitialise le formulaire.
+          this.getUsers(); // Recharge la liste des utilisateurs.
 
-          // Afficher le message de succès avec SweetAlert2
+          // Affiche une alerte de succès.
           Swal.fire({
             icon: 'success',
             title: 'Succès!',
@@ -128,6 +122,8 @@ export class UsersCreateComponent {
         },
         (error) => {
           console.error("Erreur lors de la création de l'utilisateur", error);
+
+          // Affiche une alerte d'erreur.
           Swal.fire({
             icon: 'error',
             title: 'Erreur!',
@@ -141,39 +137,62 @@ export class UsersCreateComponent {
     }
   }
 
+  /**
+   * Retourne le pourcentage d'avancement dans les étapes.
+   */
   get stepPercentage(): number {
-    return (this.currentStep / 3) * 100; // Nombre total d'étapes
+    return (this.currentStep / 3) * 100; // Trois étapes au total.
   }
 
+  /**
+   * Passe à l'étape suivante.
+   */
   nextStep(): void {
     if (this.currentStep < 3) {
       this.currentStep++;
     }
   }
 
+  /**
+   * Revient à l'étape précédente.
+   */
   previousStep(): void {
     if (this.currentStep > 1) {
       this.currentStep--;
     }
   }
 
-
+  /**
+   * Réinitialise le formulaire.
+   */
   onReset(): void {
     this.userForm.reset();
   }
 
-  toggleUserMenu() {
+  /**
+   * Active/désactive le menu des utilisateurs.
+   */
+  toggleUserMenu(): void {
     this.isUserMenuOpen = !this.isUserMenuOpen;
   }
 
-  toggleLeaveMenu() {
+  /**
+   * Active/désactive le menu des congés.
+   */
+  toggleLeaveMenu(): void {
     this.isLeaveMenuOpen = !this.isLeaveMenuOpen;
   }
 
-  toggleReportMenu() {
+  /**
+   * Active/désactive le menu des rapports.
+   */
+  toggleReportMenu(): void {
     this.isReportMenuOpen = !this.isReportMenuOpen;
   }
 
+  /**
+   * Déconnecte l'utilisateur et redirige vers la page de connexion.
+   */
   logout(): void {
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       this.authService.logout();

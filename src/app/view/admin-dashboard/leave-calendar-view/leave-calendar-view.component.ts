@@ -11,7 +11,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CalendarEvent, CalendarEventType } from '../../../core/models/CalendarEvent';
 import { DomService } from '../../../shared/dom.service';
-import Modal from 'bootstrap/js/dist/modal';
 
 @Component({
   selector: 'app-leave-calendar-view',
@@ -26,11 +25,16 @@ import Modal from 'bootstrap/js/dist/modal';
   styleUrl: './leave-calendar-view.component.scss'
 })
 export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
+  // États des menus
   isUserMenuOpen: boolean = false;
   isLeaveMenuOpen: boolean = false;
   isAttendanceMenuOpen: boolean = false;
   isReportMenuOpen: boolean = false;
+
+  // Utilisateur connecté
   user: User | null = null;
+
+  // Options du calendrier
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
@@ -42,8 +46,14 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     eventClick: this.handleEventClick.bind(this),
   };
 
+  // Événement sélectionné
   selectedEvent: CalendarEvent | null = null;
 
+  /**
+   * Traduire le type d'événement en chaîne
+   * @param eventType Type de l'événement à traduire
+   * @returns Chaîne traduite du type d'événement ou "Type inconnu" si pas trouvé
+   */
   translateEventType(eventType: CalendarEventType): string {
     const eventTypes: { [key in CalendarEventType]: string } = {
       [CalendarEventType.ApprovedLeave]: 'Congé approuvé',
@@ -51,41 +61,60 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
       [CalendarEventType.Other]: 'Autre événement',
       [CalendarEventType.Paye]: 'Congé payé',
       [CalendarEventType.NonPaye]: 'Congé non payé',
-      [CalendarEventType.Maladie]: 'Congé maladie',
-      [CalendarEventType.Parental]: 'Congé parental',
-      [CalendarEventType.Sabbatique]: 'Congé sabbatique',
-      [CalendarEventType.Famille]: 'Congé pour événements familiaux',
-      [CalendarEventType.Formation]: 'Congé pour formation',
-      [CalendarEventType.Militaire]: 'Congé pour service militaire',
-      [CalendarEventType.SansSolde]: 'Congé sans solde',
-      [CalendarEventType.Exceptionnel]: 'Congé exceptionnel',
-      [CalendarEventType.ReposCompensateur]: 'Congé pour repos compensateur',
-      [CalendarEventType.Anniversaire]: 'Congé pour anniversaire',
-      [CalendarEventType.Civique]: 'Congé pour obligation civique',
-      [CalendarEventType.DonSang]: 'Congé pour don de sang',
-      [CalendarEventType.Deuil]: 'Congé pour deuil',
+      [CalendarEventType.Maladie]: '',
+      [CalendarEventType.Parental]: '',
+      [CalendarEventType.Sabbatique]: '',
+      [CalendarEventType.Famille]: '',
+      [CalendarEventType.Formation]: '',
+      [CalendarEventType.Militaire]: '',
+      [CalendarEventType.SansSolde]: '',
+      [CalendarEventType.Exceptionnel]: '',
+      [CalendarEventType.ReposCompensateur]: '',
+      [CalendarEventType.Anniversaire]: '',
+      [CalendarEventType.Civique]: '',
+      [CalendarEventType.DonSang]: '',
+      [CalendarEventType.Deuil]: ''
     };
     return eventTypes[eventType] || 'Type inconnu';
   }
 
-  constructor(private router: Router, private authService: AuthService, private calendarService: CalendarService, private domService: DomService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private calendarService: CalendarService,
+    private domService: DomService
+  ) {}
 
+  /**
+   * Initialiser le component
+   */
   ngOnInit(): void {
     this.getUserDetails();
     this.loadEvents();
   }
 
+  /**
+   * Méthode appelée après la vue initiale
+   */
   ngAfterViewInit(): void {
-    const doc = this.domService.getDocument();
-    if (doc) {
-      const modalElement = doc.getElementById('eventDetailsModal');
-      if (modalElement) {
-        const modal = new Modal(modalElement);
-        modal.show();
-      }
+    if (this.isClientSide()) {
+      import('bootstrap/js/dist/modal').then(({ default: Modal }) => {
+        const doc = this.domService.getDocument();
+        if (doc) {
+          const modalElement = doc.getElementById('eventDetailsModal');
+          if (modalElement) {
+            const modal = new Modal(modalElement);
+            modal.show();
+          }
+        }
+      });
     }
   }
 
+  /**
+   * Gérer le clic sur un événement du calendrier
+   * @param clickInfo Informations sur le clic de l'événement
+   */
   handleEventClick(clickInfo: any): void {
     const event = clickInfo.event;
     this.selectedEvent = {
@@ -105,21 +134,36 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Vérifier si l'environnement est côté client
+   * @returns true si c'est un environnement côté client, false sinon
+   */
   isClientSide(): boolean {
     return typeof window !== 'undefined' && typeof document !== 'undefined';
   }
 
+  /**
+   * Afficher les détails d'un événement dans un modal
+   */
   showEventDetailsModal(): void {
     if (this.isClientSide()) {
       const modalElement = document.getElementById('eventDetailsModal');
       if (modalElement) {
-        const modal = new Modal(modalElement);
-        modal.show();
+        import('bootstrap/js/dist/modal').then(({ default: Modal }) => {
+          const modal = new Modal(modalElement);
+          modal.show();
+        }).catch(err => {
+          console.error('Erreur lors du chargement du module Bootstrap Modal:', err);
+        });
       }
     }
   }
 
-
+  /**
+   * Formater une date au format français (jj/mm/aaaa)
+   * @param date Date à formater
+   * @returns Chaîne formatée de la date
+   */
   formatDate(date: string): string {
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, '0');
@@ -128,6 +172,9 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     return `${day}/${month}/${year}`;
   }
 
+  /**
+   * Charger les événements du calendrier
+   */
   loadEvents(): void {
     this.calendarService.getCalendarEvents().subscribe((events: CalendarEvent[]) => {
       const formattedEvents = events.map(event => ({
@@ -146,6 +193,7 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
       this.calendarOptions.events = formattedEvents;
     });
   }
+
 
   getUserDetails(): void {
     this.user = this.authService.getCurrentUser();

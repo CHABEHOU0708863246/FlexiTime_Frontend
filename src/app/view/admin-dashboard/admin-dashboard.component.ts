@@ -1,3 +1,6 @@
+/**
+ * Imports nécessaires pour le composant AdminDashboardComponent
+ */
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -9,6 +12,9 @@ import { LeaveReportsService } from '../../core/services/leaveReports/leave-repo
 import Chart from 'chart.js/auto';
 import { LeaveTrend } from '../../core/models/LeaveTrend';
 
+/**
+ * Définition du composant AdminDashboardComponent
+ */
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
@@ -21,30 +27,51 @@ import { LeaveTrend } from '../../core/models/LeaveTrend';
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
 })
-export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy  {
+export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  /**
+   * État des menus du tableau de bord
+   */
   isUserMenuOpen: boolean = false;
   isLeaveMenuOpen: boolean = false;
   isAttendanceMenuOpen: boolean = false;
   isReportMenuOpen: boolean = false;
+
+  /**
+   * Informations sur l'utilisateur et les statistiques de congés
+   */
   user: User | null = null;
   leaveStatistics: LeaveStatusSummary | null = null;
-  private charts: Chart[] = [];
 
+  /**
+   * Données et graphiques liés aux congés
+   */
+  private charts: Chart[] = [];
   leaveTrends: LeaveTrend[] = [];
   leaveStatusSummary: LeaveStatusSummary | null = null;
-
   barChartData: Record<string, number> = {};
   pieChartData: Record<string, number> = {};
   startDate = new Date(new Date().getFullYear(), 0, 1);
   endDate = new Date();
-
-  selectedYear: number = new Date().getFullYear();
-  availableYears: number[] = [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
   leaveTypeData: Record<string, number> = {};
 
+  /**
+   * Années disponibles pour la sélection
+   */
+  selectedYear: number = new Date().getFullYear();
+  availableYears: number[] = [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
 
+  /**
+   * Constructeur pour injecter les services nécessaires
+   * @param router Service de navigation Angular
+   * @param authService Service d'authentification
+   * @param leaveReportsService Service de gestion des rapports de congés
+   */
   constructor(private router: Router, private authService: AuthService, private leaveReportsService: LeaveReportsService) {}
 
+  /**
+   * Méthode appelée à l'initialisation du composant
+   */
   ngOnInit(): void {
     this.getUserDetails();
     this.loadLeaveStatistics();
@@ -53,14 +80,20 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     this.loadLeaveTypeData();
   }
 
+  /**
+   * Gestion du changement d'année
+   */
   onYearChange(): void {
     this.loadData();
     this.loadLeaveTypeData();
   }
 
+  /**
+   * Chargement des données des types de congés
+   */
   loadLeaveTypeData(): void {
-    const startDate = new Date(this.selectedYear, 0, 1); // 1er janvier de l'année sélectionnée
-    const endDate = new Date(this.selectedYear, 11, 31); // 31 décembre de l'année sélectionnée
+    const startDate = new Date(this.selectedYear, 0, 1);
+    const endDate = new Date(this.selectedYear, 11, 31);
 
     this.leaveReportsService.getLeaveDataForBarChart(startDate, endDate).subscribe({
       next: (data) => {
@@ -73,7 +106,9 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
-
+  /**
+   * Création du graphique des types de congés
+   */
   createLeaveTypeChart(): void {
     const ctx = document.getElementById('leave-bar-chart') as HTMLCanvasElement;
     if (!ctx) {
@@ -81,20 +116,18 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
       return;
     }
 
-    // Détruire le graphique existant s'il y en a un
     const existingChart = Chart.getChart(ctx);
     if (existingChart) {
       existingChart.destroy();
     }
 
-    // Configuration des couleurs pour chaque type de congé
     const colors = {
-      'Congé Annuel': 'rgba(75, 192, 192, 0.8)',      // Vert-bleu
-      'Congé Maladie': 'rgba(255, 99, 132, 0.8)',     // Rouge
-      'Congé Maternité': 'rgba(255, 206, 86, 0.8)',   // Jaune
-      'Congé Sans Solde': 'rgba(153, 102, 255, 0.8)', // Violet
-      'RTT': 'rgba(54, 162, 235, 0.8)',               // Bleu
-      'Autres': 'rgba(201, 203, 207, 0.8)'            // Gris
+      'Congé Annuel': 'rgba(75, 192, 192, 0.8)',
+      'Congé Maladie': 'rgba(255, 99, 132, 0.8)',
+      'Congé Maternité': 'rgba(255, 206, 86, 0.8)',
+      'Congé Sans Solde': 'rgba(153, 102, 255, 0.8)',
+      'RTT': 'rgba(54, 162, 235, 0.8)',
+      'Autres': 'rgba(201, 203, 207, 0.8)'
     };
 
     new Chart(ctx, {
@@ -148,11 +181,16 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
+  /**
+   * Nettoyage des ressources lors de la destruction du composant
+   */
   ngOnDestroy(): void {
-    // Nettoyer les graphiques lors de la destruction du composant
     this.charts.forEach(chart => chart.destroy());
   }
 
+  /**
+   * Chargement des tendances et résumés liés aux congés
+   */
   loadData(): void {
     this.leaveReportsService.getLeaveTrends().subscribe({
       next: (trends) => {
@@ -176,8 +214,10 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
+  /**
+   * Chargement des données pour les graphiques (barres et circulaire)
+   */
   loadChartData(): void {
-    // Charger les données pour le graphique en barres
     this.leaveReportsService.getLeaveDataForBarChart(this.startDate, this.endDate).subscribe({
       next: (data) => {
         this.barChartData = data;
@@ -186,7 +226,6 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
       error: (error) => console.error('Erreur lors du chargement des données du graphique en barres:', error)
     });
 
-    // Charger les données pour le graphique circulaire
     this.leaveReportsService.getLeaveDataForPieChart().subscribe({
       next: (data) => {
         this.pieChartData = data;
@@ -196,7 +235,9 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
-
+  /**
+   * Création du graphique en barres
+   */
   createBarChart(): void {
     const ctx = document.getElementById('leave-bar-chart') as HTMLCanvasElement;
     if (!ctx) return;
@@ -233,6 +274,9 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
+  /**
+   * Création du graphique circulaire
+   */
   createPieChart(): void {
     const ctx = document.getElementById('leave-pie-chart') as HTMLCanvasElement;
     if (!ctx) return;
@@ -272,6 +316,10 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
+  /**
+   * Méthode appelée après l'initialisation de la vue.
+   * Utilisée pour créer les graphiques une fois que les éléments HTML sont disponibles.
+   */
   ngAfterViewInit(): void {
     setTimeout(() => {
       const salesCanvas = document.getElementById('sales-chart') as HTMLCanvasElement;
@@ -286,7 +334,10 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     }, 100);
   }
 
-createSalesChart(): void {
+  /**
+   * Crée un graphique linéaire pour afficher les tendances des congés mensuels.
+   */
+  createSalesChart(): void {
     const ctx = document.getElementById('sales-chart') as HTMLCanvasElement;
     if (!ctx) {
       console.error('Canvas sales-chart non trouvé');
@@ -364,7 +415,9 @@ createSalesChart(): void {
     });
   }
 
-
+  /**
+   * Crée un graphique en barres pour afficher la répartition des congés par statut.
+   */
   createTeamChart(): void {
     const ctx = document.getElementById('team-chart') as HTMLCanvasElement;
     if (!ctx || !this.leaveStatusSummary) return;
@@ -414,10 +467,16 @@ createSalesChart(): void {
     });
   }
 
+  /**
+   * Charge les détails de l'utilisateur connecté.
+   */
   getUserDetails(): void {
     this.user = this.authService.getCurrentUser();
   }
 
+  /**
+   * Charge les statistiques globales des congés.
+   */
   loadLeaveStatistics(): void {
     this.leaveReportsService.getLeaveStatusSummary().subscribe(
       (data) => {
@@ -429,22 +488,35 @@ createSalesChart(): void {
     );
   }
 
+  /**
+   * Active ou désactive le menu utilisateur.
+   */
   toggleUserMenu() {
     this.isUserMenuOpen = !this.isUserMenuOpen;
   }
 
+  /**
+   * Active ou désactive le menu de gestion des congés.
+   */
   toggleLeaveMenu() {
     this.isLeaveMenuOpen = !this.isLeaveMenuOpen;
   }
 
+  /**
+   * Active ou désactive le menu des rapports.
+   */
   toggleReportMenu() {
     this.isReportMenuOpen = !this.isReportMenuOpen;
   }
 
+  /**
+   * Déconnecte l'utilisateur et le redirige vers la page de connexion.
+   */
   logout(): void {
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       this.authService.logout();
     }
     this.router.navigate(['/auth/login']);
   }
+
 }
