@@ -9,6 +9,7 @@ import { UsersRoleManagementComponent } from '../../view/admin-dashboard/users-r
 import { LeaveConfigComponent } from '../../view/admin-dashboard/leave-config/leave-config.component';
 import { HolidayConfigComponent } from '../../view/admin-dashboard/holiday-config/holiday-config.component';
 import { LeaveReportComponent } from '../../view/admin-dashboard/leave-report/leave-report.component';
+import { SettingsFexitimeComponent } from '../../view/admin-dashboard/settings-fexitime/settings-fexitime.component';
 
 const routes: Routes = [
   {
@@ -51,6 +52,10 @@ const routes: Routes = [
   {
     path: 'leave-calendar-view',
     component: LeaveCalendarViewComponent
+  },
+  {
+    path: 'leave-setting',
+    component: SettingsFexitimeComponent
   }
 ];
 

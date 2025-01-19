@@ -44,7 +44,28 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     events: [],
     eventBackgroundColor: '',
     eventClick: this.handleEventClick.bind(this),
+    // Modification 1: Traduction du titre des événements en français
+    eventContent: (arg: any) => {
+      const eventTitle = this.translateEventTitle(arg.event.title);
+      return { html: `<div class="fc-content">${eventTitle}</div>` };
+    }
   };
+
+
+   /**
+   * Traduire le titre de l'événement
+   * @param title Titre de l'événement en anglais
+   * @returns Titre traduit en français
+   */
+   translateEventTitle(title: string): string {
+    const translations: { [key: string]: string } = {
+      'Leave': 'Congé',
+      'Vacation': 'Vacances',
+      'Sick Leave': 'Congé Maladie',
+      // Ajoutez d'autres traductions selon vos besoins
+    };
+    return translations[title] || title;
+  }
 
   // Événement sélectionné
   selectedEvent: CalendarEvent | null = null;
@@ -61,22 +82,23 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
       [CalendarEventType.Other]: 'Autre événement',
       [CalendarEventType.Paye]: 'Congé payé',
       [CalendarEventType.NonPaye]: 'Congé non payé',
-      [CalendarEventType.Maladie]: '',
-      [CalendarEventType.Parental]: '',
-      [CalendarEventType.Sabbatique]: '',
-      [CalendarEventType.Famille]: '',
-      [CalendarEventType.Formation]: '',
-      [CalendarEventType.Militaire]: '',
-      [CalendarEventType.SansSolde]: '',
-      [CalendarEventType.Exceptionnel]: '',
-      [CalendarEventType.ReposCompensateur]: '',
-      [CalendarEventType.Anniversaire]: '',
-      [CalendarEventType.Civique]: '',
-      [CalendarEventType.DonSang]: '',
-      [CalendarEventType.Deuil]: ''
+      [CalendarEventType.Maladie]: 'Congé maladie',
+      [CalendarEventType.Parental]: 'Congé parental',
+      [CalendarEventType.Sabbatique]: 'Congé sabbatique',
+      [CalendarEventType.Famille]: 'Congé familial',
+      [CalendarEventType.Formation]: 'Congé formation',
+      [CalendarEventType.Militaire]: 'Congé militaire',
+      [CalendarEventType.SansSolde]: 'Congé sans solde',
+      [CalendarEventType.Exceptionnel]: 'Congé exceptionnel',
+      [CalendarEventType.ReposCompensateur]: 'Repos compensateur',
+      [CalendarEventType.Anniversaire]: 'Anniversaire',
+      [CalendarEventType.Civique]: 'Jour civique',
+      [CalendarEventType.DonSang]: 'Don de sang',
+      [CalendarEventType.Deuil]: 'Congé de deuil',
     };
-    return eventTypes[eventType] || 'Type inconnu';
+    return eventTypes[eventType] || `Type ${eventType}`;
   }
+
 
   constructor(
     private router: Router,
@@ -117,16 +139,17 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
    */
   handleEventClick(clickInfo: any): void {
     const event = clickInfo.event;
+    // Modification 3: Assurer que le nom du demandeur est toujours affiché
     this.selectedEvent = {
       id: event.id,
-      title: event.title,
+      title: this.translateEventTitle(event.title),
       startDate: event.startStr,
       endDate: event.endStr,
       eventType: event.extendedProps.eventType,
       translatedEventType: this.translateEventType(event.extendedProps.eventType),
       colorCode: event.backgroundColor,
       isRecurring: event.extendedProps.isRecurring || false,
-      requestedBy: event.extendedProps.requestedBy,
+      requestedBy: event.extendedProps.requestedBy || this.user?.lastName || 'Non spécifié',
     };
 
     if (this.isClientSide()) {
@@ -167,7 +190,7 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
   formatDate(date: string): string {
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, '0');
-    const month = String(d.getMonth() + 1).padStart(2, '0'); // Les mois commencent à 0
+    const month = String(d.getMonth() + 1).padStart(2, '0');
     const year = d.getFullYear();
     return `${day}/${month}/${year}`;
   }
@@ -179,20 +202,22 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     this.calendarService.getCalendarEvents().subscribe((events: CalendarEvent[]) => {
       const formattedEvents = events.map(event => ({
         id: event.id,
-        title: event.title,
+        title: this.translateEventTitle(event.title),
         start: event.startDate,
         end: event.endDate,
         backgroundColor: event.eventType === CalendarEventType.ApprovedLeave ? '#007bff' : '#28a745',
         extendedProps: {
-          eventType: event.eventType,  // eventType doit être de type CalendarEventType
+          eventType: event.eventType,
           isRecurring: event.isRecurring,
-          requestedBy: event.requestedBy || 'Inconnu',  // Utilisation de requestedBy
+          requestedBy: event.requestedBy || 'Non spécifié', // Nom du demandeur
         },
       }));
 
       this.calendarOptions.events = formattedEvents;
     });
   }
+
+
 
 
   getUserDetails(): void {
