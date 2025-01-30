@@ -44,61 +44,15 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     events: [],
     eventBackgroundColor: '',
     eventClick: this.handleEventClick.bind(this),
-    // Modification 1: Traduction du titre des événements en français
     eventContent: (arg: any) => {
       const eventTitle = this.translateEventTitle(arg.event.title);
-      return { html: `<div class="fc-content">${eventTitle}</div>` };
+      const requestedBy = arg.event.extendedProps.requestedBy || 'Non spécifié';
+      return { html: `<div class="fc-content">${eventTitle} - ${requestedBy}</div>` };
     }
   };
 
-
-   /**
-   * Traduire le titre de l'événement
-   * @param title Titre de l'événement en anglais
-   * @returns Titre traduit en français
-   */
-   translateEventTitle(title: string): string {
-    const translations: { [key: string]: string } = {
-      'Leave': 'Congé',
-      'Vacation': 'Vacances',
-      'Sick Leave': 'Congé Maladie',
-      // Ajoutez d'autres traductions selon vos besoins
-    };
-    return translations[title] || title;
-  }
-
   // Événement sélectionné
   selectedEvent: CalendarEvent | null = null;
-
-  /**
-   * Traduire le type d'événement en chaîne
-   * @param eventType Type de l'événement à traduire
-   * @returns Chaîne traduite du type d'événement ou "Type inconnu" si pas trouvé
-   */
-  translateEventType(eventType: CalendarEventType): string {
-    const eventTypes: { [key in CalendarEventType]: string } = {
-      [CalendarEventType.ApprovedLeave]: 'Congé approuvé',
-      [CalendarEventType.Holiday]: 'Jour férié',
-      [CalendarEventType.Other]: 'Autre événement',
-      [CalendarEventType.Paye]: 'Congé payé',
-      [CalendarEventType.NonPaye]: 'Congé non payé',
-      [CalendarEventType.Maladie]: 'Congé maladie',
-      [CalendarEventType.Parental]: 'Congé parental',
-      [CalendarEventType.Sabbatique]: 'Congé sabbatique',
-      [CalendarEventType.Famille]: 'Congé familial',
-      [CalendarEventType.Formation]: 'Congé formation',
-      [CalendarEventType.Militaire]: 'Congé militaire',
-      [CalendarEventType.SansSolde]: 'Congé sans solde',
-      [CalendarEventType.Exceptionnel]: 'Congé exceptionnel',
-      [CalendarEventType.ReposCompensateur]: 'Repos compensateur',
-      [CalendarEventType.Anniversaire]: 'Anniversaire',
-      [CalendarEventType.Civique]: 'Jour civique',
-      [CalendarEventType.DonSang]: 'Don de sang',
-      [CalendarEventType.Deuil]: 'Congé de deuil',
-    };
-    return eventTypes[eventType] || `Type ${eventType}`;
-  }
-
 
   constructor(
     private router: Router,
@@ -107,17 +61,11 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     private domService: DomService
   ) {}
 
-  /**
-   * Initialiser le component
-   */
   ngOnInit(): void {
     this.getUserDetails();
     this.loadEvents();
   }
 
-  /**
-   * Méthode appelée après la vue initiale
-   */
   ngAfterViewInit(): void {
     if (this.isClientSide()) {
       import('bootstrap/js/dist/modal').then(({ default: Modal }) => {
@@ -133,13 +81,8 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Gérer le clic sur un événement du calendrier
-   * @param clickInfo Informations sur le clic de l'événement
-   */
   handleEventClick(clickInfo: any): void {
     const event = clickInfo.event;
-    // Modification 3: Assurer que le nom du demandeur est toujours affiché
     this.selectedEvent = {
       id: event.id,
       title: this.translateEventTitle(event.title),
@@ -157,17 +100,10 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Vérifier si l'environnement est côté client
-   * @returns true si c'est un environnement côté client, false sinon
-   */
   isClientSide(): boolean {
     return typeof window !== 'undefined' && typeof document !== 'undefined';
   }
 
-  /**
-   * Afficher les détails d'un événement dans un modal
-   */
   showEventDetailsModal(): void {
     if (this.isClientSide()) {
       const modalElement = document.getElementById('eventDetailsModal');
@@ -182,11 +118,6 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Formater une date au format français (jj/mm/aaaa)
-   * @param date Date à formater
-   * @returns Chaîne formatée de la date
-   */
   formatDate(date: string): string {
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, '0');
@@ -195,9 +126,6 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     return `${day}/${month}/${year}`;
   }
 
-  /**
-   * Charger les événements du calendrier
-   */
   loadEvents(): void {
     this.calendarService.getCalendarEvents().subscribe((events: CalendarEvent[]) => {
       const formattedEvents = events.map(event => ({
@@ -216,9 +144,6 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
       this.calendarOptions.events = formattedEvents;
     });
   }
-
-
-
 
   getUserDetails(): void {
     this.user = this.authService.getCurrentUser();
@@ -241,5 +166,39 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
       this.authService.logout();
     }
     this.router.navigate(['/auth/login']);
+  }
+
+  translateEventTitle(title: string): string {
+    const translations: { [key: string]: string } = {
+      'Leave': 'Congé',
+      'Vacation': 'Vacances',
+      'Sick Leave': 'Congé Maladie',
+      // Ajoutez d'autres traductions selon vos besoins
+    };
+    return translations[title] || title;
+  }
+
+  translateEventType(eventType: CalendarEventType): string {
+    const eventTypes: { [key in CalendarEventType]: string } = {
+      [CalendarEventType.ApprovedLeave]: 'Congé approuvé',
+      [CalendarEventType.Holiday]: 'Jour férié',
+      [CalendarEventType.Other]: 'Autre événement',
+      [CalendarEventType.Paye]: 'Congé payé',
+      [CalendarEventType.NonPaye]: 'Congé non payé',
+      [CalendarEventType.Maladie]: 'Congé maladie',
+      [CalendarEventType.Parental]: 'Congé parental',
+      [CalendarEventType.Sabbatique]: 'Congé sabbatique',
+      [CalendarEventType.Famille]: 'Congé familial',
+      [CalendarEventType.Formation]: 'Congé formation',
+      [CalendarEventType.Militaire]: 'Congé militaire',
+      [CalendarEventType.SansSolde]: 'Congé sans solde',
+      [CalendarEventType.Exceptionnel]: 'Congé exceptionnel',
+      [CalendarEventType.ReposCompensateur]: 'Repos compensateur',
+      [CalendarEventType.Anniversaire]: 'Anniversaire',
+      [CalendarEventType.Civique]: 'Jour civique',
+      [CalendarEventType.DonSang]: 'Don de sang',
+      [CalendarEventType.Deuil]: 'Congé de deuil',
+    };
+    return eventTypes[eventType] || `Type ${eventType}`;
   }
 }

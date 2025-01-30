@@ -8,6 +8,7 @@ import { LeaveBalance } from '../../models/LeaveBalance';
 import { LeaveRequest } from '../../models/LeaveRequest';
 import { LeaveStatusSummary } from '../../models/LeaveStatusSummary';
 import { LeaveTrend } from '../../models/LeaveTrend';
+import { EmployeeLeaveStats } from '../../models/EmployeeLeaveStats';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,25 @@ export class LeaveReportsService {
     const url = `${this.apiUrl}/Reports/generate?reportType=${reportType}&generatedBy=${generatedBy}`;
     return this.http.post<Report>(url, {}).pipe(
       catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Récupère les statistiques de congés pour un employé spécifique
+   * @param userId L'identifiant de l'employé
+   * @returns Un Observable contenant les statistiques de congés de l'employé
+   */
+  getEmployeeLeaveStats(userId: string): Observable<EmployeeLeaveStats> {
+    const url = `${this.apiUrl}/Reports/employee-stats/${userId}`;
+    return this.http.get<EmployeeLeaveStats>(url).pipe(
+      catchError(error => {
+        console.error('Erreur lors de la récupération des statistiques:', error);
+        return throwError(() => new Error(
+          error.status === 404
+            ? 'Employé non trouvé'
+            : 'Une erreur est survenue lors de la récupération des statistiques'
+        ));
+      })
     );
   }
 
@@ -88,7 +108,16 @@ export class LeaveReportsService {
   deleteReport(reportId: string): Observable<Report> {
     const url = `${this.apiUrl}/Reports/${reportId}`;
     return this.http.delete<Report>(url).pipe(
+      tap(() => {
+        console.log('Suppression du rapport effectuée');
+      }),
       catchError((error) => {
+        // Si l'erreur est 404, cela signifie que le rapport a déjà été supprimé
+        if (error.status === 404) {
+          console.log('Rapport déjà supprimé ou inexistant');
+          // Retourner un "succès" car c'est le résultat souhaité
+          return new Observable<Report>();
+        }
         console.error('Erreur lors de la suppression du rapport:', error);
         return throwError(() => new Error(error));
       })

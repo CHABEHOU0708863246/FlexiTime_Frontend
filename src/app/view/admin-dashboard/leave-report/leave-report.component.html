@@ -139,91 +139,180 @@
 
 
 
-<div class="report-container">
-  <div class="header">
-    <h2>Gestion des Rapports de Congés</h2>
-    <button class="btn btn-primary" (click)="openGenerateReportModal()">+ Générer un rapport</button>
-  </div>
-
-  <!-- Modal de génération de rapport -->
-  <div class="modal" *ngIf="showGenerateModal">
-    <div class="modal-content">
-      <h3>Générer un nouveau rapport</h3>
-      <div class="form-group">
-        <label for="newReportType">Type de rapport :</label>
-        <select id="newReportType" [(ngModel)]="newReportType">
-          <option value="">Sélectionnez un type</option>
-          <option *ngFor="let type of reportTypes" [value]="type">
-            {{ getTranslatedReportType(type) }}
-          </option>
-        </select>
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-7xl mx-auto space-y-8">
+    <!-- Header Section -->
+    <div class="bg-white rounded-xl shadow-lg p-6 flex justify-between items-center border-l-8 border-blue-600 transition-all hover:shadow-xl">
+      <div>
+        <h2 class="text-3xl font-bold text-gray-800">📊 Gestion des Rapports de Congés</h2>
+        <p class="text-gray-500 mt-2">Générez et consultez les rapports d'activité</p>
       </div>
-      <div class="error-message" *ngIf="generationError">{{ generationError }}</div>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" (click)="showGenerateModal = false">Annuler</button>
-        <button class="btn btn-primary" (click)="generateReport()">Générer</button>
+      <button
+        class="btn bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center space-x-2 transition-transform hover:scale-105"
+        (click)="openGenerateReportModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+        </svg>
+        <span>Nouveau Rapport</span>
+      </button>
+    </div>
+
+    <!-- Generate Report Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity"
+         *ngIf="showGenerateModal"
+         [class]="showGenerateModal ? 'animate-fade-in' : 'animate-fade-out'">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all scale-95">
+        <div class="bg-blue-600 p-6 rounded-t-2xl">
+          <h3 class="text-xl font-semibold text-white">📈 Générer un rapport</h3>
+        </div>
+
+        <div class="p-6 space-y-6">
+          <div class="space-y-4">
+            <label class="block text-sm font-medium text-gray-700">Type de rapport</label>
+            <select
+              id="newReportType"
+              [(ngModel)]="newReportType"
+              class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+              <option value="">Sélectionnez un type</option>
+              <option *ngFor="let type of reportTypes" [value]="type">
+                {{ getTranslatedReportType(type) }}
+              </option>
+            </select>
+          </div>
+
+          <div class="flex justify-end space-x-3">
+            <button
+              class="px-5 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+              (click)="showGenerateModal = false">
+              Annuler
+            </button>
+            <button
+              class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 transition-transform hover:scale-[1.02]"
+              (click)="generateReport()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z" clip-rule="evenodd"/>
+              </svg>
+              <span>Générer</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Modal de confirmation de suppression -->
-  <div class="modal" *ngIf="showDeleteModal">
-    <div class="modal-content">
-      <h3>Confirmation de suppression</h3>
-      <p>Êtes-vous sûr de vouloir supprimer ce rapport ?</p>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" (click)="cancelDelete()">Annuler</button>
-        <button class="btn btn-danger" (click)="executeDelete()">Supprimer</button>
+    <!-- Reports Table -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+              <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+              <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Généré par</th>
+              <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th class="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr
+              *ngFor="let report of filteredReports"
+              class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#{{ report.id }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <span class="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-800">
+                  {{ getTranslatedReportType(report.reportType) }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ getUserFullName(report.generatedBy) }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ getFormattedDate(report.generatedAt) }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm space-x-2">
+                <button
+                  class="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors"
+                  (click)="viewReport(report)">
+                  👁️ Voir
+                </button>
+                <button
+                  class="text-green-600 hover:text-green-900 p-2 rounded-lg hover:bg-green-50 transition-colors"
+                  (click)="exportToExcel(report.id)">
+                  📤 Excel
+                </button>
+                <button
+                  class="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition-colors"
+                  (click)="confirmDelete(report.id)">
+                  🗑️ Supprimer
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
-  </div>
 
-  <!-- Modal de visualisation -->
-  <div class="modal" *ngIf="showViewModal">
-    <div class="modal-content">
-      <h3>Détails du rapport</h3>
-      <div *ngIf="currentReport">
-      <p><strong>ID:</strong> {{ currentReport.id }}</p>
-      <p><strong>Type:</strong> {{ getTranslatedReportType(currentReport.reportType) }}</p>
-      <p><strong>Généré par:</strong> {{ getUserFullName(currentReport.generatedBy) }}</p>
-      <p><strong>Date:</strong> {{ getFormattedDate(currentReport.generatedAt) }}</p>
-        <div class="modal-actions">
-          <button class="btn btn-secondary" (click)="showViewModal = false">Fermer</button>
-          <button class="btn btn-primary" (click)="exportToExcel(currentReport.id)">
-            Exporter en Excel
-          </button>
+      <div *ngIf="filteredReports.length === 0" class="p-8 text-center text-gray-500">
+        <div class="inline-block p-4">
+          📭 Aucun rapport trouvé
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <table class="reports-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Type</th>
-        <th>Généré par</th>
-        <th>Date de génération</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let report of filteredReports">
-        <td>{{ report.id }}</td>
-        <td>{{ getTranslatedReportType(report.reportType) }}</td>
-        <td>{{ getUserFullName(report.generatedBy) }}</td>
-        <td>{{ getFormattedDate(report.generatedAt) }}</td>
-        <td>
-          <button class="btn btn-sm btn-info" (click)="viewReport(report)">Voir</button>&nbsp;&nbsp;
-          <button class="btn btn-sm btn-primary" (click)="exportToExcel(report.id)">Excel</button>&nbsp;&nbsp;
-          <button class="btn btn-sm btn-danger" (click)="confirmDelete(report.id)">Supprimer</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<!-- Ajoutez cette modal de confirmation après la modal de génération -->
 
-  <div *ngIf="filteredReports.length === 0" class="no-reports">
-    Aucun rapport trouvé.
+<!-- Delete Confirmation Modal -->
+<div class="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity"
+     *ngIf="showDeleteModal">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all">
+    <div class="bg-red-600 p-6 rounded-t-2xl">
+      <h3 class="text-xl font-semibold text-white">🗑️ Confirmer la suppression</h3>
+    </div>
+    <div class="p-6 space-y-6">
+      <p class="text-gray-700">Êtes-vous sûr de vouloir supprimer ce rapport ? Cette action est irréversible.</p>
+      <div class="flex justify-end space-x-3">
+        <button
+          class="px-5 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+          (click)="cancelDelete()">
+          Annuler
+        </button>
+        <button
+          class="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center space-x-2 transition-transform hover:scale-[1.02]"
+          (click)="executeDelete()">
+          <span>Confirmer la suppression</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View Report Modal -->
+<div class="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity"
+     *ngIf="showViewModal">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl transform transition-all">
+    <div class="bg-blue-600 p-6 rounded-t-2xl flex justify-between items-center">
+      <h3 class="text-xl font-semibold text-white">👁️ Détails du rapport</h3>
+      <button
+        class="text-white hover:text-gray-200"
+        (click)="showViewModal = false">
+        ✖️
+      </button>
+    </div>
+    <div class="p-6 space-y-6" *ngIf="currentReport">
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm font-medium text-gray-500">Type de rapport</p>
+            <p class="mt-1">{{ getTranslatedReportType(currentReport.reportType) }}</p>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-500">Généré par</p>
+            <p class="mt-1">{{ getUserFullName(currentReport.generatedBy) }}</p>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-500">Date de génération</p>
+            <p class="mt-1">{{ getFormattedDate(currentReport.generatedAt) }}</p>
+          </div>
+        </div>
+        <!-- Ajouter ici d'autres détails du rapport selon vos besoins -->
+      </div>
+    </div>
   </div>
 </div>
 

@@ -17,4 +17,12 @@ export class ToastService {
     this.toastSubject.next({ message, type });
   }
 
+  showSuccess(message: string) {
+    this.show(message, 'success');
+  }
+
+  showError(message: string) {
+    this.show(message, 'error');
+  }
+
 }

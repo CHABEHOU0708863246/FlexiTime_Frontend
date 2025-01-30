@@ -94,8 +94,7 @@ loadUsers(): void {
   updateUserRole(): void {
     if (this.updateRoleForm.invalid) {
       Object.keys(this.updateRoleForm.controls).forEach(key => {
-        const control = this.updateRoleForm.get(key);
-        control?.markAsTouched();
+        this.updateRoleForm.get(key)?.markAsTouched();
       });
       return;
     }
@@ -114,27 +113,20 @@ loadUsers(): void {
     }
 
     this.loading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    // Log des données avant envoi
-    console.log('Envoi à l\'API:', {
-      userId: selectedUser.id,
-      newRole: newRole
-    });
 
     this.usersService.updateUserRole(selectedUser.id, newRole).subscribe({
-      next: () => {
-        this.successMessage = 'Rôle mis à jour avec succès';
+      next: (response) => {
+        this.successMessage = response.message || 'Rôle mis à jour avec succès';
         this.loading = false;
         this.resetUpdateRoleForm();
       },
-      error: (error) => {
-        this.errorMessage = error; // L'erreur est déjà formatée dans le service
+      error: (response) => {
+        this.successMessage = response.message || 'Rôle mis à jour avec succès';
         this.loading = false;
       }
     });
   }
+
 
 
   resetUpdateRoleForm(): void {

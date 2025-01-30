@@ -133,174 +133,250 @@
 
 
 
+<div class="min-h-screen p-6">
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+      <!-- En-tête -->
+      <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-6">
+        <h1 class="text-2xl font-bold text-white text-center">Créer un utilisateur</h1>
+      </div>
 
-
-
-
-<div class="container mt-4">
-  <div class="card">
-    <div class="card-header">
-      <h1 class="text-center">Créer un utilisateur</h1>
-    </div>
-    <div class="card-body">
       <!-- Barre de progression -->
-      <div class="progress mb-4">
-        <div
-          class="progress-bar"
-          role="progressbar"
-          [style.width]="stepPercentage + '%'"
-          aria-valuenow="25"
-          aria-valuemin="0"
-          aria-valuemax="100">
-          Étape {{ currentStep }} / 3
+      <div class="p-4 bg-blue-50">
+        <div class="relative pt-1">
+          <div class="flex mb-2 items-center justify-between">
+            <div class="text-xs font-semibold inline-block text-blue-600">
+              Étape {{currentStep}} / 3
+            </div>
+          </div>
+          <div class="flex h-2 mb-4 overflow-hidden bg-blue-200 rounded">
+            <div [style.width]="stepPercentage + '%'" class="transition-all duration-500 ease-out bg-blue-600"></div>
+          </div>
         </div>
       </div>
 
-      <!-- Étape 1: Informations personnelles -->
-      <div *ngIf="currentStep === 1">
-        <h1 class="text-center">Informations personnelles</h1>
-        <form [formGroup]="userForm">
-          <div class="form-group">
-            <label for="firstName">Prénom</label>
-            <input type="text" class="form-control" formControlName="firstName" placeholder="Entrez un prénom...">
-          </div>
-          <div class="form-group">
-            <label for="lastName">Nom</label>
-            <input type="text" class="form-control" formControlName="lastName" placeholder="Entrez un nom...">
-          </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" formControlName="email" placeholder="Votre email...">
-          </div>
-          <div class="form-group">
-            <label for="phoneNumber">Numéro de téléphone</label>
-            <input type="text" class="form-control" formControlName="phoneNumber" placeholder="Votre numéro de téléphone...">
-          </div>
-          <div class="form-group row">
-            <label class="col-lg-4 col-form-label">Activer l'utilisateur <span class="text-danger">*</span></label>
-            <div class="col-lg-8">
-              <input type="checkbox" formControlName="isEnabled">
+      <div class="p-6 space-y-6">
+        <!-- Étape 1: Informations personnelles -->
+        <div *ngIf="currentStep === 1" class="space-y-4 transition-all duration-300">
+          <h2 class="text-xl font-semibold text-gray-800 mb-6">Informations personnelles</h2>
+          <form [formGroup]="userForm" class="space-y-6">
+            <!-- Prénom et Nom -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="group">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                <input type="text" formControlName="firstName"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  placeholder="Entrez un prénom...">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                <input type="text" formControlName="lastName"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  placeholder="Entrez un nom...">
+              </div>
             </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-lg-4 col-form-label" for="val-postal-address">Adresse postale</label>
-            <div class="col-lg-8">
-              <input type="text" class="form-control" id="val-postal-address" formControlName="postalAddress" placeholder="Entrez l'adresse postale">
-            </div>
-          </div>
-        </form>
-      </div>
 
-      <!-- Étape 2: Détails professionnels -->
-      <div *ngIf="currentStep === 2">
-        <h1 class="text-center">Détails professionnels</h1>
-        <form [formGroup]="userForm">
-          <div class="form-group">
-            <label for="hireDate">Date d'embauche</label>
-            <input type="date" class="form-control" formControlName="hireDate">
-          </div>
-          <div class="form-group">
-            <label for="roles">Rôles</label>
-            <select multiple class="form-control" formControlName="roles">
-              <option *ngFor="let role of availableRoles" [value]="role">{{ role }}</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="isPartTime">Statut de l'emploi</label>
+            <!-- Email et Téléphone -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" formControlName="email"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  placeholder="Votre email...">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Numéro de téléphone</label>
+                <input type="text" formControlName="phoneNumber"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  placeholder="Votre numéro de téléphone...">
+              </div>
+            </div>
+
+            <!-- Adresse postale -->
             <div>
-              <div class="form-check form-check-inline">
-                <input type="radio" class="form-check-input" id="partTime" formControlName="isPartTime" [value]="true">
-                <label for="partTime" class="form-check-label">À temps partiel</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input type="radio" class="form-check-input" id="fullTime" formControlName="isPartTime" [value]="false">
-                <label for="fullTime" class="form-check-label">À temps plein</label>
-              </div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Adresse postale</label>
+              <input type="text" formControlName="postalAddress"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                placeholder="Entrez l'adresse postale">
             </div>
-            <div class="form-group row">
-              <label class="col-lg-4 col-form-label" for="val-working-hours">Heures de travail</label>
-              <div class="col-lg-8">
-                <input type="number" class="form-control" id="val-working-hours" formControlName="workingHours" placeholder="Nombre d'heures">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label class="col-lg-4 col-form-label" for="val-password">Mot de passe <span class="text-danger">*</span></label>
-              <div class="col-lg-8">
-                <input type="password" class="form-control" id="val-password" formControlName="password" placeholder="Choisissez un mot de passe sûr..">
+
+            <!-- Activation utilisateur -->
+            <div class="flex items-center space-x-4">
+              <label class="text-sm font-medium text-gray-700">Activer l'utilisateur <span class="text-red-500">*</span></label>
+              <div class="relative inline-block align-middle select-none transition duration-200 ease-in">
+                <input type="checkbox" formControlName="isEnabled"
+                  class="h-6 w-6 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer transition-all duration-200 scale-125">
               </div>
             </div>
-            <div class="form-group row">
-              <label class="col-lg-4 col-form-label" for="val-confirm-password">Confirmer le mot de passe <span class="text-danger">*</span></label>
-              <div class="col-lg-8">
-                <input type="password" class="form-control" id="val-confirm-password" formControlName="confirmPassword" placeholder="..et confirmez-le !">
+          </form>
+        </div>
+
+       <!-- Étape 2: Détails professionnels -->
+        <div *ngIf="currentStep === 2" class="space-y-6 transition-all duration-300">
+          <h2 class="text-xl font-semibold text-gray-800 mb-6">Détails professionnels</h2>
+          <form [formGroup]="userForm" class="space-y-6">
+            <!-- Date d'embauche et Rôles -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Date d'embauche</label>
+                <input type="date" formControlName="hireDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Rôles</label>
+                <select multiple formControlName="roles"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 min-h-[100px]">
+                  <option *ngFor="let role of availableRoles" [value]="role"
+                    class="py-1 px-2 hover:bg-blue-50">
+                    {{ role }}
+                  </option>
+                </select>
               </div>
             </div>
-          </div>
-        </form>
-      </div>
 
-      <!-- Étape 3: Données supplémentaires -->
-      <div *ngIf="currentStep === 3">
-        <h1 class="text-center">Données supplémentaires</h1>
-        <form [formGroup]="userForm">
-          <div class="form-group">
-            <label for="residence">Lieu de résidence</label>
-            <input type="text" class="form-control" formControlName="residence" placeholder="Entrez votre lieu de résidence...">
-          </div>
-          <div class="form-group">
-            <label for="maritalStatus">Statut marital</label>
-            <input type="text" class="form-control" formControlName="maritalStatus" placeholder="Ex: Célibataire">
-          </div>
-          <div class="form-group">
-            <label for="numberOfChildren">Nombre d'enfants</label>
-            <input type="number" class="form-control" formControlName="numberOfChildren" placeholder="Entrez le nombre d'enfants...">
-          </div>
-          <div class="form-group row">
-            <label class="col-lg-4 col-form-label" for="val-gender">Genre <span class="text-danger">*</span></label>
-            <div class="col-lg-8">
-              <input type="text" class="form-control" id="val-gender" formControlName="gender" placeholder="Entrez le genre (Homme/Femme)">
+            <!-- Statut de l'emploi -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">Statut de l'emploi</label>
+              <div class="flex space-x-6">
+                <div class="flex items-center">
+                  <input type="radio" id="partTime" formControlName="isPartTime" [value]="true"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                  <label for="partTime" class="ml-2 text-sm text-gray-700">À temps partiel</label>
+                </div>
+                <div class="flex items-center">
+                  <input type="radio" id="fullTime" formControlName="isPartTime" [value]="false"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                  <label for="fullTime" class="ml-2 text-sm text-gray-700">À temps plein</label>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div class="form-group row">
-            <label class="col-lg-4 col-form-label" for="val-contract-type">Type de contrat <span class="text-danger">*</span></label>
-            <div class="col-lg-8">
-              <input type="text" class="form-control" id="val-contract-type" formControlName="contractType" placeholder="Entrez le type de contrat (CDI, CDD, etc.)">
+            <!-- Heures de travail -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Heures de travail</label>
+              <input type="number" formControlName="workingHours"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                placeholder="Nombre d'heures">
             </div>
-          </div>
-        </form>
-      </div>
 
-      <!-- Boutons de navigation -->
-      <div class="d-flex justify-content-between">
-        <button
-          class="btn btn-primary"
-          [disabled]="currentStep === 1"
-          (click)="previousStep()">Précédent
-          <div id="container-stars">
-            <div id="stars"></div>
-          </div>
-          <div id="glow">
-            <div class="circle"></div>
-            <div class="circle"></div>
-          </div>
-        </button>
+            <!-- Mot de passe et confirmation -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Mot de passe <span class="text-red-500">*</span>
+                </label>
+                <input type="password" formControlName="password"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  placeholder="Choisissez un mot de passe sûr..">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Confirmer le mot de passe <span class="text-red-500">*</span>
+                </label>
+                <input type="password" formControlName="confirmPassword"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  placeholder="..et confirmez-le !">
+              </div>
+            </div>
+          </form>
+        </div>
 
-        <button
-          *ngIf="currentStep < 3"
-          class="btn btn-primary"
-          (click)="nextStep()">Suivant
-        </button>
+        <!-- Étape 3: Données supplémentaires -->
+          <div *ngIf="currentStep === 3" class="space-y-6 transition-all duration-300">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">Données supplémentaires</h2>
+            <form [formGroup]="userForm" class="space-y-6">
+              <!-- Lieu de résidence et Statut marital -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Lieu de résidence</label>
+                  <input type="text" formControlName="residence"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="Entrez votre lieu de résidence...">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Statut marital</label>
+                  <input type="text" formControlName="maritalStatus"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="Ex: Célibataire">
+                </div>
+              </div>
 
-          <button type="button" class="btn btn-secondary" (click)="onReset()">Réinitialiser</button>
-        <button
-          *ngIf="currentStep === 3"
-          class="btn btn-success"
-          (click)="onSubmit()">Valider</button>
+              <!-- Genre et Nombre d'enfants -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Genre <span class="text-red-500">*</span>
+                  </label>
+                  <select formControlName="gender"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                    <option value="">Sélectionnez votre genre</option>
+                    <option value="Homme">Homme</option>
+                    <option value="Femme">Femme</option>
+                    <option value="Autre">Autre</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Nombre d'enfants</label>
+                  <input type="number" formControlName="numberOfChildren"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="Entrez le nombre d'enfants..."
+                    min="0">
+                </div>
+              </div>
+
+              <!-- Type de contrat -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Type de contrat <span class="text-red-500">*</span>
+                </label>
+                <select formControlName="contractType"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                  <option value="">Sélectionnez le type de contrat</option>
+                  <option value="CDI">CDI</option>
+                  <option value="CDD">CDD</option>
+                  <option value="Interim">Intérim</option>
+                  <option value="Stage">Stage</option>
+                  <option value="Alternance">Alternance</option>
+                </select>
+              </div>
+
+              <!-- Message de validation -->
+              <div class="bg-blue-50 p-4 rounded-md" *ngIf="userForm.valid">
+                <p class="text-sm text-blue-800">
+                  Toutes les informations ont été correctement remplies. Vous pouvez maintenant valider le formulaire.
+                </p>
+              </div>
+            </form>
+          </div>
+
+        <!-- Boutons de navigation -->
+        <div class="flex justify-between pt-6">
+          <button
+            [disabled]="currentStep === 1"
+            (click)="previousStep()"
+            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 transition-all duration-200">
+            Précédent
+          </button>
+
+          <button
+            *ngIf="currentStep < 3"
+            (click)="nextStep()"
+            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+            Suivant
+          </button>
+
+          <button
+            *ngIf="currentStep === 3"
+            (click)="onSubmit()"
+            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200">
+            Valider
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
 
 
 

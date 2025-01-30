@@ -1,0 +1,233 @@
+<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+  <div class="nano">
+    <div class="nano-content">
+      <div class="logo"><a href="index.html"><span>FlexiTime</span></a></div>
+      <ul>
+        <li class="label">Principale</li>
+        <li class="active"><a class="sidebar-sub-toggle" [routerLink]="['/employe/dashboard']"><i class="ti-home"></i> Dashboard <span class="badge badge-primary"></span></a>
+        </li>
+
+        <li class="label">Menu</li>
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleLeaveMenu()">
+            <i class="ti-ticket -chart-alt"></i> Gestion des congés
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isLeaveMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isLeaveMenuOpen}">
+            <li><a [routerLink]="['/employe/request-for-leave']">Demandé un congé</a></li>
+            <li><a [routerLink]="['/employe/leave-config']">Liste des demandes de congé</a></li>
+            <li><a [routerLink]="['/employe/holiday-config']">Solde de Congés</a></li>
+          </ul>
+        </li>
+
+        <li><a [routerLink]="['/employe/leave-calendar-view']"><i class="ti-user -chart-alt"></i> Gerer mon profil</a></li>
+        <li><a [routerLink]="['/employe/leave-calendar-view']"><i class="ti-calendar grid2-alt"></i> Calendrier de congés</a></li>
+        <li><a [routerLink]="['/employe/leave-calendar-view']"><i class="ti-support grid2-alt"></i> Contacter le support</a></li>
+        <li><a [routerLink]="['/employe/leave-calendar-view']"><i class="ti-help-alt grid2-alt"></i> Foire aux questions</a></li>
+
+
+
+        <li><a (click)="logout()"><i class="ti-close"></i> Je me déconnecte</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="float-left">
+          <div class="">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </div>
+        </div>
+        <div class="float-right">
+          <ul>
+            <li class="header-icon dib"><i class="ti-bell"></i>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">Recent Notifications</span>
+                </div>
+              </div>
+            </li>
+            <li class="header-icon dib"><i class="ti-email"></i>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">2 New Messages</span>
+                  <a href="email.html"><i class="ti-pencil-alt pull-right"></i></a>
+                </div>
+              </div>
+            </li>
+            <li class="header-icon dib">
+              <span class="user-avatar">{{ user?.firstName }} <i class="ti-angle-down f-s-10"></i></span>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">User Details</span>
+                </div>
+                <div class="dropdown-content">
+                  <span>Email: {{ user?.email }}</span><br />
+                  <span>Phone: {{ user?.phoneNumber }}</span>
+                </div>
+                <div class="dropdown-footer">
+                  <button (click)="logout()">Logout</button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="content-wrap">
+  <div class="main">
+      <div class="container-fluid">
+          <div class="row">
+              <!-- /# column -->
+              <div class="col-lg-4 p-l-0 title-margin-left">
+                  <div class="page-header">
+                      <div class="page-title">
+                          <ol class="breadcrumb">
+                              <li class="breadcrumb-item"><a [routerLink]="['/admin/dashboard']">Gestion des congés</a></li>
+                              <li class="breadcrumb-item active">Demandé un congé</li>
+                          </ol>
+                      </div>
+                  </div>
+              </div>
+              <!-- /# column -->
+          </div>
+          <!-- /# row -->
+
+
+        <form class="form-valide" [formGroup]="leaveRequestForm" (ngSubmit)="submitLeaveRequest()">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">Demande de Congé</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                      <div class="col-xl-6">
+                        <!-- ID Utilisateur (Masqué) -->
+                          <div class="form-group row" hidden>
+                            <label class="col-lg-4 col-form-label" for="user-id">
+                              ID Utilisateur
+                            </label>
+                            <div class="col-lg-6">
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="user-id"
+                                formControlName="userId"
+                                readonly
+                              />
+                            </div>
+                          </div>
+                          <!-- Type de congé -->
+                          <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="type-conge">
+                              Type de congé <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                              <select formControlName="typeConge" class="form-control">
+                                <option *ngFor="let type of leaveTypes" [value]="type.value">
+                                  {{ type.label }}
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+                        <!-- Date de début -->
+                        <div class="form-group row">
+                          <label class="col-lg-4 col-form-label" for="start-date">
+                            Date de début <span class="text-danger">*</span>
+                          </label>
+                          <div class="col-lg-6">
+                            <input type="date" class="form-control" id="start-date" formControlName="startDate" />
+                          </div>
+                        </div>
+                        <!-- Date de fin -->
+                        <div class="form-group row">
+                          <label class="col-lg-4 col-form-label" for="end-date">
+                            Date de fin <span class="text-danger">*</span>
+                          </label>
+                          <div class="col-lg-6">
+                            <input type="date" class="form-control" id="end-date" formControlName="endDate" />
+                          </div>
+                        </div>
+                        <!-- Commentaire -->
+                        <div class="form-group row">
+                          <label class="col-lg-4 col-form-label" for="commentaire">
+                            Commentaire
+                          </label>
+                          <div class="col-lg-6">
+                            <textarea class="form-control" id="commentaire" formControlName="commentaire" rows="4"></textarea>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-xl-6">
+                        <!-- Justificatif -->
+                        <div class="form-group row">
+                          <label class="col-lg-4 col-form-label" for="justificatif">
+                            Fichier justificatif
+                          </label>
+                          <div class="col-lg-6">
+                            <input type="file" class="form-control" id="justificatif"
+                                   (change)="onFileChange($event)" />
+                          </div>
+                        </div>
+                        <!-- Raison -->
+                        <div class="form-group row">
+                          <label class="col-lg-4 col-form-label" for="raison">
+                            Raison
+                          </label>
+                          <div class="col-lg-6">
+                            <textarea class="form-control" id="raison" formControlName="raison" rows="4"></textarea>
+                          </div>
+                        </div>
+                        <!-- Soumettre -->
+                        <div class="form-group row">
+                          <div class="col-lg-8 ml-auto">
+                            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+                              <span *ngIf="!isSubmitting">Soumettre</span>
+                              <span *ngIf="isSubmitting">
+                                <i class="spinner-border spinner-border-sm" role="status"></i> Chargement...
+                              </span>
+                            </button>&nbsp;&nbsp;
+                            <button type="reset" class="btn btn-light">Annuler</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+
+      </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

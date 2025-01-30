@@ -68,12 +68,20 @@ export class RolesService {
     const url = `${this.apiUrl}/${roleId}`;
     return this.http.put(url, roleData).pipe(
       tap(() => {
-        // Notifie les abonnés que les données du rôle ont été mises à jour.
         this.roleUpdatedSubject.next();
       }),
-      catchError(this.handleError)
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 200 || error.status === 204) {
+          return new Observable(observer => {
+            observer.next({ message: 'Rôle mis à jour avec succès' });
+            observer.complete();
+          });
+        }
+        return this.handleError(error);
+      })
     );
   }
+
 
   /**
    * 6. Renvoie un Observable pour suivre les mises à jour des rôles.

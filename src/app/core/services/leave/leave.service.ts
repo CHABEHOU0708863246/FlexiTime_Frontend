@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { LeaveRequest } from '../../models/LeaveRequest';
 import { PaginatedResponse } from '../../models/PaginatedRequest';
 
@@ -34,15 +34,18 @@ export class LeaveService {
   }
 
   /**
-   * 3. Crée une nouvelle demande de congé.
-   * Envoie une requête POST pour ajouter une nouvelle demande.
-   * @param leaveRequest - Les détails de la nouvelle demande de congé.
-   * @returns Observable contenant la demande de congé créée.
-   */
-  createLeaveRequest(leaveRequest: LeaveRequest): Observable<LeaveRequest> {
-    return this.http.post<LeaveRequest>(`${this.apiUrl}`, leaveRequest)
-      .pipe(catchError(this.handleError));
+ * 3. Crée une nouvelle demande de congé.
+ * Envoie une requête POST pour ajouter une nouvelle demande.
+ * @param leaveRequest - Les détails de la nouvelle demande de congé.
+ * @returns Observable contenant la réponse de la demande.
+ */
+  createLeaveRequest(formData: FormData): Observable<any> {
+    console.log('Données envoyées au serveur :', formData.get('typeConge'));
+    return this.http.post(`${this.apiUrl}`, formData);
   }
+
+
+
 
   /**
    * 4. Met à jour une demande de congé existante.

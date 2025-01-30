@@ -1,1 +1,192 @@
-<p>employe-dashboard works!</p>
+<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+  <div class="nano">
+    <div class="nano-content">
+      <div class="logo"><a href="index.html"><span>FlexiTime</span></a></div>
+      <ul>
+        <li class="label">Principale</li>
+        <li class="active"><a class="sidebar-sub-toggle" [routerLink]="['/employe/dashboard']"><i class="ti-home"></i> Dashboard <span class="badge badge-primary"></span></a>
+        </li>
+
+        <li class="label">Menu</li>
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleLeaveMenu()">
+            <i class="ti-ticket -chart-alt"></i> Gestion des congés
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isLeaveMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isLeaveMenuOpen}">
+            <li><a [routerLink]="['/employe/request-for-leave']">Demandé un congé</a></li>
+            <li><a [routerLink]="['/employe/leave-config']">Liste des demandes de congé</a></li>
+            <li><a [routerLink]="['/employe/holiday-config']">Solde de Congés</a></li>
+          </ul>
+        </li>
+
+        <li><a [routerLink]="['/employe/leave-calendar-view']"><i class="ti-user -chart-alt"></i> Gerer mon profil</a></li>
+        <li><a [routerLink]="['/employe/leave-calendar-view']"><i class="ti-calendar grid2-alt"></i> Calendrier de congés</a></li>
+        <li><a [routerLink]="['/employe/leave-calendar-view']"><i class="ti-support grid2-alt"></i> Contacter le support</a></li>
+        <li><a [routerLink]="['/employe/leave-calendar-view']"><i class="ti-help-alt grid2-alt"></i> Foire aux questions</a></li>
+
+
+
+        <li><a (click)="logout()"><i class="ti-close"></i> Je me déconnecte</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="float-left">
+          <div class="">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </div>
+        </div>
+        <div class="float-right">
+          <ul>
+            <li class="header-icon dib"><i class="ti-bell"></i>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">Recent Notifications</span>
+                </div>
+              </div>
+            </li>
+            <li class="header-icon dib"><i class="ti-email"></i>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">2 New Messages</span>
+                  <a href="email.html"><i class="ti-pencil-alt pull-right"></i></a>
+                </div>
+              </div>
+            </li>
+            <li class="header-icon dib">
+              <span class="user-avatar">{{ user?.firstName }} <i class="ti-angle-down f-s-10"></i></span>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">User Details</span>
+                </div>
+                <div class="dropdown-content">
+                  <span>Email: {{ user?.email }}</span><br />
+                  <span>Phone: {{ user?.phoneNumber }}</span>
+                </div>
+                <div class="dropdown-footer">
+                  <button (click)="logout()">Logout</button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="content-wrap">
+  <div class="main">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-lg-8 p-r-0 title-margin-right">
+                  <div class="page-header">
+                      <div class="page-title">
+                        <h1>
+                          <span class="emoji">👋</span>
+                          Salut,
+                          <span class="highlight">Bienvenue</span>
+                          dans
+                          <span class="brand-name">FlexiTime</span>
+                        </h1>
+                      </div>
+                  </div>
+              </div>
+              <!-- /# column -->
+              <div class="col-lg-4 p-l-0 title-margin-left">
+                  <div class="page-header">
+                      <div class="page-title">
+                          <ol class="breadcrumb">
+                              <li class="breadcrumb-item"><a [routerLink]="['/admin/dashboard']">Dashboard</a></li>
+                              <li class="breadcrumb-item active">Accueil</li>
+                          </ol>
+                      </div>
+                  </div>
+              </div>
+              <!-- /# column -->
+          </div>
+          <!-- /# row -->
+
+          <section id="main-content">
+            <div class="row">
+              <div class="col-lg-3">
+                <div class="card">
+                  <div class="stat-widget-one">
+                    <div class="stat-icon dib"><i class="ti-world grid2 color-pink border-pink"></i></div>
+                    <div class="stat-content dib">
+                      <div class="stat-text">Total Congés</div>
+                      <div class="stat-digit">{{ leaveStatistics?.totalRequests }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="card">
+                  <div class="stat-widget-one">
+                    <div class="stat-icon dib"><i class="ti-hand-open color-primary border-primary"></i></div>
+                    <div class="stat-content dib">
+                      <div class="stat-text">Congé Attente</div>
+                      <div class="stat-digit">{{ leaveStatistics?.pendingRequests }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="card">
+                  <div class="stat-widget-one">
+                    <div class="stat-icon dib"><i class="ti-face-smile color-success border-success"></i></div>
+                    <div class="stat-content dib">
+                      <div class="stat-text">Congé Acceptés</div>
+                      <div class="stat-digit">{{ leaveStatistics?.approvedRequests }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="card">
+                  <div class="stat-widget-one">
+                    <div class="stat-icon dib"><i class="ti-face-sad color-danger border-danger"></i></div>
+                    <div class="stat-content dib">
+                      <div class="stat-text">Congé Réfusés</div>
+                      <div class="stat-digit">{{ leaveStatistics?.rejectedRequests }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="footer">
+                  <p>©2025 FlexiTime -- Développé par <a href="https://www.linkedin.com/in/afferyauxencedelorschabehou/"> Affery Auxence Delors CHABEHOU.</a></p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+
+      </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -9,7 +9,7 @@ export class LeaveRequest {
   // Propriétés liées à la demande de congé
   id: string;
   userId: string;
-  type: TypeConge = TypeConge.Paye; // Type de congé par défaut
+  type: TypeConge;
   startDate: Date;
   endDate: Date;
   status: StatutConges = StatutConges.Attente; // Statut par défaut
@@ -18,9 +18,7 @@ export class LeaveRequest {
   reason?: string;
   requestedAt: Date;
   approvedAt?: Date;
-
-  // Propriété ajoutée pour la justification de congé
-  justificationFileUrl?: string; // URL du fichier justificatif
+justificationFileUrl?: string;
 
   constructor(
     id: string,
@@ -34,7 +32,7 @@ export class LeaveRequest {
     reason: string | undefined,
     requestedAt: Date,
     approvedAt?: Date,
-    justificationFileUrl?: string // Paramètre pour la justification
+    justificationFileUrl?: string
   ) {
     this.id = id;
     this.userId = userId;
@@ -66,10 +64,10 @@ export class LeaveRequest {
 
 // Enum pour le statut de la demande de congé
 export enum StatutConges {
-  Attente = 0,   // En attente d'approbation
-  Approuve = 1,  // Congé approuvé
-  Rejete = 2,    // Congé rejeté
-  Annule = 3     // Congé annulé
+  Attente = 0,
+  Approuve = 1,
+  Rejete = 2,
+  Annule = 3
 }
 
 // Enum pour le type de congé

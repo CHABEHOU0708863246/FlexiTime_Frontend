@@ -4,7 +4,7 @@
       <div class="logo"><a href="index.html"><span>FlexiTime</span></a></div>
       <ul>
         <li class="label">Principale</li>
-        <li class="active"><a class="sidebar-sub-toggle"><i class="ti-home"></i> Dashboard <span class="badge badge-primary"></span></a>
+        <li class="active"><a class="sidebar-sub-toggle" [routerLink]="['/admin/dashboard']"><i class="ti-home"></i> Dashboard <span class="badge badge-primary"></span></a>
         </li>
 
         <li class="label">Menu</li>
@@ -129,134 +129,189 @@
 </div>
 
 
-<div class="content-wrap">
-  <div class="main">
-    <div class="container-fluid">
-      <section id="main-content">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">Modifier le Rôle d'un Utilisateur</h4>
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-6xl mx-auto">
+    <!-- Section principale -->
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+      <!-- En-tête -->
+      <div class="bg-blue-600 p-6">
+        <h3 class="text-2xl font-bold text-white">Modifier le Rôle d'un Utilisateur</h3>
+      </div>
+      <!-- Contenu -->
+      <div class="p-6 space-y-8">
+        <!-- Feedback utilisateur -->
+        <div *ngIf="loading" class="text-center">
+          <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-600"></div>
+          <p class="mt-2 text-sm text-gray-500">Chargement...</p>
+        </div>
+        <div *ngIf="errorMessage" class="p-4 bg-red-100 text-red-700 rounded-md">
+          {{ errorMessage }}
+        </div>
+        <div *ngIf="successMessage" class="p-4 bg-green-100 text-green-700 rounded-md">
+          {{ successMessage }}
+        </div>
 
-                <div *ngIf="loading" class="text-center">
-                  <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Chargement...</span>
-                  </div>
-                </div>
-
-                <div *ngIf="errorMessage" class="alert alert-danger">
-                  {{ successMessage }}
-                </div>
-
-                <div *ngIf="successMessage" class="alert alert-success">
-                  {{ successMessage }}
-                </div>
-                <!-- Assurez-vous que le formulaire complet soit entouré des balises form avec ngSubmit -->
-                <form [formGroup]="updateRoleForm" (ngSubmit)="updateUserRole()">
-                  <div class="form-group row mb-3">
-                    <label class="col-lg-4 col-form-label">Sélectionner un Utilisateur</label>
-                    <div class="col-lg-8">
-                      <select class="form-select" formControlName="selectedUser">
-                        <option [ngValue]="null">Choisissez un utilisateur</option>
-                        <option *ngFor="let user of users" [ngValue]="user">
-                          {{ user.firstName }} {{ user.lastName }} ({{ user.email }})
-                        </option>
-                      </select>
-                      <div *ngIf="isFieldInvalid('selectedUser')" class="text-danger">
-                        Veuillez sélectionner un utilisateur
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-group row mb-3">
-                    <label class="col-lg-4 col-form-label">Nouveau Rôle</label>
-                    <div class="col-lg-8">
-                      <select class="form-select" formControlName="newRole">
-                        <option value="">Sélectionnez un rôle</option>
-                        <option *ngFor="let role of roles" [value]="role.roleName">
-                          {{ role.roleName }}
-                        </option>
-                      </select>
-                      <div *ngIf="isFieldInvalid('newRole')" class="text-danger">
-                        Veuillez sélectionner un rôle
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-group row">
-                    <div class="col-lg-8 offset-lg-4">
-                      <button type="submit"
-                              class="btn btn-primary me-2"
-                              [disabled]="!canUpdateRole()">
-                        Mettre à Jour le Rôle
-                      </button>
-                      <button type="button"
-                              class="btn btn-secondary"
-                              (click)="resetUpdateRoleForm()"
-                              [disabled]="loading">
-                        Réinitialiser
-                      </button>
-                    </div>
-                  </div>
-                </form>
-                <hr>
-                <h4 class="card-title">Gestion des Rôles</h4>
-                <!-- Formulaire de création/édition -->
-                <form [formGroup]="roleForm" (ngSubmit)="saveRole()">
-                  <div class="form-group row">
-                    <label class="col-lg-4 col-form-label">Code</label>
-                    <div class="col-lg-8">
-                      <input type="text" class="form-control" formControlName="code" placeholder="Ex : ADM" />
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label class="col-lg-4 col-form-label">Nom du Rôle</label>
-                    <div class="col-lg-8">
-                      <input type="text" class="form-control" formControlName="roleName" placeholder="Ex : Administrateur" />
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label class="col-lg-4 col-form-label">Nom Normalisé</label>
-                    <div class="col-lg-8">
-                      <input type="text" class="form-control" formControlName="normalizedName" placeholder="Ex : ADMIN" />
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <div class="col-lg-8 offset-lg-4">
-                      <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Mettre à jour' : 'Créer' }}</button>
-                      <button type="button" class="btn btn-secondary" (click)="resetForm()">Réinitialiser</button>
-                    </div>
-                  </div>
-                </form>
-
-                <!-- Liste des rôles -->
-                <table class="table mt-4">
-                  <thead>
-                    <tr>
-                      <th>Code</th>
-                      <th>Nom</th>
-                      <th>Nom Normalisé</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let role of roles">
-                      <td>{{ role.code }}</td>
-                      <td>{{ role.roleName }}</td>
-                      <td>{{ role.normalizedName }}</td>
-                      <td>
-                        <button class="btn btn-sm btn-warning" (click)="editRole(role)">Modifier</button>&nbsp;&nbsp;&nbsp;
-                        <button class="btn btn-sm btn-danger" (click)="deleteRole(role.id)">Supprimer</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+        <!-- Formulaire principal -->
+        <form [formGroup]="updateRoleForm" (ngSubmit)="updateUserRole()" class="space-y-6">
+          <!-- Sélection d'utilisateur -->
+          <div>
+            <label for="selectedUser" class="block text-sm font-medium text-gray-700">Sélectionner un Utilisateur</label>
+            <select
+              id="selectedUser"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              formControlName="selectedUser"
+            >
+              <option [ngValue]="null">Choisissez un utilisateur</option>
+              <option *ngFor="let user of users" [ngValue]="user">
+                {{ user.firstName }} {{ user.lastName }} ({{ user.email }})
+              </option>
+            </select>
+            <div *ngIf="isFieldInvalid('selectedUser')" class="text-red-500 text-sm mt-1">
+              Veuillez sélectionner un utilisateur.
             </div>
           </div>
-        </div>
-      </section>
+
+          <!-- Nouveau rôle -->
+          <div>
+            <label for="newRole" class="block text-sm font-medium text-gray-700">Nouveau Rôle</label>
+            <select
+              id="newRole"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              formControlName="newRole"
+            >
+              <option value="">Sélectionnez un rôle</option>
+              <option *ngFor="let role of roles" [value]="role.roleName">
+                {{ role.roleName }}
+              </option>
+            </select>
+            <div *ngIf="isFieldInvalid('newRole')" class="text-red-500 text-sm mt-1">
+              Veuillez sélectionner un rôle.
+            </div>
+          </div>
+
+          <!-- Boutons -->
+          <div class="flex justify-end space-x-4">
+            <button
+              type="button"
+              class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg shadow-sm transition"
+              (click)="resetUpdateRoleForm()"
+              [disabled]="loading"
+            >
+              Réinitialiser
+            </button>
+            <button
+              type="submit"
+              [disabled]="!canUpdateRole()"
+              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition"
+            >
+              Mettre à Jour le Rôle
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Gestion des rôles -->
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden mt-8">
+      <!-- En-tête -->
+      <div class="bg-blue-600 p-6">
+        <h3 class="text-2xl font-bold text-white">Gestion des Rôles</h3>
+      </div>
+      <!-- Formulaire de gestion -->
+      <div class="p-6">
+        <form [formGroup]="roleForm" (ngSubmit)="saveRole()" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Code -->
+            <div>
+              <label for="code" class="block text-sm font-medium text-gray-700">Code</label>
+              <input
+                id="code"
+                type="text"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                formControlName="code"
+                placeholder="Ex : ADM"
+              />
+            </div>
+            <!-- Nom du rôle -->
+            <div>
+              <label for="roleName" class="block text-sm font-medium text-gray-700">Nom du Rôle</label>
+              <input
+                id="roleName"
+                type="text"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                formControlName="roleName"
+                placeholder="Ex : Administrateur"
+              />
+            </div>
+            <!-- Nom normalisé -->
+            <div>
+              <label for="normalizedName" class="block text-sm font-medium text-gray-700">Nom Normalisé</label>
+              <input
+                id="normalizedName"
+                type="text"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                formControlName="normalizedName"
+                placeholder="Ex : ADMIN"
+              />
+            </div>
+          </div>
+          <div class="flex justify-end space-x-4">
+            <button
+              type="button"
+              class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg shadow-sm transition"
+              (click)="resetForm()"
+            >
+              Réinitialiser
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition"
+            >
+              {{ isEditMode ? 'Mettre à Jour' : 'Créer' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Liste des rôles -->
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden mt-8">
+      <div class="bg-blue-600 p-6">
+        <h3 class="text-2xl font-bold text-white">Liste des Rôles</h3>
+      </div>
+      <div class="p-6">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom Normalisé</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr *ngFor="let role of roles" class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 text-sm">{{ role.code }}</td>
+              <td class="px-6 py-4 text-sm">{{ role.roleName }}</td>
+              <td class="px-6 py-4 text-sm">{{ role.normalizedName }}</td>
+              <td class="px-6 py-4">
+                  <button
+                    (click)="editRole(role)"
+                    class="text-indigo-600 hover:text-indigo-900 font-medium">
+                    Modifier
+                  </button>
+                  &nbsp;
+                  &nbsp;
+                  <button
+                    (click)="deleteRole(role.id)"
+                    class="text-red-600 hover:text-red-900 font-medium">
+                    Supprimer
+                  </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
@@ -264,10 +319,3 @@
 
 
 
-<div id="search">
-  <button type="button" class="close">×</button>
-  <form>
-    <input type="search" value="" placeholder="type keyword(s) here" />
-    <button type="submit" class="btn btn-primary">Search</button>
-  </form>
-</div>
