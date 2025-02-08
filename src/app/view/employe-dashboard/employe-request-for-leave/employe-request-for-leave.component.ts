@@ -52,6 +52,9 @@ export class EmployeRequestForLeaveComponent implements OnInit{
 
     isSubmitting: boolean = false;
 
+    selectedFileName: string = '';
+    fileUrl: string | null = null;
+
     /**
      * Constructeur pour injecter les services nécessaires
      * @param router Service de navigation Angular
@@ -66,6 +69,8 @@ export class EmployeRequestForLeaveComponent implements OnInit{
       private leaveService: LeaveService,
       private toastService : ToastService
     ) {}
+
+
 
     /**
      * Méthode appelée à l'initialisation du composant
@@ -132,7 +137,14 @@ export class EmployeRequestForLeaveComponent implements OnInit{
     onFileChange(event: any): void {
       const file = event.target.files[0];
       if (file) {
+        this.selectedFileName = file.name;
         this.leaveRequestForm.patchValue({ justificatif: file });
+
+        // Créer une URL pour prévisualiser le fichier
+        if (this.fileUrl) {
+          URL.revokeObjectURL(this.fileUrl);
+        }
+        this.fileUrl = URL.createObjectURL(file);
       }
     }
 

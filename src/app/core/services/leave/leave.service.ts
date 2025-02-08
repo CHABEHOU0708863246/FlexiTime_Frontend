@@ -20,7 +20,7 @@ export class LeaveService {
    */
   getLeaveRequests(): Observable<LeaveRequest[]> {
     return this.http.get<LeaveRequest[]>(`${this.apiUrl}`)
-      .pipe(catchError(this.handleError)); // Gestion centralisée des erreurs.
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -31,6 +31,14 @@ export class LeaveService {
   getLeaveRequestById(id: number): Observable<LeaveRequest> {
     return this.http.get<LeaveRequest>(`${this.apiUrl}/${id}`)
       .pipe(catchError(this.handleError));
+  }
+
+  getLeaveRequestFile(leaveRequestId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${leaveRequestId}/file`, {
+      responseType: 'blob'
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   /**

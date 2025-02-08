@@ -203,7 +203,6 @@ getStatutCongeString(status: StatutConges): string {
     case StatutConges.Attente: return 'En attente';
     case StatutConges.Approuve: return 'Approuvé';
     case StatutConges.Rejete: return 'Rejeté';
-    case StatutConges.Annule: return 'Annulé';
     default: return 'Statut mis a jour';
   }
 }

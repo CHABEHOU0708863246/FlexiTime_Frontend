@@ -1,2 +1,8 @@
+<!-- Spinner -->
+<div *ngIf="isLoading" class="loading-overlay">
+  <i class="pi pi-spin pi-spinner" style="font-size: 2rem; color: #007bff;"></i>
+</div>
+
+<!-- Contenu principal -->
 <router-outlet></router-outlet>
 <app-toast></app-toast>

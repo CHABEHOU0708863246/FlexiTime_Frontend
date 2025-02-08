@@ -167,7 +167,10 @@
           <div class="col-span-3">
             <div class="card-box">
               <!-- Composant de calendrier -->
-              <full-calendar [options]="calendarOptions"></full-calendar>
+              <full-calendar
+                [options]="calendarOptions"
+                (eventClick)="handleEventClick($event)"
+              ></full-calendar>
             </div>
           </div>
         </div>

@@ -27,6 +27,8 @@ import { LeaveTrend } from '../../core/models/LeaveTrend';
 })
 export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  isLoading: boolean = false;
+
   /**
    * État des menus du tableau de bord
    */
@@ -34,6 +36,8 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
   isLeaveMenuOpen: boolean = false;
   isAttendanceMenuOpen: boolean = false;
   isReportMenuOpen: boolean = false;
+
+  isSidebarCollapsed = false;
 
   /**
    * Informations sur l'utilisateur et les statistiques de congés
@@ -58,6 +62,17 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
    */
   selectedYear: number = new Date().getFullYear();
   availableYears: number[] = [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
+
+  toggleSidebar() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    // Ajouter une logique pour fermer les sous-menus si nécessaire
+    if (this.isSidebarCollapsed) {
+      this.isUserMenuOpen = false;
+      this.isLeaveMenuOpen = false;
+      this.isReportMenuOpen = false;
+    }
+  }
+
 
   /**
    * Constructeur pour injecter les services nécessaires
@@ -186,29 +201,23 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     this.charts.forEach(chart => chart.destroy());
   }
 
-  /**
-   * Chargement des tendances et résumés liés aux congés
+   /**
+   * Simulation d'une action avec chargement
    */
-  loadData(): void {
+   loadData(): void {
+    this.isLoading = true; // Activation du spinner
+
     this.leaveReportsService.getLeaveTrends().subscribe({
       next: (trends) => {
-        console.log("Données de tendances reçues:", trends);
         this.leaveTrends = trends;
         setTimeout(() => this.createSalesChart(), 100);
       },
       error: (error) => {
         console.error('Erreur lors du chargement des tendances:', error);
       },
-      complete: () => console.log("Chargement des tendances terminé")
-    });
-
-    this.leaveReportsService.getLeaveStatusSummary().subscribe({
-      next: (summary) => {
-        console.log("Données de résumé reçues:", summary);
-        this.leaveStatusSummary = summary;
-        setTimeout(() => this.createTeamChart(), 100);
-      },
-      error: (error) => console.error('Erreur lors du chargement du résumé:', error)
+      complete: () => {
+        this.isLoading = false; // Désactivation du spinner après chargement
+      }
     });
   }
 

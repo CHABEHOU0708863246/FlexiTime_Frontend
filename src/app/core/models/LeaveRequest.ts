@@ -12,7 +12,7 @@ export class LeaveRequest {
   type: TypeConge;
   startDate: Date;
   endDate: Date;
-  status: StatutConges = StatutConges.Attente; // Statut par défaut
+  status: StatutConges = StatutConges.Attente;
   comment: string = '';
   approvedBy?: string;
   reason?: string;
@@ -66,8 +66,7 @@ justificationFileUrl?: string;
 export enum StatutConges {
   Attente = 0,
   Approuve = 1,
-  Rejete = 2,
-  Annule = 3
+  Rejete = 2
 }
 
 // Enum pour le type de congé

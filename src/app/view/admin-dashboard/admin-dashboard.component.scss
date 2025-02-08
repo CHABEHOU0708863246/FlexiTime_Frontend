@@ -28,8 +28,6 @@ h1 span {
 
 
 
-
-
 .submenu {
   display: none; /* Masquer par défaut */
   margin-left: 15px; /* Indentation pour les sous-menus */
@@ -62,12 +60,72 @@ h1 span {
   transform: rotate(180deg);
 }
 
-.card-body {
-  min-height: 300px;
-  position: relative;
+
+
+
+
+
+/* Styles de base du sidebar */
+.sidebar {
+  width: 250px;
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
-canvas {
-  width: 100% !important;
-  height: 100% !important;
+/* État réduit */
+.sidebar-collapsed {
+  width: 60px !important;
+}
+
+
+/* Ajuster les icônes */
+.sidebar-collapsed .sidebar-sub-toggle {
+  justify-content: center;
+}
+
+/* Animation du hamburger */
+.hamburger {
+  cursor: pointer;
+  padding: 15px;
+}
+
+.hamburger .line {
+  display: block;
+  width: 25px;
+  height: 2px;
+  background: #333;
+  margin: 5px 0;
+  transition: all 0.3s ease;
+}
+
+/* Transformation en X quand actif */
+.sidebar-collapsed + .header .hamburger .line:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.sidebar-collapsed + .header .hamburger .line:nth-child(2) {
+  opacity: 0;
+}
+.sidebar-collapsed + .header .hamburger .line:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Ajustements responsives */
+@media (max-width: 768px) {
+  .sidebar:not(.sidebar-collapsed) {
+    width: 100%;
+    position: absolute;
+    z-index: 1000;
+  }
+}
+
+.sidebar-collapsed .submenu {
+  position: absolute;
+  left: 60px;
+  min-width: 200px;
+  background: #2b2b2b;
+  display: none !important;
+}
+
+.sidebar-collapsed li:hover .submenu {
+  display: block !important;
 }

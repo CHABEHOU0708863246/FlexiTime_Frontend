@@ -63,3 +63,29 @@ h1 span {
 }
 
 
+.fc-content {
+  font-size: 0.85em;
+  padding: 2px;
+
+  strong {
+    color: #333;
+    display: block;
+  }
+
+  small {
+    color: #666;
+    display: block;
+    margin-top: 2px;
+  }
+}
+
+.fc-daygrid-event {
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.fc-event-title {
+  white-space: normal !important;
+  overflow-wrap: break-word;
+}
+

@@ -1,4 +1,4 @@
-<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures" *ngIf="!isLoading" [class.sidebar-collapsed]="isSidebarCollapsed" [class.sidebar-gestures]="!isSidebarCollapsed">
   <div class="nano">
     <div class="nano-content">
       <div class="logo"><a href="index.html"><span>FlexiTime</span></a></div>
@@ -56,15 +56,17 @@
 </div>
 
 
-<div class="header">
+<div class="header" >
   <div class="container-fluid">
     <div class="row">
       <div class="col-lg-12">
         <div class="float-left">
-          <div class="">
-            <span class="line"></span>
-            <span class="line"></span>
-            <span class="line"></span>
+          <div class="float-left">
+            <!-- <div class="hamburger" (click)="toggleSidebar()">
+              <span class="line"></span>
+              <span class="line"></span>
+              <span class="line"></span>
+            </div> -->
           </div>
         </div>
         <div class="float-right">
@@ -107,22 +109,7 @@
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="content-wrap">
+<div class="content-wrap" >
   <div class="main">
       <div class="container-fluid">
           <div class="row">

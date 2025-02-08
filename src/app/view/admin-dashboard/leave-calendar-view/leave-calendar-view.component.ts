@@ -11,6 +11,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CalendarEvent, CalendarEventType } from '../../../core/models/CalendarEvent';
 import { DomService } from '../../../shared/dom.service';
+import frLocale from '@fullcalendar/core/locales/fr';
 
 @Component({
   selector: 'app-leave-calendar-view',
@@ -40,14 +41,24 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     initialView: 'dayGridMonth',
     editable: true,
     selectable: true,
-    locale: 'fr',
+    locale: frLocale,
     events: [],
     eventBackgroundColor: '',
     eventClick: this.handleEventClick.bind(this),
     eventContent: (arg: any) => {
       const eventTitle = this.translateEventTitle(arg.event.title);
       const requestedBy = arg.event.extendedProps.requestedBy || 'Non spécifié';
-      return { html: `<div class="fc-content">${eventTitle} - ${requestedBy}</div>` };
+      return {
+        html: `<div class="fc-content">
+                <strong>${eventTitle}</strong><br>
+                <small>Demandé par : ${requestedBy}</small>
+              </div>`
+      };
+    },
+    headerToolbar: {
+      start: 'prev,next today',
+      center: 'title',
+      end: 'dayGridMonth,dayGridWeek,dayGridDay'
     }
   };
 
@@ -126,8 +137,11 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
     return `${day}/${month}/${year}`;
   }
 
-  loadEvents(): void {
-    this.calendarService.getCalendarEvents().subscribe((events: CalendarEvent[]) => {
+// Dans votre composant
+loadEvents(): void {
+  this.calendarService.getCalendarEvents().subscribe({
+    next: (events: CalendarEvent[]) => {
+      console.log('Données brutes reçues:', events);
       const formattedEvents = events.map(event => ({
         id: event.id,
         title: this.translateEventTitle(event.title),
@@ -137,13 +151,17 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
         extendedProps: {
           eventType: event.eventType,
           isRecurring: event.isRecurring,
-          requestedBy: event.requestedBy || 'Non spécifié', // Nom du demandeur
-        },
+          requestedBy: event.requestedBy || 'Non spécifié'
+        }
       }));
-
+      console.log('Données formatées:', formattedEvents);
       this.calendarOptions.events = formattedEvents;
-    });
-  }
+    },
+    error: (error) => {
+      console.error('Erreur lors du chargement des événements:', error);
+    }
+  });
+}
 
   getUserDetails(): void {
     this.user = this.authService.getCurrentUser();

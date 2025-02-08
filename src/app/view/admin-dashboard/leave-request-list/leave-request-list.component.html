@@ -200,8 +200,7 @@
                     [ngClass]="{
                       'bg-green-100 text-green-800': leaveRequest.status === StatutConges.Approuve,
                       'bg-red-100 text-red-800': leaveRequest.status === StatutConges.Rejete,
-                      'bg-yellow-100 text-yellow-800': leaveRequest.status === StatutConges.Attente,
-                      'bg-gray-100 text-gray-800': leaveRequest.status === StatutConges.Annule
+                      'bg-yellow-100 text-yellow-800': leaveRequest.status === StatutConges.Attente
                     }"
                   >
                     {{ getStatutCongeString(leaveRequest.status) }}
@@ -216,7 +215,6 @@
                       'ring-green-200 bg-green-50': leaveRequest.status === StatutConges.Approuve,
                       'ring-red-200 bg-red-50': leaveRequest.status === StatutConges.Rejete,
                       'ring-yellow-200 bg-yellow-50': leaveRequest.status === StatutConges.Attente,
-                      'ring-gray-200 bg-gray-50': leaveRequest.status === StatutConges.Annule
                     }"
                     [ngModel]="leaveRequest.status"
                     (ngModelChange)="updateLeaveStatus(leaveRequest.id, $event)"
@@ -224,7 +222,6 @@
                     <option [value]="StatutConges.Attente">En attente</option>
                     <option [value]="StatutConges.Approuve">Approuvé</option>
                     <option [value]="StatutConges.Rejete">Rejeté</option>
-                    <option [value]="StatutConges.Annule">Annulé</option>
                   </select>
                 </td>
 

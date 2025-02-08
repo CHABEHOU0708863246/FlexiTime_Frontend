@@ -85,10 +85,6 @@ export class EmployeDashboardComponent implements OnInit{
 
 
 
-
-
-
-
   /**
    * Charge les détails de l'utilisateur connecté.
    */
