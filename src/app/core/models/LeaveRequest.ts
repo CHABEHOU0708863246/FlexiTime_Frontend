@@ -18,7 +18,7 @@ export class LeaveRequest {
   reason?: string;
   requestedAt: Date;
   approvedAt?: Date;
-justificationFileUrl?: string;
+  justificationFileUrl?: string;
 
   constructor(
     id: string,

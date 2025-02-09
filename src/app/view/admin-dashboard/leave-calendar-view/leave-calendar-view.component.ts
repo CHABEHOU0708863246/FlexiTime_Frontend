@@ -104,6 +104,7 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
       colorCode: event.backgroundColor,
       isRecurring: event.extendedProps.isRecurring || false,
       requestedBy: event.extendedProps.requestedBy || this.user?.lastName || 'Non spécifié',
+      requesterName: event.extendedProps.requesterName || 'Nom non spécifié', // Ajout de requesterName
     };
 
     if (this.isClientSide()) {
@@ -141,20 +142,25 @@ export class LeaveCalendarViewComponent implements OnInit, AfterViewInit {
 loadEvents(): void {
   this.calendarService.getCalendarEvents().subscribe({
     next: (events: CalendarEvent[]) => {
-      console.log('Données brutes reçues:', events);
-      const formattedEvents = events.map(event => ({
-        id: event.id,
-        title: this.translateEventTitle(event.title),
-        start: event.startDate,
-        end: event.endDate,
-        backgroundColor: event.eventType === CalendarEventType.ApprovedLeave ? '#007bff' : '#28a745',
-        extendedProps: {
-          eventType: event.eventType,
-          isRecurring: event.isRecurring,
-          requestedBy: event.requestedBy || 'Non spécifié'
-        }
-      }));
-      console.log('Données formatées:', formattedEvents);
+      const formattedEvents = events.map(event => {
+        // Utiliser directement la date de fin sans ajouter de jour
+        return {
+          id: event.id,
+          title: event.title.startsWith('Paid')
+            ? `Congé payé - ${event.requesterName}`
+            : event.title,
+          start: event.startDate,
+          end: event.endDate,  // Utiliser la date de fin telle quelle
+          backgroundColor: event.colorCode || '#007bff',
+          extendedProps: {
+            eventType: event.eventType,
+            isRecurring: event.isRecurring,
+            requestedBy: event.requesterName || 'Non spécifié',
+            translatedEventType: this.translateEventType(event.eventType)
+          }
+        };
+      });
+
       this.calendarOptions.events = formattedEvents;
     },
     error: (error) => {
@@ -162,6 +168,8 @@ loadEvents(): void {
     }
   });
 }
+
+
 
   getUserDetails(): void {
     this.user = this.authService.getCurrentUser();

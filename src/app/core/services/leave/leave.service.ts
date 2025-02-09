@@ -52,6 +52,18 @@ export class LeaveService {
     return this.http.post(`${this.apiUrl}`, formData);
   }
 
+    /**
+   * 11. Télécharge le fichier de justification d'une demande de congé.
+   * @param fileName - Le nom du fichier de justification.
+   * @returns Observable contenant le fichier de justification sous forme de Blob.
+   */
+    downloadJustificationFile(fileName: string): Observable<Blob> {
+      const url = `${this.apiUrl}/justification/${fileName}`;
+      return this.http.get(url, { responseType: 'blob' }).pipe(
+        catchError(this.handleError)
+      );
+    }
+
 
 
 
@@ -88,18 +100,6 @@ export class LeaveService {
    */
   rejectLeaveRequest(leaveId: string, approverId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/${leaveId}/reject`, { approverId }).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  /**
-   * 7. Annule une demande de congé.
-   * Utilise une requête POST sans données supplémentaires.
-   * @param leaveId - L'identifiant de la demande de congé.
-   * @returns Observable avec une confirmation ou une erreur.
-   */
-  cancelLeaveRequest(leaveId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${leaveId}/cancel`, {}).pipe(
       catchError(this.handleError)
     );
   }
@@ -142,17 +142,7 @@ updateLeaveStatus(leaveId: string, newStatus: number, userId: string): Observabl
     );
   }
 
-  /**
-   * 11. Télécharge le fichier de justification d'une demande de congé.
-   * @param fileName - Le nom du fichier de justification.
-   * @returns Observable contenant le fichier de justification sous forme de Blob.
-   */
-  downloadJustificationFile(fileName: string): Observable<Blob> {
-    const url = `${this.apiUrl}/justification/${fileName}`;
-    return this.http.get(url, { responseType: 'blob' }).pipe(
-      catchError(this.handleError)
-    );
-  }
+
 
   /**
    * 12. Met à jour le solde de congés d'un utilisateur après un congé.

@@ -79,14 +79,13 @@ export class EmployeRequestForLeaveComponent implements OnInit{
       this.getUserDetails();
       this.loadLeaveTypes();
 
-      // Initialisation du formulaire de demande de congé
       this.leaveRequestForm = this.formBuilder.group({
         userId: [this.employeeId, Validators.required],
-        typeConge: [Validators.required],
+        typeConge: [null, Validators.required],
         startDate: ['', Validators.required],
         endDate: ['', Validators.required],
         commentaire: [''],
-        justificatif: [''],
+        JustificationFile: [null],
         raison: [''],
       });
     }
@@ -138,15 +137,11 @@ export class EmployeRequestForLeaveComponent implements OnInit{
       const file = event.target.files[0];
       if (file) {
         this.selectedFileName = file.name;
-        this.leaveRequestForm.patchValue({ justificatif: file });
-
-        // Créer une URL pour prévisualiser le fichier
-        if (this.fileUrl) {
-          URL.revokeObjectURL(this.fileUrl);
-        }
-        this.fileUrl = URL.createObjectURL(file);
+        // Utiliser 'JustificationFile' au lieu de 'justificatif'
+        this.leaveRequestForm.patchValue({ JustificationFile: file });
       }
     }
+
 
 
 /**
@@ -166,17 +161,19 @@ submitLeaveRequest(): void {
 
   const formValue = this.leaveRequestForm.value;
   const typeConge: TypeConge = parseInt(formValue.typeConge, 10);
-
   const formData = new FormData();
+
   formData.append('userId', this.leaveRequestForm.value.userId);
-  formData.append('typeConge', typeConge.toString());
+  formData.append('Type', typeConge.toString());
   formData.append('startDate', this.leaveRequestForm.value.startDate);
   formData.append('endDate', this.leaveRequestForm.value.endDate);
-  formData.append('commentaire', this.leaveRequestForm.value.commentaire);
-  formData.append('raison', this.leaveRequestForm.value.raison);
-  if (this.leaveRequestForm.value.justificatif) {
-    formData.append('justificatif', this.leaveRequestForm.value.justificatif);
+  formData.append('Comment', this.leaveRequestForm.value.commentaire);
+  formData.append('Reason', this.leaveRequestForm.value.raison);
+  // Changer 'justificatif' en 'JustificationFile'
+  if (this.leaveRequestForm.value.JustificationFile) {
+    formData.append('JustificationFile', this.leaveRequestForm.value.JustificationFile);
   }
+  console.log('Fichier ajouté :', formData.get('JustificationFile'));
   console.log('Valeurs envoyées au backend :', formData.get('typeConge'));
   console.log('Valeurs du formulaire :', this.leaveRequestForm.value);
   console.log('Valeur de typeConge :', this.leaveRequestForm.value.typeConge);

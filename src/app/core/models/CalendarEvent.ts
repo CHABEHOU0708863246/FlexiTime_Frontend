@@ -4,6 +4,7 @@ export interface CalendarEvent {
   startDate: Date;           // Date de début de l'événement
   endDate: Date;             // Date de fin de l'événement
   eventType: CalendarEventType; // Type de l'événement (congé approuvé, jour férié, etc.)
+  requesterName : string;
   translatedEventType?: string;  // Type traduit pour l'affichage
   isRecurring: boolean;      // Indique si l'événement est récurrent
   colorCode: string;         // Code couleur de l'événement (ex: #000000)
