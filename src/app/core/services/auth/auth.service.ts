@@ -48,6 +48,30 @@ export class AuthService {
    * Récupère l'utilisateur actuellement connecté.
    * @returns Instance de l'utilisateur connecté ou null s'il n'y a pas de session active.
    */
+  // getCurrentUser(): User | null {
+  //   const token = this.getToken();
+  //   if (!token) return null;
+
+  //   const decodedToken = this.decodeToken(token);
+  //   if (!decodedToken) return null;
+
+  //   // Créer une instance de l'utilisateur à partir des données du token décodé
+  //   return new User({
+  //     id: decodedToken.sub,
+  //     firstName: decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || '',
+  //     lastName: decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || '',
+  //     email: decodedToken.email,
+  //     phoneNumber: decodedToken.phoneNumber || '',
+  //     roles: decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+  //       ? [decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']]
+  //       : []
+  //   });
+  // }
+
+
+  /**
+   * Récupère l'utilisateur actuellement connecté avec les informations de profil à jour
+   */
   getCurrentUser(): User | null {
     const token = this.getToken();
     if (!token) return null;
@@ -55,7 +79,13 @@ export class AuthService {
     const decodedToken = this.decodeToken(token);
     if (!decodedToken) return null;
 
-    // Créer une instance de l'utilisateur à partir des données du token décodé
+    // Tente de récupérer les informations de profil mises à jour
+    const userProfile = localStorage.getItem('currentUserProfile');
+    if (userProfile) {
+      return JSON.parse(userProfile);
+    }
+
+    // Si pas de profil mis à jour, retourne les informations du token
     return new User({
       id: decodedToken.sub,
       firstName: decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || '',
@@ -91,10 +121,14 @@ export class AuthService {
    * Déconnecte l'utilisateur.
    * Supprime les données de session stockées localement.
    */
+  /**
+   * Déconnecte l'utilisateur.
+   */
   logout(): void {
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.removeItem(this.tokenKey);
       localStorage.removeItem('userRole');
+      localStorage.removeItem('currentUserProfile'); // Ajout de la suppression du profil
     }
   }
 
@@ -170,4 +204,23 @@ export class AuthService {
   changePassword(oldPassword: string, newPassword: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/change-password`, { oldPassword, newPassword });
   }
+
+   /**
+   * Met à jour les informations de l'utilisateur courant dans le localStorage
+   * @param user - Les nouvelles informations de l'utilisateur
+   */
+   updateCurrentUser(user: User): void {
+    const currentToken = this.getToken();
+    if (currentToken && user) {
+      // On garde le token actuel car il contient les informations d'authentification
+      // On met à jour uniquement les informations de profil dans une clé séparée
+      localStorage.setItem('currentUserProfile', JSON.stringify(user));
+    }
+  }
+
+
+
+
+
+
 }

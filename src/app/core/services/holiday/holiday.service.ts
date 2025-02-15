@@ -34,7 +34,7 @@ export class HolidayService {
    * @param holidayRequest Détails du jour férié à ajouter.
    * @returns Le jour férié ajouté avec son identifiant généré (Observable).
    */
-  addHoliday(holidayRequest: PublicHoliday): Observable<PublicHoliday> {
+  createHoliday(holidayRequest: PublicHoliday): Observable<PublicHoliday> {
     return this.http.post<PublicHoliday>(`${this.apiUrl}`, holidayRequest);
   }
 
@@ -49,12 +49,21 @@ export class HolidayService {
   }
 
   /**
-   * Supprime un jour férié par son ID.
+   * Supprime un jour férié par son identifiant.
    * @param id Identifiant du jour férié à supprimer.
-   * @returns Un booléen indiquant le succès de l'opération (Observable).
+   * @returns Un booléen indiquant le succès de la suppression (Observable).
    */
   deleteHoliday(id: string): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiUrl}/${id}`);
   }
 
+  /**
+   * Récupère les jours fériés dans une plage de dates spécifiée.
+   * @param startDate Date de début de la plage.
+   * @param endDate Date de fin de la plage.
+   * @returns Liste des jours fériés dans la plage de dates (Observable).
+   */
+  getHolidaysInRange(startDate: string, endDate: string): Observable<Date[]> {
+    return this.http.get<Date[]>(`${this.apiUrl}/range?startDate=${startDate}&endDate=${endDate}`);
+  }
 }

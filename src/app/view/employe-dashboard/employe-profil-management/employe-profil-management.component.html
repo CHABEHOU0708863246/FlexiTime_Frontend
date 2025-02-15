@@ -93,8 +93,7 @@
                       <div class="page-title">
                           <ol class="breadcrumb">
                               <li class="breadcrumb-item"><a [routerLink]="['/admin/dashboard']">Menu</a></li>
-                              <li class="breadcrumb-item active">Gestion des congés</li>
-                              <li class="breadcrumb-item active">Liste des demandes de congés</li>
+                              <li class="breadcrumb-item active">Gestion de profil</li>
                           </ol>
                       </div>
                   </div>
@@ -103,60 +102,4 @@
 </div>
 
 
-<div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-8">
-  <div class="max-w-7xl mx-auto space-y-6">
-    <!-- Carte principale -->
-    <div class="flex justify-center items-center min-h-screen bg-gray-100">
-      <div class="bg-white rounded-xl shadow-lg transition-all duration-300 hover:shadow-2xl w-full max-w-4xl">
-        <!-- En-tête -->
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 rounded-t-xl text-center">
-          <h2 class="text-2xl font-bold text-white flex justify-center items-center">
-            <span class="mr-2">📋</span>
-            Mes Demandes de Congé
-          </h2>
-        </div>
 
-        <!-- Contenu -->
-        <div class="p-6 space-y-6">
-          <!-- Tableau modernisé -->
-          <div class="overflow-hidden rounded-lg ring-1 ring-gray-200">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50">
-                <tr>
-                  <th scope="col" class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Type de Congé</th>
-                  <th scope="col" class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Date de Début</th>
-                  <th scope="col" class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Date de Fin</th>
-                  <th scope="col" class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Statut de mes demandes</th>
-                </tr>
-              </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                <tr *ngFor="let leaveRequest of paginatedLeaveRequests" class="hover:bg-gray-50 transition-colors duration-150">
-                  <!-- Type de congé -->
-                  <td class="px-6 py-4 whitespace-nowrap text-gray-600 text-center">
-                    {{ getTypeCongeLabel(leaveRequest.type) }}
-                  </td>
-
-                  <!-- Date de début -->
-                  <td class="px-6 py-4 whitespace-nowrap text-gray-500 text-center">
-                    {{ leaveRequest.startDate | date: 'dd/MM/yyyy' }}
-                  </td>
-
-                  <!-- Date de fin -->
-                  <td class="px-6 py-4 whitespace-nowrap text-gray-500 text-center">
-                    {{ leaveRequest.endDate | date: 'dd/MM/yyyy' }}
-                  </td>
-
-                  <!-- Statut avec badge design -->
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <span class="px-3 py-1 rounded-full text-sm font-medium" [ngClass]="getStatusClass(leaveRequest.status)">
-                      {{ getStatutCongeLabel(leaveRequest.status) }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-</div>

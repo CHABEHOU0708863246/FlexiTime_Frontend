@@ -107,7 +107,7 @@ export class HolidayConfigComponent implements OnInit {
       });
     } else {
       // Mode ajout : ajouter un nouveau jour férié
-      this.holidayService.addHoliday(holidayData).subscribe({
+      this.holidayService.createHoliday(holidayData).subscribe({
         next: () => {
           this.loadHolidays();
           this.onReset();

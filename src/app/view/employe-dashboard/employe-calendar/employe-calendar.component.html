@@ -1,1 +1,210 @@
-<p>employe-calendar works!</p>
+<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+  <div class="nano">
+    <div class="nano-content">
+      <div class="logo"><a [routerLink]="['/employe/dashboard']"><span>FlexiTime</span></a></div>
+      <ul>
+        <li class="label">Principale</li>
+        <li class="active"><a class="sidebar-sub-toggle" [routerLink]="['/employe/dashboard']"><i class="ti-home"></i> Dashboard <span class="badge badge-primary"></span></a>
+        </li>
+
+        <li class="label">Menu</li>
+        <li>
+          <a class="sidebar-sub-toggle" (click)="toggleLeaveMenu()">
+            <i class="ti-ticket -chart-alt"></i> Gestion des congés
+            <span class="sidebar-collapse-icon ti-angle-down rotate" [ngClass]="{'active': isLeaveMenuOpen}"></span>
+          </a>
+          <ul class="submenu" [ngClass]="{'active': isLeaveMenuOpen}">
+            <li><a [routerLink]="['/employe/request-for-leave']">Demandé un congé</a></li>
+            <li><a [routerLink]="['/employe/request-list']">Liste des demandes de congé</a></li>
+            <li><a [routerLink]="['/employe/leave-balance']">Solde de Congés</a></li>
+          </ul>
+        </li>
+
+        <li><a [routerLink]="['/employe/profil-management']"><i class="ti-user -chart-alt"></i> Gerer mon profil</a></li>
+        <li><a [routerLink]="['/employe/calendar']"><i class="ti-calendar grid2-alt"></i> Calendrier de congés</a></li>
+        <li><a [routerLink]="['/employe/leave-calendar-view']"><i class="ti-support grid2-alt"></i> Contacter le support</a></li>
+        <li><a [routerLink]="['/employe/leave-calendar-view']"><i class="ti-help-alt grid2-alt"></i> Foire aux questions</a></li>
+
+
+
+        <li><a (click)="logout()"><i class="ti-close"></i> Je me déconnecte</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="float-left">
+          <div class="">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </div>
+        </div>
+        <div class="float-right">
+          <ul>
+            <li class="header-icon dib"><i class="ti-bell"></i>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">Recent Notifications</span>
+                </div>
+              </div>
+            </li>
+            <li class="header-icon dib"><i class="ti-email"></i>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">2 New Messages</span>
+                  <a href="email.html"><i class="ti-pencil-alt pull-right"></i></a>
+                </div>
+              </div>
+            </li>
+            <li class="header-icon dib">
+              <span class="user-avatar">{{ user?.firstName }} <i class="ti-angle-down f-s-10"></i></span>
+              <div class="drop-down">
+                <div class="dropdown-content-heading">
+                  <span class="text-left">User Details</span>
+                </div>
+                <div class="dropdown-content">
+                  <span>Email: {{ user?.email }}</span><br />
+                  <span>Phone: {{ user?.phoneNumber }}</span>
+                </div>
+                <div class="dropdown-footer">
+                  <button (click)="logout()">Logout</button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content-wrap">
+  <div class="main">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-lg-4 p-l-0 title-margin-left">
+                  <div class="page-header">
+                      <div class="page-title">
+                          <ol class="breadcrumb">
+                              <li class="breadcrumb-item"><a [routerLink]="['/employe/dashboard']">Menu</a></li>
+                              <li class="breadcrumb-item active">Calendrier de congés</li>
+                          </ol>
+                      </div>
+                  </div>
+              </div>
+        </div>
+</div>
+
+
+<div class="min-h-screen bg-gray-100 p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Section du calendrier des congés -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="bg-blue-600 p-6">
+        <h3 class="text-2xl font-bold text-white">Calendrier des Congés</h3>
+      </div>
+      <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <!-- Section des événements -->
+          <div class="col-span-1">
+            <a href="#" data-toggle="modal" data-target="#add-category" class="btn btn-lg btn-success btn-block waves-effect waves-light">
+              <i class="fa fa-plus"></i> Créer nouveau
+            </a>
+            <div id="external-events" class="mt-6">
+              <p class="text-gray-600 mb-4">Faites glisser et déposez un événement ou cliquez dans le calendrier</p>
+
+              <!-- Event 1 -->
+              <div class="external-event rounded-lg shadow-sm bg-blue-500 text-white p-3 mb-2 hover:bg-blue-600 transition-colors cursor-pointer">
+                <i class="fa fa-calendar-check"></i> Nouveaux Congés
+              </div>
+
+              <!-- Event 2 -->
+              <div class="external-event rounded-lg shadow-sm bg-green-500 text-white p-3 mb-2 hover:bg-green-600 transition-colors cursor-pointer">
+                <i class="fa fa-calendar-day"></i> Congé maladie
+              </div>
+
+              <!-- Event 3 -->
+              <div class="external-event rounded-lg shadow-sm bg-yellow-500 text-gray-800 p-3 mb-2 hover:bg-yellow-600 transition-colors cursor-pointer">
+                <i class="fa fa-calendar-plus"></i> Congé exceptionnel
+              </div>
+
+              <!-- Event 4 -->
+              <div class="external-event rounded-lg shadow-sm bg-indigo-500 text-white p-3 mb-2 hover:bg-indigo-600 transition-colors cursor-pointer">
+                <i class="fa fa-calendar-check"></i> Congé parental
+              </div>
+            </div>
+          </div>
+
+          <!-- Section du calendrier -->
+          <div class="col-span-3">
+            <div class="card-box">
+              <!-- Composant de calendrier -->
+              <full-calendar
+                [options]="calendarOptions"
+                (eventClick)="handleEventClick($event)"
+              ></full-calendar>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pour afficher les détails de l'événement -->
+<div id="eventDetailsModal" class="modal fade" tabindex="-1" aria-labelledby="eventDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-blue-600 p-6">
+        <h5 class="modal-title text-2xl font-bold text-white" id="eventDetailsModalLabel">Détails de l'événement</h5>
+        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-6">
+        <!-- Titre de l'événement -->
+        <p class="text-gray-700"><strong>Titre:</strong> {{ selectedEvent?.title }}</p>
+
+        <!-- Dates formatées en jj/mm/aaaa -->
+        <p class="text-gray-700"><strong>Date:</strong>
+          {{ selectedEvent?.startDate | date:'dd/MM/yyyy' }} au {{ selectedEvent?.endDate | date:'dd/MM/yyyy' }}
+        </p>
+        <!-- Couleur de l'événement -->
+        <p class="text-gray-700"><strong>Couleur:</strong>
+          <span [style.background]="selectedEvent?.colorCode" class="badge text-white px-2 py-1 rounded-full">Couleur</span>
+        </p>
+
+        <!-- Si un utilisateur a fait la demande pour un congé approuvé, afficher son nom -->
+        <p *ngIf="selectedEvent?.requestedBy" class="text-gray-700"><strong>Demande faite par:</strong> {{ selectedEvent?.requestedBy }}</p>
+      </div>
+      <div class="modal-footer bg-gray-100 p-4">
+        <button type="button" class="btn btn-secondary bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div id="search">
+  <button type="button" class="close">×</button>
+  <form>
+    <input type="search" value="" placeholder="type keyword(s) here" />
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+</div>
+
+
+

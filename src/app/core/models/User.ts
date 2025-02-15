@@ -1,45 +1,101 @@
 export class User {
+  // Propriétés pour l'interface utilisateur (en camelCase)
   id: string = '';
-  firstName: string | null = null;
-  lastName: string | null = null;
-  email: string | null = null;
-  phoneNumber: string | null = null;
+  firstName: string = '';
+  lastName: string = '';
+  email: string = '';
+  phoneNumber: string = '';
   isEnabled: boolean = true;
   roles: string[] = [];
   workingHours: number = 0;
   isPartTime: boolean = false;
   hireDate: Date = new Date();
-  gender: string | null = null;
-  contractType: string | null = null;
-  numberOfChildren: number | null = null;
-  maritalStatus: string | null = null;
-  residence: string | null = null;
-  postalAddress: string | null = null;
+  gender: string = '';
+  contractType: string = '';
+  numberOfChildren: number = 0;
+  maritalStatus: string = '';
+  residence: string = '';
+  postalAddress: string = '';
 
-  // Optionnel : mots de passe pour des opérations spécifiques comme la création/modification utilisateur.
+  // Propriétés du serveur (en PascalCase)
+  private _id?: { $oid: string };
+  private FirstName?: string;
+  private LastName?: string;
+  private Email?: string;
+  private PhoneNumber?: string;
+  private IsEnabled?: boolean;
+  private WorkingHours?: number;
+  private IsPartTime?: boolean;
+  private HireDate?: { $date: string };
+  private Gender?: string;
+  private ContractType?: string;
+  private NumberOfChildren?: number;
+  private MaritalStatus?: string;
+  private Residence?: string;
+  private PostalAddress?: string;
+
+  // Optionnel pour les opérations de création/modification
   password?: string;
   confirmPassword?: string;
 
-  constructor(data?: Partial<User>) {
+  constructor(data?: any) {
     if (data) {
-      this.id = data.id || this.id;
-      this.firstName = data.firstName ?? this.firstName;
-      this.lastName = data.lastName ?? this.lastName;
-      this.email = data.email ?? this.email;
-      this.phoneNumber = data.phoneNumber ?? this.phoneNumber;
-      this.isEnabled = data.isEnabled ?? this.isEnabled;
-      this.roles = data.roles || this.roles;
-      this.workingHours = data.workingHours ?? this.workingHours;
-      this.isPartTime = data.isPartTime ?? this.isPartTime;
-      this.hireDate = data.hireDate ? new Date(data.hireDate) : this.hireDate;
-      this.gender = data.gender ?? this.gender;
-      this.contractType = data.contractType ?? this.contractType;
-      this.numberOfChildren = data.numberOfChildren ?? this.numberOfChildren;
-      this.maritalStatus = data.maritalStatus ?? this.maritalStatus;
-      this.residence = data.residence ?? this.residence;
-      this.postalAddress = data.postalAddress ?? this.postalAddress;
-      this.password = data.password;
-      this.confirmPassword = data.confirmPassword;
+      // Mapping des données du serveur vers les propriétés de l'interface
+      this.id = data._id?.$oid || data.id || '';
+      this.firstName = data.FirstName || data.firstName || '';
+      this.lastName = data.LastName || data.lastName || '';
+      this.email = data.Email || data.email || '';
+      this.phoneNumber = data.PhoneNumber || data.phoneNumber || '';
+      this.isEnabled = data.IsEnabled ?? data.isEnabled ?? true;
+      this.workingHours = data.WorkingHours ?? data.workingHours ?? 0;
+      this.isPartTime = data.IsPartTime ?? data.isPartTime ?? false;
+      this.hireDate = data.HireDate?.$date ? new Date(data.HireDate.$date)
+                   : data.hireDate ? new Date(data.hireDate)
+                   : new Date();
+      this.gender = data.Gender || data.gender || '';
+      this.contractType = data.ContractType || data.contractType || '';
+      this.numberOfChildren = data.NumberOfChildren ?? data.numberOfChildren ?? 0;
+      this.maritalStatus = data.MaritalStatus || data.maritalStatus || '';
+      this.residence = data.Residence || data.residence || '';
+      this.postalAddress = data.PostalAddress || data.postalAddress || '';
+
+      // Stockage des données originales du serveur
+      this._id = data._id;
+      this.FirstName = data.FirstName;
+      this.LastName = data.LastName;
+      this.Email = data.Email;
+      this.PhoneNumber = data.PhoneNumber;
+      this.IsEnabled = data.IsEnabled;
+      this.WorkingHours = data.WorkingHours;
+      this.IsPartTime = data.IsPartTime;
+      this.HireDate = data.HireDate;
+      this.Gender = data.Gender;
+      this.ContractType = data.ContractType;
+      this.NumberOfChildren = data.NumberOfChildren;
+      this.MaritalStatus = data.MaritalStatus;
+      this.Residence = data.Residence;
+      this.PostalAddress = data.PostalAddress;
     }
+  }
+
+  // Méthode pour convertir l'objet en format serveur
+  toServerFormat(): any {
+    return {
+      _id: this._id,
+      FirstName: this.firstName,
+      LastName: this.lastName,
+      Email: this.email,
+      PhoneNumber: this.phoneNumber,
+      IsEnabled: this.isEnabled,
+      WorkingHours: this.workingHours,
+      IsPartTime: this.isPartTime,
+      HireDate: this.HireDate || { $date: this.hireDate.toISOString() },
+      Gender: this.gender,
+      ContractType: this.contractType,
+      NumberOfChildren: this.numberOfChildren,
+      MaritalStatus: this.maritalStatus,
+      Residence: this.residence,
+      PostalAddress: this.postalAddress
+    };
   }
 }
