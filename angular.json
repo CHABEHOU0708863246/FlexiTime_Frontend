@@ -56,6 +56,13 @@
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
 
             ],
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "512kb",
+                "maximumError": "1mb"
+              }
+            ],
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
