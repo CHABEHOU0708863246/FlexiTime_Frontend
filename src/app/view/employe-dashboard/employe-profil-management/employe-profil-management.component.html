@@ -102,4 +102,195 @@
 </div>
 
 
+<div class="min-h-screen bg-gradient-to-r from-blue-50 to-purple-50 flex items-center justify-center p-6">
+  <div class="w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:scale-105">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6">
+      <h3 class="text-3xl font-bold text-white text-center">Modifier mon profil</h3>
+    </div>
+
+    <!-- Form Body -->
+    <div class="p-8">
+      <form class="space-y-6">
+        <!-- First Name & Last Name -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="firstName" class="block text-sm font-medium text-gray-700">Prénoms :</label>
+            <input
+              type="text"
+              id="firstName"
+              placeholder="Prénoms"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+          <div>
+            <label for="lastName" class="block text-sm font-medium text-gray-700">Nom :</label>
+            <input
+              type="text"
+              id="lastName"
+              placeholder="Nom"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+        </div>
+
+        <!-- Email & Phone Number -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Email"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+          <div>
+            <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Numéro de téléphone</label>
+            <input
+              type="text"
+              id="phoneNumber"
+              placeholder="Numéro de téléphone"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+        </div>
+
+        <!-- Password & Confirm Password -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Mot de passe"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+          <div>
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              placeholder="Confirmer le mot de passe"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+        </div>
+
+        <!-- Gender, Marital Status, Number of Children -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label for="gender" class="block text-sm font-medium text-gray-700">Genre</label>
+            <select
+              id="gender"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            >
+              <option>M</option>
+              <option>F</option>
+            </select>
+          </div>
+          <div>
+            <label for="maritalStatus" class="block text-sm font-medium text-gray-700">Statut matrimonial</label>
+            <select
+              id="maritalStatus"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            >
+              <option>Célibataire</option>
+              <option>Marié</option>
+              <option>Divorcé</option>
+            </select>
+          </div>
+          <div>
+            <label for="numberOfChildren" class="block text-sm font-medium text-gray-700">Nombre d'enfants</label>
+            <input
+              type="number"
+              id="numberOfChildren"
+              placeholder="0"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+        </div>
+
+        <!-- Contract Type & Hire Date -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="contractType" class="block text-sm font-medium text-gray-700">Type de contrat</label>
+            <input
+              type="text"
+              id="contractType"
+              placeholder="Type de contrat"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+          <div>
+            <label for="hireDate" class="block text-sm font-medium text-gray-700">Date d'embauche</label>
+            <input
+              type="date"
+              id="hireDate"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+        </div>
+
+        <!-- Residence & Postal Address -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="residence" class="block text-sm font-medium text-gray-700">Lieu d'habitation</label>
+            <input
+              type="text"
+              id="residence"
+              placeholder="Lieu d'habitation"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+          <div>
+            <label for="postalAddress" class="block text-sm font-medium text-gray-700">Adresse postale</label>
+            <input
+              type="text"
+              id="postalAddress"
+              placeholder="Adresse postale"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+        </div>
+
+        <!-- Working Hours, Part Time -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label for="workingHours" class="block text-sm font-medium text-gray-700">Nombre d'heures de travail par jour</label>
+            <input
+              type="number"
+              id="workingHours"
+              placeholder="Nombre d'heures"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+          <div>
+            <label for="isPartTime" class="block text-sm font-medium text-gray-700">Temps partiel</label>
+            <select
+              id="isPartTime"
+              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            >
+              <option value="false">NON</option>
+              <option value="true">OUI</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+          <button
+            type="submit"
+            class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300"
+          >
+            Valider les nouvelles informations
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
 
